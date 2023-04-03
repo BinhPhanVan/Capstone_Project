@@ -1,0 +1,13 @@
+.not-found-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: $dark-blue-1;
+    color: aliceblue;
+    font-family: mulish-text;
+  }
+  
+.not-found-content {
+    text-align: center;
+}

@@ -9,6 +9,11 @@ const login = async (email, password) => {
     return res;
 }
 
-const authService = {login};
+const signup = async (account) => {
+    const res = await httpRequest.post("users/register/", account);
+    return res;
+};
+
+const authService = {login, signup};
 
 export default authService;

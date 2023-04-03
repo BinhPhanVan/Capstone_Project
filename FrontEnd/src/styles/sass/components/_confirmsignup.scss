@@ -1,0 +1,56 @@
+.confirm-container 
+{
+    display: flex;
+    // flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    height: 100vh;
+    background-size: cover;
+    background-repeat: no-repeat;
+    // background-color: #f7f7f7;
+    background-image: url(../../../../public/image/background.jpg);
+
+    h1 {
+        font-size: 1.5 rem;
+        margin-bottom: 40px;
+    }
+
+    .confirm-form{
+        width: 400px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        padding: 2rem;
+        
+        h1 
+        {
+            color: $dark-blue;
+            font-family: san-fran-form-header;
+        }
+        input 
+        {
+            font-size: 16px;
+            padding: 10px;
+            border-radius: $border-input;
+            border: none;
+            border: 1px solid #ccc;
+            width: 100%;
+            display: inline-block;
+            
+        }
+        label 
+        {
+            font-size: 18px;
+            display: inline-block;
+        }
+        button 
+        {
+            background-color: $blue;
+            color: #ffffff;
+            font-size: 1.1rem;
+            padding: 10px 20px;
+            border-radius: 1rem;
+        }
+    }
+}
