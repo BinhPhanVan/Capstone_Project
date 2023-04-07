@@ -1,6 +1,7 @@
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import UserManager
 from django.shortcuts import render
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
@@ -20,6 +21,13 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 
 class RegisterAPI(APIView):
+    @swagger_auto_schema(
+        request_body=UserSerializer,  # Specify the serializer used for request data
+        responses={
+            status.HTTP_200_OK: "Register successfully. Please check your email",  # Add response description
+            status.HTTP_400_BAD_REQUEST: "Data invalid. Please enter again",  # Add response description
+        },
+    )
     def post(self, request, *args, **kwargs):
         try:
             data = request.data
@@ -27,6 +35,8 @@ class RegisterAPI(APIView):
             if serializer.is_valid():
                 account = User(**serializer.data)
                 account.password = make_password(serializer.data['password'])
+                account.first_name = request.data["first_name"]
+                account.last_name = request.data["last_name"]
                 account.save()
                 send_opt_via_email(serializer.data['email'])
                 return Response({
@@ -44,6 +54,13 @@ class RegisterAPI(APIView):
 
 
 class VerifyOTP(APIView):
+    @swagger_auto_schema(
+        request_body=VertifyEmailSerializer,  # Specify the serializer used for request data
+        responses={
+            status.HTTP_202_ACCEPTED: "Register successful!",  # Add response description
+            status.HTTP_400_BAD_REQUEST: "Invalid data. Please enter again",  # Add response description
+        },
+    )
     def post(self, request):
         try:
             data = request.data
@@ -87,6 +104,14 @@ class VerifyOTP(APIView):
 
 
 class LoginView(APIView):
+    @swagger_auto_schema(
+        request_body=LoginSerializer,  # Specify the serializer used for request data
+        responses={
+            status.HTTP_202_ACCEPTED: "Login successful",  # Add response description
+            status.HTTP_400_BAD_REQUEST: "Invalid password",  # Add response description
+            status.HTTP_401_UNAUTHORIZED: "Account is not verified. Please try again",  # Add response description
+        },
+    )
     def post(self, request, *args, **kwargs):
         try:
             data = request.data
@@ -103,7 +128,7 @@ class LoginView(APIView):
                     })
                 if user.is_verified is False:
                     return Response({
-                        'status': status.HTTP_400_BAD_REQUEST,
+                        'status': status.HTTP_401_UNAUTHORIZED,
                         'message': 'Account is not verified. Please try again',
                         'data': {}
                     })
@@ -128,6 +153,13 @@ class LoginView(APIView):
 
 
 class ForgotPasswordView(APIView):
+    @swagger_auto_schema(
+        request_body=ForgotPassWordSerializer,  # Specify the serializer used for request data
+        responses={
+            status.HTTP_205_RESET_CONTENT: "Please check your email for a new password.",  # Add response description
+            status.HTTP_400_BAD_REQUEST: "Invalid data. Please enter again",  # Add response description
+        },
+    )
     def post(self, request, *args, **kwargs):
         try:
             data = request.data
@@ -158,7 +190,6 @@ class ChangePasswordView(GenericAPIView):
         try:
             serializer = ChangePasswordSerializer(data=request.data)
             if serializer.is_valid():
-                print("ádsdsdasasd")
                 old_password = request.data["old_password"]
                 new_password = request.data["new_password"]
                 repeat_password = request.data["repeat_new_password"]

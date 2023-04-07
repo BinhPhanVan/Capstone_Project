@@ -21,7 +21,7 @@ from rest_framework import permissions
 
 schema_view = swagger_get_schema_view(
    openapi.Info(
-      title="BaseProject API",
+      title="Capstone Project API",
       default_version='v1',
       description="API of project",
       terms_of_service="https://www.google.com/policies/terms/",
