@@ -14,7 +14,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['email', 'password', 'is_verified']
+        fields = ['email', 'password']
 
 
 class VertifyEmailSerializer(serializers.Serializer):
