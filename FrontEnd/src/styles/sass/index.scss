@@ -1,5 +1,10 @@
 // base scss
-
+@import "base/_layout";
+@import "base/_variables";
 
 // component scss
 @import "components/_login";
+@import "components/_signup";
+@import "components/_confirmSignup";
+@import "components/_header";
+@import "components/_notfound";
