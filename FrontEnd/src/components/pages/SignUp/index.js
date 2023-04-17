@@ -30,11 +30,10 @@ function SignUp() {
     );
     if (signup.fulfilled.match(resultAction)) {
       navigate("/confirmSignUp");
-      toast.success(resultAction.payload[0]);
+      toast.success(resultAction.payload.message);
     }
     if (signup.rejected.match(resultAction)) {
-      console.log(resultAction);
-      toast.error(resultAction.payload[0]);
+      toast.error(resultAction.payload);
     }
   }
   useEffect(() => {

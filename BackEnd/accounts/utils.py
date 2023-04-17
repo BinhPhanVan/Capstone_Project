@@ -10,3 +10,4 @@ def same_pass(new_password, repeat_password):
     if new_password != repeat_password:
         return False
     return True
+    

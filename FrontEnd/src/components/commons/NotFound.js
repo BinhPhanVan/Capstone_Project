@@ -17,7 +17,7 @@ const NotFound = () => {
         <p className="mb-4">
           But you can click the button below to go back to the homepage.
         </p>
-        <Button as={Link} to="/" variant="primary">
+        <Button as={Link} to="/home" variant="primary">
           Go Back to Homepage
         </Button>{" "}
         {/* Use Link from react-router-dom to navigate to homepage */}
