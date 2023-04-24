@@ -4,8 +4,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { Form, Row, Col, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { login } from "../../../store/AuthSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { login, selectAccount } from "../../../store/AuthSlice";
 import { useNavigate } from "react-router-dom";
 function Login() {
   const [email, setEmail] = useState("");
@@ -20,17 +20,30 @@ function Login() {
       navigate("/home")
     }
     if (login.rejected.match(actionResult)) {
-      console.log(actionResult);
-      toast.error(actionResult.payload);
-      setEmail("");
-      setPassword("");
+      if(actionResult.payload.status === 406)
+      {
+        toast.warning(actionResult.payload.message);
+        navigate("/confirmSignUp");
+      }
+      else
+      {
+        toast.error(actionResult.payload);
+      }
     }
   };
+
+  const account = useSelector(selectAccount);
+  useEffect(() => {
+    if (account !== null) 
+    {
+      navigate("/");
+    }
+  }, [account, navigate]);
 
   useEffect(() => {
     document.title = "Login | Hire IT";
   }, []);
-  return (
+  return !account?(
     <div>
       <div className="login-page">
         <div className="login-container">
@@ -89,7 +102,7 @@ function Login() {
         </div>
       </div>
     </div>
-  );
+  ):<></>
 }
 
 export default Login;

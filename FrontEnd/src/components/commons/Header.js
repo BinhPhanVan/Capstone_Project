@@ -6,6 +6,7 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import { NavLink } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css"; 
 import { BiMessageSquareDetail } from 'react-icons/bi';
+import { MdNotifications } from 'react-icons/md';
 function Header() {
   return (
     <Navbar collapseOnSelect expand="lg"  style={{backgroundColor: '#104271'}}>
@@ -25,6 +26,17 @@ function Header() {
             <Nav.Link as={NavLink} to="/resume" className="navbar-text" >My resume</Nav.Link>
             <Nav.Link eventKey={2} as={NavLink} to="/contact" className="navbar-text">
               <BiMessageSquareDetail size={24}/>
+              <div className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              <span className="visually-hidden">Notification count</span>
+                5
+              </div>
+            </Nav.Link>
+            <Nav.Link eventKey={2} as={NavLink} to="/notify" className="navbar-text">
+              <MdNotifications size={24}/>
+              <div className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              <span className="visually-hidden">Notification count</span>
+                5
+              </div>
             </Nav.Link>
             <NavDropdown title="Username" style={{color: "white"}}   id="collasible-nav-dropdown">
               <NavDropdown.Item className="header-custome-navbar-dropdown" as={NavLink} to="/profile">Profile</NavDropdown.Item>

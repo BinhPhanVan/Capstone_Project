@@ -23,10 +23,6 @@ function App() {
           <Route path="signup" element={<SignUp />} />
           <Route path="confirmSignUp" element={<ConfirmSignUp />}></Route>
           <Route path="*" element={<NotFound />} />
-          {/* <Route path="verify" element={<VerifySignup />} />
-          <Route path="confirmSignup/:code" element={<ConfirmSignup />} />
-          <Route path="*" element={<NotFound />} /> 
-          element={<ConfirmSignUp />}*/}
       </Routes>
     </BrowserRouter>
   );

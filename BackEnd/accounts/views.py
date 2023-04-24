@@ -3,54 +3,60 @@ from django.contrib.auth.models import UserManager
 from django.shortcuts import render
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.generics import GenericAPIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework import status, permissions
+from rest_framework import status, permissions, viewsets, generics
 from rest_framework.views import APIView
+from django.conf import settings
 # Create your views here.
 from accounts.serializers import UserSerializer, VertifyEmailSerializer, LoginSerializer, \
     MyTokenObtainPairSerializer, ForgotPassWordSerializer, ChangePasswordSerializer
 from .email import send_opt_via_email, send_reset_password
+from .permissions import IsEmployeePermission
+from .serializers import EmployeeSerializer
 from .utils import check_pass, same_pass
-from .models import User
-from django.contrib.auth import authenticate
+from .models import User, Employee
+from django.contrib.auth import authenticate, login, logout
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
+class RegisterViewSet(viewsets.ViewSet, generics.CreateAPIView):
+    queryset = User.objects.all()
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = UserSerializer
 
-class RegisterAPI(APIView):
-    @swagger_auto_schema(
-        request_body=UserSerializer,  # Specify the serializer used for request data
-        responses={
-            status.HTTP_200_OK: "Register successfully. Please check your email",  # Add response description
-            status.HTTP_400_BAD_REQUEST: "Data invalid. Please enter again",  # Add response description
-        },
-    )
-    def post(self, request, *args, **kwargs):
+    def create(self, request, *args, **kwargs):
         try:
-            data = request.data
-            serializer = UserSerializer(data=data)
-            if serializer.is_valid():
-                account = User(**serializer.data)
-                account.password = make_password(serializer.data['password'])
-                account.first_name = request.data["first_name"]
-                account.last_name = request.data["last_name"]
-                account.save()
-                send_opt_via_email(serializer.data['email'])
+            if not User.objects.filter(email=request.data.get('email')).exists():
+                serializer = self.get_serializer(data=request.data)
+                if serializer.is_valid(raise_exception=True):
+                    account = serializer.save()
+                    send_opt_via_email(serializer.data['email'])
+                    return Response({
+                        'status': status.HTTP_200_OK,
+                        'message': 'Register successfully. Please check your email',
+                        'data': serializer.data,
+                    })
                 return Response({
-                    'status': status.HTTP_200_OK,
-                    'message': 'Register successfully. Please check your email',
-                    'data': serializer.data,
+                    'status': status.HTTP_400_BAD_REQUEST,
+                    'message': 'Data invalid. Please enter again',
+                    'data': serializer.errors
                 })
+            else:
+                return Response({
+                    'status': status.HTTP_400_BAD_REQUEST,
+                    'message': 'This account already exists',
+                    'data': {}
+                })
+        except Exception as e:
             return Response({
                 'status': status.HTTP_400_BAD_REQUEST,
                 'message': 'Data invalid. Please enter again',
                 'data': serializer.errors
             })
-        except Exception as e:
-            print(e)
 
 
 class VerifyOTP(APIView):
@@ -91,6 +97,8 @@ class VerifyOTP(APIView):
                         'email': user.email,
                         'refresh_token': str(refresh),
                         'access_token': str(refresh.access_token),
+                        'access_expires': int(settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds()),
+                        'refresh_expires': int(settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'].total_seconds()),
                     }
                 })
 
@@ -109,7 +117,7 @@ class LoginView(APIView):
         responses={
             status.HTTP_202_ACCEPTED: "Login successful",  # Add response description
             status.HTTP_400_BAD_REQUEST: "Invalid password",  # Add response description
-            status.HTTP_401_UNAUTHORIZED: "Account is not verified. Please try again",  # Add response description
+            status.HTTP_406_NOT_ACCEPTABLE: "Account is not verified. Please try again",  # Add response description
         },
     )
     def post(self, request, *args, **kwargs):
@@ -128,9 +136,9 @@ class LoginView(APIView):
                     })
                 if user.is_verified is False:
                     return Response({
-                        'status': status.HTTP_401_UNAUTHORIZED,
+                        'status': status.HTTP_406_NOT_ACCEPTABLE,
                         'message': 'Account is not verified. Please try again',
-                        'data': {}
+                        'data': {'email': user.email}
                     })
                 refresh = MyTokenObtainPairSerializer.get_token(user)
                 response = {
@@ -140,11 +148,13 @@ class LoginView(APIView):
                         'email': user.email,
                         'refresh_token': str(refresh),
                         'access_token': str(refresh.access_token),
+                        'access_expires': int(settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds()),
+                        'refresh_expires': int(settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'].total_seconds()),
                     },
                 }
                 return Response(response, status=status.HTTP_202_ACCEPTED)
             return Response({
-                'status': status.HTTP_400_BAD_REQUEST,
+                'status': status.HTTP_401_UNAUTHORIZED,
                 'message': 'Invalid data. Please enter again',
                 'data': {}
             })
@@ -218,3 +228,22 @@ class ChangePasswordView(GenericAPIView):
             })
         except Exception as e:
             print(e)
+
+
+class Logout(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        logout(request)
+        response = {
+            "status": status.HTTP_200_OK,
+            "data": "Logout successfully",
+            "detail": None
+        }
+        return Response(response, status=status.HTTP_204_NO_CONTENT)
+
+
+class EmployeeViewSet(viewsets.ModelViewSet):
+    queryset = Employee.objects.all()
+    permission_classes = [IsEmployeePermission, IsAuthenticated]
+    serializer_class = EmployeeSerializer
