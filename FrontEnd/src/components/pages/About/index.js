@@ -1,7 +1,7 @@
-
+import SpinnerLoading from '../../commons/SpinnerLoading' 
 function About() {
     return (
-      <p>About</p>
+      <SpinnerLoading loading={true}/>
     );
   }
   
