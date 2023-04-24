@@ -1,14 +1,17 @@
-import React from 'react';
-import { SyncLoader } from 'react-spinner';
+import { SyncLoader } from 'react-spinners';
 
-const SpinnerLoading = ({ loading, color = '#3689d6', size = 10 }) => {
+const SpinnerLoading = ({ loading }) => {
   return (
     loading && (
       <div className="spinner-container">
-        <SyncLoader color={color} size={size} loading={loading} />
+        <div className="spinner-overlay"></div>
+        <div className="spinner">
+          <SyncLoader color={'#3689d6'} size={12} margin={3} />
+        </div>
       </div>
     )
   );
 };
+
 
 export default SpinnerLoading;

@@ -12,6 +12,11 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['first_name'] = user.first_name
         token['last_name'] = user.last_name
         token['role'] = user.role
+        if user.role == 1:
+            avatar_url = User.objects.get(email=user.email).employee.avatar_url
+        else:
+            avatar_url = User.objects.get(email=user.email).recruiter.avatar_url
+        token['avatar_url'] = avatar_url
         return token
 
 
