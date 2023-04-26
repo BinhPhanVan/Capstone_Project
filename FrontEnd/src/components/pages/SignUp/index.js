@@ -7,11 +7,13 @@ import {
   FormControl,
 } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { signup } from "../../../store/AuthSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { selectIsLoading, signup } from "../../../store/AuthSlice";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import SpinnerLoading from "../../commons/SpinnerLoading";
 function SignUp() {
+  const loading = useSelector(selectIsLoading);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [first_name, setFirstName] = useState("");
@@ -41,6 +43,8 @@ function SignUp() {
   }, []);
   return (
     <div>
+      <SpinnerLoading loading={loading}/>
+      <div>
       <div className="signup-page">
         <div className="signup-container">
           <div className="form">
@@ -69,7 +73,6 @@ function SignUp() {
               <Form.Group
                 as={Row}
                 className="mb-1"
-                controlId="formHorizontalPassword"
               >
                 <Form.Label column sm={1}>
                   Information
@@ -77,7 +80,7 @@ function SignUp() {
                 <Col sm={20}>
                   <Row>
                     <Col sm={6}>
-                      <InputGroup>
+                      <InputGroup controlId="formHorizontalFirstName">
                         <FormControl 
                           value= {first_name}
                           onChange={(e) => setFirstName(e.target.value)}
@@ -85,7 +88,7 @@ function SignUp() {
                       </InputGroup>
                     </Col>
                     <Col sm={6}>
-                      <InputGroup>
+                      <InputGroup controlId="formHorizontalLastName">
                         <FormControl 
                           value= {last_name}
                           onChange={(e) => setLastName(e.target.value)}
@@ -128,6 +131,7 @@ function SignUp() {
           </div> */}
         </div>
       </div>
+    </div>
     </div>
   );
 }

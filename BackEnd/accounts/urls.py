@@ -11,7 +11,7 @@ router.register(r'employees', EmployeeViewSet)
 router.register(r'employee/register', RegisterViewSet, basename='user/register')
 urlpatterns = [
     path('api/token/', csrf_exempt(MyTokenObtainPairView.as_view()), name='token_obtain_pair'),
-    path('api/token/refresh/', csrf_exempt(TokenRefreshView.as_view()), name='token_refresh'),
+    path('api/token/refresh/', csrf_exempt(MyTokenRefreshView.as_view()), name='token_refresh'),
     path('employee/login/', csrf_exempt(LoginView.as_view()), name='login'),
     path('employee/forgot-password/', ForgotPasswordView.as_view(), name='forgot-password'),
     path('employee/change-password/', ChangePasswordView.as_view(), name='change-password'),

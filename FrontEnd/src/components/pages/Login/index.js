@@ -5,9 +5,11 @@ import { Form, Row, Col, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { login, selectAccount } from "../../../store/AuthSlice";
+import { login, selectAccount, selectIsLoading } from "../../../store/AuthSlice";
 import { useNavigate } from "react-router-dom";
+import SpinnerLoading from "../../commons/SpinnerLoading";
 function Login() {
+  const loading = useSelector(selectIsLoading);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
@@ -47,7 +49,6 @@ function Login() {
     <div>
       <div className="login-page">
         <div className="login-container">
-          
           <div className="form">
             <Form onSubmit={handle_submit}  className="login-form">
               <h1>Login HireIT</h1>
@@ -102,7 +103,7 @@ function Login() {
         </div>
       </div>
     </div>
-  ):<></>
+  ):<SpinnerLoading loading={loading}/>
 }
 
 export default Login;

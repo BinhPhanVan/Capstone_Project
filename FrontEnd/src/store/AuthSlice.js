@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import authService from "../api-service/authService";
 import { handleEmail } from "../utils/handleEmail";
+import jwtDecode from 'jwt-decode';
 export const login = createAsyncThunk(
   "users/login/                          ",
   async (user, { rejectWithValue }) => {
@@ -62,16 +63,31 @@ export const verify_email = createAsyncThunk(
       }
     }
 );
+const Information = (access_token) => {
+  if(access_token)
+  {
+    const decodedToken = jwtDecode(access_token);
+    return decodedToken;
+  }
+  return null; 
+}
 
 let accountString = null;
+let user = null;
 try {
   accountString = JSON.parse(localStorage.getItem("account"));
+  if(accountString !== null)
+  {
+    user = Information(accountString.access_token);
+  }
 } catch {}
 
 const initialState = {
-  user: null,
+  user: user,
+  full_name: "",
   account: accountString,
   verifyEmail: "",
+  isLoading: false,
 };
 const userSlice = createSlice({
   name: "auth",
@@ -79,6 +95,7 @@ const userSlice = createSlice({
   reducers: {
     setAccount: (state, action) => {
       state.account = action.payload;
+      state.user = Information(action.payload.access_token);
       localStorage.setItem("account", JSON.stringify(action.payload));
     },
     logout: (state) => {
@@ -91,24 +108,37 @@ const userSlice = createSlice({
     builder.addCase(login.fulfilled, (state, action) => {
       state.account = action.payload;
       localStorage.setItem("account", JSON.stringify(action.payload));
+      state.user = Information(action.payload.access_token);
+      state.isLoading = false;
+    });
+    builder.addCase(login.pending, (state, action) => {
+      state.isLoading = true;
     });
     builder.addCase(login.rejected, (state, action) => {
       if(action.payload.status === 406)
       {
-        console.log(action.payload);
         state.verifyEmail = action.payload.data.email;
       }
       state.account = null;
       state.user = null;
       localStorage.setItem("account", null);
+      state.isLoading = false;
     });
     builder.addCase(signup.fulfilled, (state, action) => {
       state.verifyEmail = action.payload.data.email;
+      state.isLoading = false;
+    });
+    builder.addCase(signup.pending, (state, action) => {
+      state.isLoading = true;
+    });
+    builder.addCase(signup.rejected, (state, action) => {
+      state.isLoading = false;
     });
     builder.addCase(verify_email.fulfilled, (state, action) => {
       state.account = action.payload.data;
       localStorage.setItem("account", JSON.stringify(action.payload.data));
       state.verifyEmail = action.payload.data.email;
+      state.user = Information(action.payload.data.access_token);
     });
     builder.addCase(verify_email.rejected, (state, action) => {
       state.account = null;
@@ -120,6 +150,7 @@ const userSlice = createSlice({
 });
 
 export const selectUser = (state) => state.auth.user;
+export const selectIsLoading = (state) => state.auth.isLoading;
 export const selectAccount = (state) => state.auth.account;
 export const selectAccessToken = (state) => state.auth.account.access_token;
 export const selectVerifyEmail = (state) => state.auth.verifyEmail;

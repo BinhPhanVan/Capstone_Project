@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework import status, permissions, viewsets, generics
 from rest_framework.views import APIView
 from django.conf import settings
+from rest_framework import authentication, permissions
 # Create your views here.
 from accounts.serializers import UserSerializer, VertifyEmailSerializer, LoginSerializer, \
     MyTokenObtainPairSerializer, ForgotPassWordSerializer, ChangePasswordSerializer
@@ -140,14 +141,14 @@ class LoginView(APIView):
                         'message': 'Account is not verified. Please try again',
                         'data': {'email': user.email}
                     })
-                refresh = MyTokenObtainPairSerializer.get_token(user)
+                serializer_token = MyTokenObtainPairSerializer.get_token(user)
                 response = {
                     "status": status.HTTP_202_ACCEPTED,
                     "message": "Login successful",
                     "data": {
                         'email': user.email,
-                        'refresh_token': str(refresh),
-                        'access_token': str(refresh.access_token),
+                        'refresh_token': str(serializer_token),
+                        'access_token': str(serializer_token.access_token),
                         'access_expires': int(settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds()),
                         'refresh_expires': int(settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'].total_seconds()),
                     },
@@ -160,6 +161,11 @@ class LoginView(APIView):
             })
         except Exception as e:
             print(e)
+            return Response({
+                'status': status.HTTP_401_UNAUTHORIZED,
+                'message': 'Invalid data. Please enter again',
+                'data': {}
+            })
 
 
 class ForgotPasswordView(APIView):
@@ -240,10 +246,41 @@ class Logout(APIView):
             "data": "Logout successfully",
             "detail": None
         }
-        return Response(response, status=status.HTTP_204_NO_CONTENT)
+        return Response(response, status=status.HTTP_200_OK)
+
+from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework_simplejwt.tokens import RefreshToken
+
+class MyTokenRefreshView(TokenRefreshView):
+    def post(self, request, *args, **kwargs):
+        try: 
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            
+            refresh = RefreshToken(request.data.get('refresh'))
+            response = {
+                "status": status.HTTP_200_OK,
+                "message": "Refresh successful",
+                "data": {
+                    'refresh_token': str(refresh),
+                    'access_token': str(refresh.access_token),
+                    'access_expires': int(settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds()),
+                    'refresh_expires': int(settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'].total_seconds()),
+                },
+            }
+            return Response(response, status=status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+            response = {
+                "status": status.HTTP_401_UNAUTHORIZED,
+                "message": "Refresh Failed",
+                "data": {
+                },
+            } 
+            return Response(response, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class EmployeeViewSet(viewsets.ModelViewSet):
-    queryset = Employee.objects.all()
+    queryset = Employee.objects.select_related('account')
     permission_classes = [IsEmployeePermission, IsAuthenticated]
     serializer_class = EmployeeSerializer
