@@ -148,6 +148,16 @@ EMAIL_HOST_PASSWORD = 'urcbipmjgbrcotbc'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 # DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+# Set Up Cloudinary
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
+cloudinary.config(
+    cloud_name="dq6avgw6n",
+    api_key="931798889427792",
+    api_secret="Q7MhjfNJ6UBf1RLdYNNsSmxwO38"
+)
 
 # Social app custom settings
 AUTHENTICATION_BACKENDS = [
