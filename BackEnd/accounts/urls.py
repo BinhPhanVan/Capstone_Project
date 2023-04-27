@@ -17,5 +17,6 @@ urlpatterns = [
     path('employee/change-password/', ChangePasswordView.as_view(), name='change-password'),
     path('employee/verify-email/', VerifyOTP.as_view(), name='verify-email'),
     path("employee/logout/", Logout.as_view(), name="logout"),
+    path('employee/pdf-upload/', UploadPDFView.as_view(), name='pdf_upload'),
 ]
 urlpatterns += router.urls

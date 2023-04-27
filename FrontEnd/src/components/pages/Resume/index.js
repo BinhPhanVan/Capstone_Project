@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Typography, IconButton } from "@material-ui/core";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { Document, Page, pdfjs} from "react-pdf";
@@ -28,6 +28,9 @@ function Resume() {
   const goToNextPage = () => {
     setPageNumber((prevPageNumber) => prevPageNumber + 1);
   };
+  useEffect(() => {
+    document.title = "Resume | Hire IT";
+  }, []);
 
   return (
   <div className="resume-container">

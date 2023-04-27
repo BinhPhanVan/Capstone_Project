@@ -14,7 +14,7 @@ from accounts.serializers import UserSerializer, VertifyEmailSerializer, LoginSe
     MyTokenObtainPairSerializer, ForgotPassWordSerializer, ChangePasswordSerializer
 from .email import send_opt_via_email, send_reset_password
 from .permissions import IsEmployeePermission
-from .serializers import EmployeeSerializer
+from .serializers import EmployeeSerializer, PDFFileSerializer
 from .utils import check_pass, same_pass
 from .models import User, Employee
 from django.contrib.auth import authenticate, login, logout
@@ -110,6 +110,12 @@ class VerifyOTP(APIView):
             })
         except Exception as e:
             print(e)
+            return Response({
+                'status': status.HTTP_400_BAD_REQUEST,
+                'message': 'Invalid data. Please enter again',
+                'data': serializer.errors
+            })
+            
 
 
 class LoginView(APIView):
@@ -155,14 +161,14 @@ class LoginView(APIView):
                 }
                 return Response(response, status=status.HTTP_202_ACCEPTED)
             return Response({
-                'status': status.HTTP_401_UNAUTHORIZED,
+                'status': status.HTTP_400_BAD_REQUEST,
                 'message': 'Invalid data. Please enter again',
                 'data': {}
             })
         except Exception as e:
             print(e)
             return Response({
-                'status': status.HTTP_401_UNAUTHORIZED,
+                'status': status.HTTP_400_BAD_REQUEST,
                 'message': 'Invalid data. Please enter again',
                 'data': {}
             })
@@ -195,6 +201,13 @@ class ForgotPasswordView(APIView):
             })
         except Exception as e:
             print(e)
+            response = {
+                "status": status.HTTP_401_UNAUTHORIZED,
+                "message": "Refresh Failed",
+                "data": {
+                },
+            } 
+            return Response(response, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class ChangePasswordView(GenericAPIView):
@@ -234,6 +247,13 @@ class ChangePasswordView(GenericAPIView):
             })
         except Exception as e:
             print(e)
+            response = {
+                "status": status.HTTP_401_UNAUTHORIZED,
+                "message": "Refresh Failed",
+                "data": {
+                },
+            } 
+            return Response(response, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class Logout(APIView):
@@ -284,3 +304,62 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     queryset = Employee.objects.select_related('account')
     permission_classes = [IsEmployeePermission, IsAuthenticated]
     serializer_class = EmployeeSerializer
+
+from rest_framework.parsers import MultiPartParser, FormParser
+import cloudinary.uploader
+
+class UploadPDFView(APIView):
+    queryset = Employee.objects.select_related('account')
+    permission_classes = [IsEmployeePermission, IsAuthenticated]
+    parser_classes = (MultiPartParser, FormParser)
+    @swagger_auto_schema(
+        request_body=PDFFileSerializer,
+        operation_description="Upload a PDF file",
+        responses={
+            200: "{'url': 'https://cloudinary.com/your_url'}",
+            400: "{'error': 'Invalid file format'}",
+        },
+    )
+    def post(self, request, *args, **kwargs):
+        try:
+            if 'pdf_file' not in request.FILES:
+                response = {
+                    "status": status.HTTP_400_BAD_REQUEST,
+                    "message": "No PDF file uploaded",
+                    "data": {},
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            pdf_file = request.FILES['pdf_file']
+            if pdf_file.name == '':
+                response = {
+                    "status": status.HTTP_400_BAD_REQUEST,
+                    "message": "Empty filename",
+                    "data": {},
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            if not pdf_file.name.endswith('.pdf'):
+                response = {
+                    "status": status.HTTP_400_BAD_REQUEST,
+                    "message": "Invalid file format",
+                    "data": {},
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            employee = Employee.objects.get(account_id=request.user.id)
+            uploaded_file = cloudinary.uploader.upload(pdf_file, access_mode="public")
+            print(uploaded_file['secure_url'])
+            # return Response({'url': uploaded_file['secure_url']}, status=200)
+            employee.pdf_file = uploaded_file['secure_url']
+            employee.save()
+            response = {
+                    "status": status.HTTP_200_OK,
+                    "message": "Upload sucessfully",
+                    "data": {},
+                }
+            return Response(response, status=status.HTTP_200_OK)
+        except Exception as e:
+            response = {
+                "status": status.HTTP_401_UNAUTHORIZED,
+                "message": "Upload Failed",
+                "data": {},
+            } 
+            return Response(response, status=status.HTTP_401_UNAUTHORIZED) 

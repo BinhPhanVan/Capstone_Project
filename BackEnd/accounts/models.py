@@ -41,6 +41,7 @@ class Employee(models.Model):
     account = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     avatar_url = models.CharField(null=True, max_length=1000, blank=True,
                                   default='https://e7.pngegg.com/pngimages/419/473/png-clipart-computer-icons-user-profile-login-user-heroes-sphere-thumbnail.png')
+    pdf_file = models.CharField(null=True, max_length=1000, blank=True, default=None)
 
     class Meta:
         db_table = 'Employee'

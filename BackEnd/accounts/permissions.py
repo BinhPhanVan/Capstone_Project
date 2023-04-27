@@ -6,7 +6,6 @@ from django.conf import settings
 class IsEmployeePermission(BasePermission):
     def has_permission(self, request, view):
         try:
-            print(request.user.role)
             if request.user.role == 1:
                 return True
             return False
@@ -18,7 +17,6 @@ class IsEmployeePermission(BasePermission):
 class IsRecruiterPermission(BasePermission):
     def has_permission(self, request, view):
         try:
-            print(request.user.role)
             if request.user.role == 2:
                 return True
             return False
