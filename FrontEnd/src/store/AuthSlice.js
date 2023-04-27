@@ -154,5 +154,5 @@ export const selectIsLoading = (state) => state.auth.isLoading;
 export const selectAccount = (state) => state.auth.account;
 export const selectAccessToken = (state) => state.auth.account.access_token;
 export const selectVerifyEmail = (state) => state.auth.verifyEmail;
-export const { logout} = userSlice.actions;
+export const { logout, setAccount} = userSlice.actions;
 export default userSlice.reducer;
