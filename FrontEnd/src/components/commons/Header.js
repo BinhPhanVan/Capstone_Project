@@ -7,14 +7,19 @@ import { NavLink } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css"; 
 import { BiMessageSquareDetail } from 'react-icons/bi';
 import { MdNotifications } from 'react-icons/md';
-import { selectUser } from "../../store/AuthSlice";
-import { useSelector } from "react-redux";
+import { logout, selectUser } from "../../store/AuthSlice";
+import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import AvatarImage from "./AvatarImage";
 function Header() {
   const user = useSelector(selectUser);
+  const dispatch = useDispatch();
   const full_name = user.first_name + " " + user.last_name;
   const [name, ] = useState(full_name ||"");
+  const handleLogout = (e) => {
+    e.preventDefault();
+    dispatch(logout());
+  }
   return (
     <Navbar collapseOnSelect expand="lg"  style={{backgroundColor: '#104271'}}>
       <Container className="navbar-text">
@@ -49,7 +54,7 @@ function Header() {
             <NavDropdown title={name} style={{color: "white"}}   id="collasible-nav-dropdown">
               <NavDropdown.Item className="header-custome-navbar-dropdown" as={NavLink} to="/profile">Profile</NavDropdown.Item>
               <NavDropdown.Divider />
-              <NavDropdown.Item className="header-custome-navbar-dropdown" as={NavLink} to="/logout" >
+              <NavDropdown.Item className="header-custome-navbar-dropdown" onClick={handleLogout}>
                 Logout
               </NavDropdown.Item>
             </NavDropdown>
