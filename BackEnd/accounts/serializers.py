@@ -71,5 +71,11 @@ class EmployeeSerializer(serializers.ModelSerializer):
         model = Employee
         fields = '__all__'
 
+class RecruiterSerializer(serializers.ModelSerializer):
+    account = UserSerializer(required=True)
+    class Meta:
+        model = Recruiter
+        fields = '__all__'
+
 class PDFFileSerializer(serializers.Serializer):
     pdf_file = serializers.FileField(validators=[FileExtensionValidator(['pdf'])])

@@ -18,5 +18,6 @@ urlpatterns = [
     path('employee/verify-email/', VerifyOTP.as_view(), name='verify-email'),
     path("employee/logout/", Logout.as_view(), name="logout"),
     path('employee/pdf-upload/', UploadPDFView.as_view(), name='pdf_upload'),
+    path('user/get-information/', GetInformation.as_view(), name='pdf_upload'),
 ]
 urlpatterns += router.urls
