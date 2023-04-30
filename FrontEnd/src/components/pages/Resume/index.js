@@ -4,14 +4,29 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { Document, Page, pdfjs} from "react-pdf";
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+import { useDispatch, useSelector } from "react-redux";
+import { selectIsLoading, upload_resume } from "../../../store/ResumeSlice";
+import { toast } from "react-toastify";
+import SpinnerLoading from "../../commons/SpinnerLoading";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 function Resume() {
+  const loading = useSelector(selectIsLoading);
   const [file, setFile] = useState(null);
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
-
+  const dispatch = useDispatch();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const actionResult = await dispatch(upload_resume(file));
+    if (upload_resume.fulfilled.match(actionResult)) {
+      toast.success(actionResult.payload.message);
+    }
+    if (upload_resume.rejected.match(actionResult)) {
+        toast.error(actionResult.payload.message);
+    }
+  };
   const handleFileUpload = (event) => {
     setFile(event.target.files[0]);
     setPageNumber(1);
@@ -33,7 +48,10 @@ function Resume() {
   }, []);
 
   return (
-  <div className="resume-container">
+  <div>
+    <SpinnerLoading loading={loading}/>
+    <div className="resume-container">
+    <form onSubmit={handleSubmit} className="resume-form-container">
       <input
         id="contained-button-file"
         type="file"
@@ -92,10 +110,13 @@ function Resume() {
         {file && <Button 
           className="resume-button submit-button"
           variant="contained"
+          type="submit"  
         >
           Submit
         </Button>}
       </label>
+      </form>
+  </div>
   </div>
   );
 }
