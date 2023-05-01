@@ -6,13 +6,15 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import { NavLink } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css"; 
 import { BiMessageSquareDetail } from 'react-icons/bi';
+import {  RiProfileLine } from 'react-icons/ri';
 import { MdNotifications } from 'react-icons/md';
-import { logout, selectUser } from "../../store/AuthSlice";
+import { logout, selectIsAdmin, selectUser } from "../../store/AuthSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import AvatarImage from "./AvatarImage";
 function Header() {
   const user = useSelector(selectUser);
+  const isAdmin = useSelector(selectIsAdmin);
   const dispatch = useDispatch();
   const full_name = user.first_name + " " + user.last_name;
   const [name, ] = useState(full_name ||"");
@@ -35,7 +37,9 @@ function Header() {
             <Nav.Link as={NavLink} to="/about" className="navbar-text">About</Nav.Link>
           </Nav>
           <Nav>
-            <Nav.Link as={NavLink} to="/resume" className="navbar-text" >My resume</Nav.Link>
+            { 
+              !isAdmin && <Nav.Link as={NavLink} to="/resume" className="navbar-text" ><RiProfileLine size={24}/></Nav.Link>
+            }
             <Nav.Link eventKey={2} as={NavLink} to="/contact" className="navbar-text">
               <BiMessageSquareDetail size={24}/>
               <div className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">

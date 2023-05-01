@@ -8,15 +8,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectIsLoading, upload_resume } from "../../../store/ResumeSlice";
 import { toast } from "react-toastify";
 import SpinnerLoading from "../../commons/SpinnerLoading";
+import { get_information, selectUserInfo } from "../../../store/UserSlice";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
-function Resume() {
+const Resume = () => {
+  const dispatch = useDispatch();
   const loading = useSelector(selectIsLoading);
-  const [file, setFile] = useState(null);
+  const user_info = useSelector(selectUserInfo);
+  const [file, setFile] = useState(user_info.pdf_file == null ? null : user_info.pdf_file );
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
-  const dispatch = useDispatch();
   const handleSubmit = async (e) => {
     e.preventDefault();
     const actionResult = await dispatch(upload_resume(file));
@@ -45,7 +47,8 @@ function Resume() {
   };
   useEffect(() => {
     document.title = "Resume | Hire IT";
-  }, []);
+    dispatch(get_information());
+  }, [dispatch]);
 
   return (
   <div>

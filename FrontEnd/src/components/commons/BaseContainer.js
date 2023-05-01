@@ -2,13 +2,17 @@ import { Outlet } from "react-router-dom";
 import Footer from "./Footer";
 import Header from "./Header";
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectAccount } from "../../store/AuthSlice";
 import { useNavigate } from "react-router-dom";
+import { get_information } from "../../store/UserSlice";
 function BaseContainer() {
   const navigate = useNavigate();
   const account = useSelector(selectAccount);
-
+  const dispatch = useDispatch();
+  useEffect(() => {
+      dispatch(get_information());
+  }, [dispatch]);
   useEffect(() => {
       document.title = "Home | Hire IT";
     }, []);

@@ -88,6 +88,7 @@ const initialState = {
   account: accountString,
   verifyEmail: "",
   isLoading: false,
+  isAdmin: Information(accountString.access_token).role === 2,
 };
 const userSlice = createSlice({
   name: "auth",
@@ -96,11 +97,13 @@ const userSlice = createSlice({
     setAccount: (state, action) => {
       state.account = action.payload;
       state.user = Information(action.payload.access_token);
+      state.isAdmin = Information(action.payload.access_token).role === 2;
       localStorage.setItem("account", JSON.stringify(action.payload));
     },
     logout: (state) => {
       state.account = null;
       state.user = null;
+      state.isAdmin = false;
       localStorage.setItem("account", null);
     },
   },
@@ -109,6 +112,7 @@ const userSlice = createSlice({
       state.account = action.payload;
       localStorage.setItem("account", JSON.stringify(action.payload));
       state.user = Information(action.payload.access_token);
+      state.isAdmin = Information(action.payload.access_token).role === 2;
       state.isLoading = false;
     });
     builder.addCase(login.pending, (state, action) => {
@@ -121,6 +125,7 @@ const userSlice = createSlice({
       }
       state.account = null;
       state.user = null;
+      state.isAdmin = false;
       localStorage.setItem("account", null);
       state.isLoading = false;
     });
@@ -139,6 +144,7 @@ const userSlice = createSlice({
       localStorage.setItem("account", JSON.stringify(action.payload.data));
       state.verifyEmail = action.payload.data.email;
       state.user = Information(action.payload.data.access_token);
+      state.isAdmin = Information(action.payload.access_token).role === 2;
     });
     builder.addCase(verify_email.rejected, (state, action) => {
       state.account = null;
@@ -154,5 +160,6 @@ export const selectIsLoading = (state) => state.auth.isLoading;
 export const selectAccount = (state) => state.auth.account;
 export const selectAccessToken = (state) => state.auth.account.access_token;
 export const selectVerifyEmail = (state) => state.auth.verifyEmail;
+export const selectIsAdmin = (state) => state.auth.isAdmin;
 export const { logout, setAccount} = userSlice.actions;
 export default userSlice.reducer;
