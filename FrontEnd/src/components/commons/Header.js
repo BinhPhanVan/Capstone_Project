@@ -6,7 +6,8 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import { NavLink } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css"; 
 import { BiMessageSquareDetail } from 'react-icons/bi';
-import {  RiProfileLine } from 'react-icons/ri';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import ContentPasteSearchIcon from '@mui/icons-material/ContentPasteSearch';
 import { MdNotifications } from 'react-icons/md';
 import { logout, selectIsAdmin, selectUser } from "../../store/AuthSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,7 +24,7 @@ function Header() {
     dispatch(logout());
   }
   return (
-    <Navbar collapseOnSelect expand="lg"  style={{backgroundColor: '#104271'}}>
+    <Navbar collapseOnSelect expand="lg">
       <Container className="navbar-text">
         <Navbar.Brand href="/home" className="logo-navbar-brand">
         </Navbar.Brand>
@@ -38,8 +39,11 @@ function Header() {
           </Nav>
           <Nav>
             { 
-              !isAdmin && <Nav.Link as={NavLink} to="/resume" className="navbar-text" ><RiProfileLine size={24}/></Nav.Link>
+              !isAdmin && <Nav.Link as={NavLink} to="/resume" className="navbar-text" ><PictureAsPdfIcon/></Nav.Link>
             }
+            <Nav.Link eventKey={2} as={NavLink} to="/find" className="navbar-text">
+              <ContentPasteSearchIcon/>
+            </Nav.Link>
             <Nav.Link eventKey={2} as={NavLink} to="/contact" className="navbar-text">
               <BiMessageSquareDetail size={24}/>
               <div className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
