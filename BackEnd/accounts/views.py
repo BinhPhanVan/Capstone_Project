@@ -15,9 +15,9 @@ from accounts.serializers import UserSerializer, VertifyEmailSerializer, LoginSe
     MyTokenObtainPairSerializer, ForgotPassWordSerializer, ChangePasswordSerializer
 from .email import send_opt_via_email, send_reset_password
 from .permissions import IsEmployeePermission, IsRecruiterPermission
-from .serializers import EmployeeSerializer, PDFFileSerializer, RecruiterSerializer
-from .utils import check_pass, same_pass
-from .models import Recruiter, User, Employee
+from .serializers import EmployeeSerializer, ExtractCVGetAll, JobRequirementGetAll, JobRequirementSerializer, PDFFileSerializer, RecruiterSerializer
+from .utils import check_pass, extract_location, extract_phone_number, extract_skills, extract_text_from_pdf, same_pass
+from .models import ExtractCV, JobRequirement, Recruiter, User, Employee
 from django.contrib.auth import authenticate, login, logout
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.shortcuts import get_object_or_404
@@ -389,6 +389,10 @@ class GetInformation(generics.GenericAPIView):
         user_type = 'employee' if self.request.user.role == 1 else 'recruiter'
         permission_classes = self.permission_classes_map.get(self.request.method, {}).get(user_type, [])
         return [permission() for permission in permission_classes]
+    
+    def get_serializer_class(self):
+        user_type = 'employee' if self.request.user.role == 1 else 'recruiter'
+        return self.serializer_class_map.get(self.request.method, {}).get(user_type)
 
     def get(self, request, *args, **kwargs):
         try:
@@ -412,3 +416,128 @@ class GetInformation(generics.GenericAPIView):
                 "data": {},
             } 
             return Response(response, status=status.HTTP_401_UNAUTHORIZED) 
+
+class ExtractCVView(GenericAPIView):
+    permission_classes = [IsEmployeePermission, IsAuthenticated]
+    serializer_class = EmployeeSerializer
+    def get(self, request, *args, **kwargs):
+        try:
+            user_id = request.user.id
+            employee = Employee.objects.get(account_id = user_id)
+            text = extract_text_from_pdf(employee.pdf_file)
+            location = extract_location(text)
+            phone_number = extract_phone_number(text)
+            skills = extract_skills(text)
+            if ExtractCV.objects.filter(employee=employee).exists():
+                extract_cv = ExtractCV.objects.get(employee=employee)
+                extract_cv.phone_number = phone_number
+                extract_cv.location = location
+                extract_cv.skills = skills
+                extract_cv.save()
+            else:
+                extract_cv = ExtractCV.objects.create(
+                    employee=employee,
+                    phone_number=phone_number,
+                    location=location,
+                    skills=skills
+                )
+            response = {
+                "status": status.HTTP_200_OK,
+                "message": "Turned on sucessfully.",
+                "data": extract_cv.skills,
+            } 
+            return Response(response, status=status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+            response = {
+                "status": status.HTTP_401_UNAUTHORIZED,
+                "message": "Turned on Failed",
+                "data": {},
+            } 
+            return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+
+class UploadJobView(generics.GenericAPIView):
+    serializer_class = JobRequirementSerializer
+    permission_classes = [IsRecruiterPermission, IsAuthenticated]
+    @swagger_auto_schema(
+        request_body=JobRequirementSerializer,
+        operation_description="Create a job requirement",
+        responses={
+            201: JobRequirementSerializer,
+            400: "{'error': 'Bad request'}",
+            401: "{'error': 'Unauthorized'}",
+        },
+    )
+    def post(self, request, *args, **kwargs):
+        try:
+            serializer = self.get_serializer(data=request.data)
+            if serializer.is_valid():
+                location = request.data['location']
+                job_name = request.data['job_name']
+                if 'pdf_file' not in request.FILES:
+                    response = {
+                        "status": status.HTTP_400_BAD_REQUEST,
+                        "message": "No PDF file uploaded",
+                        "data": {},
+                    }
+                    return Response(response, status=status.HTTP_400_BAD_REQUEST)
+                pdf_file = request.FILES['pdf_file']
+                if pdf_file.name == '':
+                    response = {
+                        "status": status.HTTP_400_BAD_REQUEST,
+                        "message": "Empty filename",
+                        "data": {},
+                    }
+                    return Response(response, status=status.HTTP_400_BAD_REQUEST)
+                if not pdf_file.name.endswith('.pdf'):
+                    response = {
+                        "status": status.HTTP_400_BAD_REQUEST,
+                        "message": "Invalid file format",
+                        "data": {},
+                    }
+                    return Response(response, status=status.HTTP_400_BAD_REQUEST)
+                user_id = request.user.id
+                recruiter = Recruiter.objects.get(account_id = user_id)
+                uploaded_file = cloudinary.uploader.upload(pdf_file, access_mode="public")
+                text = extract_text_from_pdf(uploaded_file['secure_url'])
+                skills = extract_skills(text)
+                job_req = JobRequirement.objects.create(
+                        recruiter=recruiter,
+                        job_name=job_name,
+                        location=location,
+                        skills=skills,
+                        active=True,
+                        pdf_upload=uploaded_file['secure_url']
+                    )
+                job_req.save()
+                response = {
+                    "status": status.HTTP_201_CREATED,
+                    "message": "Create job successfully",
+                    "data": serializer.data,
+                }
+                return Response(response, status=status.HTTP_201_CREATED)
+            else:
+                response = {
+                    "status": status.HTTP_400_BAD_REQUEST,
+                    "message": "Create job failed",
+                    "data": serializer.errors,
+                }
+                return Response(response, status= status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            print(e)
+            response = {
+                "status": status.HTTP_401_UNAUTHORIZED,
+                "message": "Create job Failed",
+                "data": {},
+            } 
+            return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+
+class JobRequirementListAPIView(generics.ListAPIView):
+    queryset = JobRequirement.objects.filter(active=True)
+    serializer_class = JobRequirementGetAll
+
+class GetAllCandidateListAPIView(generics.ListAPIView):
+    queryset = ExtractCV.objects.filter(active=True)
+    serializer_class = ExtractCVGetAll
+    
+    
