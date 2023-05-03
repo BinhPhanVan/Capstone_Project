@@ -62,3 +62,18 @@ class Recruiter(models.Model):
 
     def __str__(self):
         return self.account.first_name + ' ' + self.account.last_name
+
+class ExtractCV(models.Model):
+    employee = models.OneToOneField(Employee, on_delete=models.CASCADE, primary_key=True)
+    phone_number = models.CharField(null=True, blank=True, max_length=12)
+    location = models.CharField(null=True, blank=True, max_length=100)
+    skills = models.TextField()
+    active = models.BooleanField(default=True)
+    
+class JobRequirement(models.Model):
+    recruiter = models.ForeignKey(Recruiter, on_delete=models.CASCADE)
+    job_name = models.CharField(max_length=255)
+    location = models.CharField(null=True, blank=True, max_length=100)
+    pdf_upload = models.CharField(null=True, max_length=1000, blank=True, default=None)
+    skills = models.TextField(null=True, blank=True)
+    active = models.BooleanField(default=True)
