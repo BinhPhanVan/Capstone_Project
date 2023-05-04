@@ -24,7 +24,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['email', 'first_name', 'last_name', 'role']
+        fields = ['email', 'password', 'first_name', 'last_name', 'role']
 
     extra_kwargs = {
         'password': {
