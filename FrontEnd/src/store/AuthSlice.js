@@ -78,7 +78,7 @@ try {
   accountString = JSON.parse(localStorage.getItem("account"));
   if(accountString !== null)
   {
-    user = Information(accountString.access_token);
+    user = Information(accountString?.access_token);
   }
 } catch {}
 
@@ -88,7 +88,7 @@ const initialState = {
   account: accountString,
   verifyEmail: "",
   isLoading: false,
-  isAdmin: Information(accountString.access_token).role === 2,
+  isAdmin: Information(accountString?.access_token)?.role === 2,
 };
 const userSlice = createSlice({
   name: "auth",
@@ -96,8 +96,8 @@ const userSlice = createSlice({
   reducers: {
     setAccount: (state, action) => {
       state.account = action.payload;
-      state.user = Information(action.payload.access_token);
-      state.isAdmin = Information(action.payload.access_token).role === 2;
+      state.user = Information(accountString?.access_token)?.role;
+      state.isAdmin = Information(accountString?.access_token)?.role === 2;
       localStorage.setItem("account", JSON.stringify(action.payload));
     },
     logout: (state) => {
@@ -111,8 +111,8 @@ const userSlice = createSlice({
     builder.addCase(login.fulfilled, (state, action) => {
       state.account = action.payload;
       localStorage.setItem("account", JSON.stringify(action.payload));
-      state.user = Information(action.payload.access_token);
-      state.isAdmin = Information(action.payload.access_token).role === 2;
+      state.user = Information(accountString?.access_token)?.role;
+      state.isAdmin = Information(accountString?.access_token)?.role === 2;
       state.isLoading = false;
     });
     builder.addCase(login.pending, (state, action) => {
@@ -143,8 +143,8 @@ const userSlice = createSlice({
       state.account = action.payload.data;
       localStorage.setItem("account", JSON.stringify(action.payload.data));
       state.verifyEmail = action.payload.data.email;
-      state.user = Information(action.payload.data.access_token);
-      state.isAdmin = Information(action.payload.access_token).role === 2;
+      state.user = Information(accountString?.access_token)?.role;
+      state.isAdmin = Information(accountString?.access_token)?.role === 2;
     });
     builder.addCase(verify_email.rejected, (state, action) => {
       state.account = null;
