@@ -1,0 +1,70 @@
+.searchjob-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 3rem !important;
+    margin-bottom: 2rem !important;
+    .MuiPaper-root .MuiMenu-paper .MuiPopover-paper{
+        max-height: 300px !important;
+    }
+    .MuiList-root{
+        margin-top: 2rem;
+        width: 60vw;
+    }
+    // Job Item
+    .btn-container{
+        display: flex;
+        justify-content : flex-end;
+        align-items: center;
+        .btn-apply 
+        {
+            margin-right: 2rem;
+        }
+        .btn-apply:hover, 
+        .btn-message:hover {
+            & ~ .jobitem-container {
+                background-color: #dee3e3;
+            }
+        }
+
+    }
+    .jobitem-container:hover {
+        background-color: #dee3e3;
+        cursor: pointer;
+        transform: scale(1.05);
+    }
+    .jobitem-container{
+        width: 100%;
+        border-radius: 10px;
+        transition: all 0.3s ease-in-out;
+        font-family: bitter-text;
+        .skill-text, .company-loc-text {
+            width: 50%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #999;
+        }
+        .jobitem-content{
+            width: 100%;
+        }
+    }
+}
+  
+.searchjob-form-container {
+    width: 600px;
+    margin: 0 auto;
+}
+@media (max-width: 950px) {
+    .searchjob-form-container {
+        width: 300px;
+    }
+}
+@media (max-width: 700px) {
+    .searchjob-form-container {
+        width: 250px;
+    }
+    .skill-text, .company-loc-text {
+        width: 20px;
+    }
+}
