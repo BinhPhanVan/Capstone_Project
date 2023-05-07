@@ -43,4 +43,5 @@ const userSlice = createSlice({
 });
 export const selectIsLoading = (state) => state.user.isLoading;
 export const selectUserInfo = (state) => state.user.user_infor;
+export const selectFile = (state) => state.user.file;
 export default userSlice.reducer;

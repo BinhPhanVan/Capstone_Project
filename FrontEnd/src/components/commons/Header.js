@@ -13,8 +13,10 @@ import { logout, selectIsAdmin, selectUser } from "../../store/AuthSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import AvatarImage from "./AvatarImage";
+import { selectFile } from "../../store/UserSlice";
 function Header() {
   const user = useSelector(selectUser);
+  const file = useSelector(selectFile);
   const isAdmin = useSelector(selectIsAdmin);
   const dispatch = useDispatch();
   const full_name = user.first_name + " " + user.last_name;
@@ -41,9 +43,9 @@ function Header() {
             { 
               !isAdmin && <Nav.Link as={NavLink} to="/resume" className="navbar-text" ><PictureAsPdfIcon/></Nav.Link>
             }
-            <Nav.Link eventKey={2} as={NavLink} to="/find" className="navbar-text">
-              <ContentPasteSearchIcon/>
-            </Nav.Link>
+            {
+              file && <Nav.Link as={NavLink} to="jobs/turn-on" className="navbar-text" ><ContentPasteSearchIcon/></Nav.Link>
+            }
             <Nav.Link eventKey={2} as={NavLink} to="/contact" className="navbar-text">
               <BiMessageSquareDetail size={24}/>
               <div className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
