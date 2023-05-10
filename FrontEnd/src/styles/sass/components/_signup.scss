@@ -14,7 +14,14 @@
         font-size: 1.5 rem;
         margin-bottom: 40px;
     }
-
+    .recruiter-signup-form{
+        width: 600px !important;
+    } 
+    .recruiter-signup-form label
+    {
+        width: 100%;
+        text-align: left !important;
+    }
     .signup-form{
         width: 450px;
         background-color: #fff;
@@ -113,11 +120,21 @@
     {
         width: 400px !important;
     }
+    .recruiter-signup-form{
+        width: 400px !important;
+    }
 }
-@media (max-width: 500px) {
+@media (max-width: 600px) {
     .signup-form
     {
         width: 300px !important;
+    }
+    .recruiter-signup-form{
+        width: 300px !important;
+    }
+    .signup-container 
+    {
+        height: auto;
     }
 }
 

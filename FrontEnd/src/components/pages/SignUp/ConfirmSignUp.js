@@ -39,7 +39,7 @@ function ConfirmSignUp() {
               <Form.Group
                 as={Row}
                 className="mb-3"
-                controlId="formHorizontalEmail"
+                controlid="formHorizontalEmail"
               >
                 <Form.Label column sm={2}>
                   Email
@@ -59,7 +59,7 @@ function ConfirmSignUp() {
               <Form.Group
                 as={Row}
                 className="mb-3"
-                controlId="formHorizontalPassword"
+                controlid="formHorizontalPassword"
               >
                 <Form.Label column sm={2}>
                   OTP

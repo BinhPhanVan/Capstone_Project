@@ -2,7 +2,6 @@
 import './App.css';
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import Login from './components/pages/Login';
-import SignUp from './components/pages/SignUp';
 import Home from './components/pages/Home';
 import About from './components/pages/About';
 import Resume from './components/pages/Resume';
@@ -13,6 +12,10 @@ import Profile from './components/pages/Profile';
 import TurnOnJob from './components/pages/Jobs/TurnOnJob';
 import SearchJob from './components/pages/Jobs/SearchJob';
 import SearchCandidate from './components/pages/Candidates/SearchCandidate';
+import DevideSignUp from './components/pages/SignUp/DevideSignUp';
+import CandidateSignUp from './components/pages/SignUp/CandidateSignUp';
+import RecruiterSignUp from './components/pages/SignUp/RecruiterSignUp';
+import SignUp from './components/pages/SignUp';
 function App() {
   return (
     <BrowserRouter>
@@ -32,7 +35,11 @@ function App() {
             </Route>
           </Route>
           <Route path="login" element={<Login />} />
-          <Route path="signup" element={<SignUp />} />
+          <Route path="register" element={<SignUp />}>
+            <Route path="" element={<DevideSignUp />} />
+            <Route path="candidate" element={<CandidateSignUp />} />
+            <Route path="recruiter" element={<RecruiterSignUp />} />
+          </Route>
           <Route path="confirmSignUp" element={<ConfirmSignUp />}></Route>
           <Route path="*" element={<NotFound />} />
       </Routes>

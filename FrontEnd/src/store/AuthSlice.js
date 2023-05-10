@@ -44,6 +44,33 @@ export const signup = createAsyncThunk(
     }
 );
 
+export const recruiter_signup = createAsyncThunk(
+  "recruiters/register",
+  async (account, { rejectWithValue }) => {
+    try {
+      const data = {
+        "company_name": account['company_name'],
+        "address": account['address'],
+        "account": {
+          "email": account['email'],
+          "password": account['password'],
+          "first_name": account['first_name'],
+          "last_name": account['last_name'],
+          "role": 2
+        }
+      }
+      const res = await authService.recruiter_signup(data);
+      if (handleEmail(res.data.email) && res.status === 200) {
+        return res;
+      } else {
+        return rejectWithValue(res.message);
+      }
+    } catch (error) {
+        return rejectWithValue("Sign up Fail");
+      }
+    }
+);
+
 export const verify_email = createAsyncThunk(
   "users/confirm_email",
   async (account, { rejectWithValue }) => {
@@ -137,6 +164,16 @@ const userSlice = createSlice({
       state.isLoading = true;
     });
     builder.addCase(signup.rejected, (state, action) => {
+      state.isLoading = false;
+    });
+    builder.addCase(recruiter_signup.fulfilled, (state, action) => {
+      state.verifyEmail = action.payload.data.email;
+      state.isLoading = false;
+    });
+    builder.addCase(recruiter_signup.pending, (state, action) => {
+      state.isLoading = true;
+    });
+    builder.addCase(recruiter_signup.rejected, (state, action) => {
       state.isLoading = false;
     });
     builder.addCase(verify_email.fulfilled, (state, action) => {
