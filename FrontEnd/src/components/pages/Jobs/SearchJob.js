@@ -123,7 +123,7 @@ function SearchJob() {
           </Select>
         </FormControl>
       </Grid>
-      <ListJob jobs={filteredJobs} />;
+      <ListJob jobs={filteredJobs} />
     </Grid>
   );
 }

@@ -12,6 +12,7 @@ import BaseContainer from './components/commons/BaseContainer';
 import Profile from './components/pages/Profile';
 import TurnOnJob from './components/pages/Jobs/TurnOnJob';
 import SearchJob from './components/pages/Jobs/SearchJob';
+import SearchCandidate from './components/pages/Candidates/SearchCandidate';
 function App() {
   return (
     <BrowserRouter>
@@ -25,6 +26,9 @@ function App() {
             <Route path="jobs" element={<SearchJob />}>
               <Route path="turn-on" element={<TurnOnJob />} />
               <Route path="search" element={<SearchJob />} />
+            </Route>
+            <Route path="candidates" element={<SearchCandidate />}>
+              <Route path="search" element={<SearchCandidate />} />
             </Route>
           </Route>
           <Route path="login" element={<Login />} />
