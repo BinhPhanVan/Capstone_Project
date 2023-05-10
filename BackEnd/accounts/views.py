@@ -15,7 +15,7 @@ from accounts.serializers import UserSerializer, VertifyEmailSerializer, LoginSe
     MyTokenObtainPairSerializer, ForgotPassWordSerializer, ChangePasswordSerializer
 from .email import send_opt_via_email, send_reset_password
 from .permissions import IsEmployeePermission, IsRecruiterPermission
-from .serializers import EmployeeSerializer, ExtractCVGetAll, JobRequirementGetAll, JobRequirementSerializer, PDFFileSerializer, RecruiterSerializer
+from .serializers import EmployeeSerializer, ExtractCVGetAll, JobRequirementGetAll, JobRequirementSerializer, PDFFileSerializer, RecruiterRegisterSerializer, RecruiterSerializer
 from .utils import check_pass, extract_location, extract_phone_number, extract_skills, extract_text_from_pdf, same_pass
 from .models import ExtractCV, JobRequirement, Recruiter, User, Employee
 from django.contrib.auth import authenticate, login, logout
@@ -42,6 +42,43 @@ class RegisterViewSet(viewsets.ViewSet, generics.CreateAPIView):
                         'status': status.HTTP_200_OK,
                         'message': 'Register successfully. Please check your email',
                         'data': serializer.data,
+                    })
+                return Response({
+                    'status': status.HTTP_400_BAD_REQUEST,
+                    'message': 'Data invalid. Please enter again',
+                    'data': serializer.errors
+                })
+            else:
+                return Response({
+                    'status': status.HTTP_400_BAD_REQUEST,
+                    'message': 'This account already exists',
+                    'data': {}
+                })
+        except Exception as e:
+            return Response({
+                'status': status.HTTP_400_BAD_REQUEST,
+                'message': 'Data invalid. Please enter again',
+                'data': serializer.errors
+            })
+
+class RecruiterRegisterViewSet(viewsets.ViewSet, generics.CreateAPIView):
+    queryset = Recruiter.objects.all()
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = RecruiterRegisterSerializer
+
+    def create(self, request, *args, **kwargs):
+        try:
+            user = request.data.get('account')
+            if not User.objects.filter(email=user['email']).exists():
+                serializer = self.get_serializer(data=request.data)
+                if serializer.is_valid(raise_exception=True):
+                    account = serializer.save()
+                    send_opt_via_email(user['email'])
+                    serialized_user = UserSerializer(data=user)
+                    return Response({
+                        'status': status.HTTP_200_OK,
+                        'message': 'Register successfully. Please check your email',
+                        'data': user
                     })
                 return Response({
                     'status': status.HTTP_400_BAD_REQUEST,

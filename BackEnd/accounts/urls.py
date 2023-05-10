@@ -9,6 +9,7 @@ app_name = "Account"
 router = routers.DefaultRouter()
 router.register(r'employees', EmployeeViewSet)
 router.register(r'employee/register', RegisterViewSet, basename='user/register')
+router.register(r'recruiter/register', RecruiterRegisterViewSet, basename='recruiter/register')
 urlpatterns = [
     path('api/token/', csrf_exempt(MyTokenObtainPairView.as_view()), name='token_obtain_pair'),
     path('api/token/refresh/', csrf_exempt(MyTokenRefreshView.as_view()), name='token_refresh'),
