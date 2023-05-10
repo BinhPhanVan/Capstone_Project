@@ -45,6 +45,32 @@ class UserSerializer(serializers.ModelSerializer):
             recruiter.save()
         return account
 
+class RecruiterRegisterSerializer(serializers.ModelSerializer):
+    account = UserSerializer(required=True)
+    class Meta:
+        model = Recruiter
+        fields = ['company_name', 'address', 'account']
+
+    extra_kwargs = {
+        'password': {
+            'write_only': True
+        }
+    }
+
+    def create(self, validated_data):
+        data = validated_data['account']
+        account = User.objects.create(**data)
+        account.password = make_password(data['password'])
+        account.save()
+        if data['role'] == 1:
+            employee = Employee.objects.create(account=account)
+            employee.save()
+        elif data['role'] == 2:
+            recruiter = Recruiter.objects.create(
+                account=account, company_name = validated_data['company_name'] ,address = validated_data['address'])
+            recruiter.save()
+        return account
+
 
 class VertifyEmailSerializer(serializers.Serializer):
     email = serializers.EmailField()
