@@ -94,7 +94,7 @@ function Login() {
                 </Col>
               </Form.Group>
               <p> You haven't account?  
-                <Link className="signup-link" to="/signup">
+                <Link className="signup-link" to="/register">
                   Sign Up
                 </Link>
               </p>

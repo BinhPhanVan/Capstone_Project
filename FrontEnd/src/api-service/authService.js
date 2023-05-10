@@ -14,6 +14,11 @@ const signup = async (account) => {
     return res;
 };
 
+const recruiter_signup = async (data) => {
+    const res = await httpRequest.post("recruiter/register/", data);
+    return res;
+};
+
 const verify_email = async (email, otp) => {
     const res = await httpRequest.post("employee/verify-email/", {
         email,
@@ -22,6 +27,6 @@ const verify_email = async (email, otp) => {
     return res;
 };
 
-const authService = {login, signup, verify_email};
+const authService = {login, signup, verify_email, recruiter_signup};
 
 export default authService;
