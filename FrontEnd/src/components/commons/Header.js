@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import AvatarImage from "./AvatarImage";
 import { selectFile } from "../../store/UserSlice";
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 function Header() {
   const user = useSelector(selectUser);
   const file = useSelector(selectFile);
@@ -45,7 +46,9 @@ function Header() {
             }
             {
               file && <Nav.Link as={NavLink} to="jobs/turn-on" className="navbar-text" ><ContentPasteSearchIcon/></Nav.Link>
+
             }
+            <Nav.Link as={NavLink} to="candidates/search" className="navbar-text" ><AssignmentIndIcon/></Nav.Link>
             <Nav.Link eventKey={2} as={NavLink} to="/contact" className="navbar-text">
               <BiMessageSquareDetail size={24}/>
               <div className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">

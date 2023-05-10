@@ -1,4 +1,4 @@
-.searchjob-container {
+.search_candidate-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -6,6 +6,10 @@
     margin-bottom: 2rem !important;
     .MuiPaper-root .MuiMenu-paper .MuiPopover-paper{
         max-height: 300px !important;
+    }
+    .MuiListItem-secondaryAction 
+    {
+        margin-right: 0 !important;
     }
     .MuiList-root{
         margin-top: 2rem;
@@ -15,7 +19,7 @@
     {
         padding-right: 1rem !important;
     }
-    // Job Item
+    // Candidate Item
     .btn-container{
         display: flex;
         justify-content : flex-end;
@@ -26,18 +30,18 @@
         }
         .btn-apply:hover, 
         .btn-message:hover {
-            & ~ .jobitem-container {
+            & ~ .candidate_item-container {
                 background-color: #dee3e3;
             }
         }
 
     }
-    .jobitem-container:hover {
+    .candidate_item-container:hover {
         background-color: #dee3e3;
         cursor: pointer;
         transform: scale(1.05);
     }
-    .jobitem-container{
+    .candidate_item-container{
         width: 100%;
         border-radius: 10px;
         transition: all 0.3s ease-in-out;
@@ -49,26 +53,41 @@
             text-overflow: ellipsis;
             color: #999;
         }
-        .jobitem-content{
+        .candidate_item-content{
             width: 100%;
+            margin-left: 1rem;
+        }
+        .candidate-avatar{
+            height: 70px;
+            width: 70px;
+            border: 1px solid #999;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
     }
 }
   
-.searchjob-form-container {
+.search_candidate-form-container {
     width: 600px;
     margin: 0 auto;
 }
 @media (max-width: 950px) {
-    .searchjob-form-container {
+    .search_candidate-form-container {
         width: 300px;
     }
 }
 @media (max-width: 700px) {
-    .searchjob-form-container {
+    .search_candidate-form-container {
         width: 250px;
     }
     .skill-text, .company-loc-text {
         width: 20px;
+    }
+}
+@media (max-width: 950px) {
+    .btn-container {
+        display: none !important;
+    }
+    .skill-text, .company-loc-text {
+        width: 80% !important;
     }
 }
