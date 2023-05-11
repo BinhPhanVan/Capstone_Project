@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { Button, Typography, IconButton } from "@material-ui/core";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { Document, Page, pdfjs} from "react-pdf";
@@ -16,7 +16,7 @@ const Resume = () => {
   const dispatch = useDispatch();
   const loading = useSelector(selectIsLoading);
   const user_info = useSelector(selectUserInfo);
-  const [file, setFile] = useState(user_info.pdf_file == null ? null : user_info.pdf_file );
+  const [file, setFile] = useState(user_info?.pdf_file)
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
   const handleSubmit = async (e) => {
@@ -45,12 +45,22 @@ const Resume = () => {
   const goToNextPage = () => {
     setPageNumber((prevPageNumber) => prevPageNumber + 1);
   };
-  useEffect(() => {
-    document.title = "Resume | Hire IT";
-    dispatch(get_information());
-  }, [dispatch]);
 
-  return (
+  useEffect(()=>
+    {
+      document.title = "Resume | Hire IT";
+      dispatch(get_information());  
+    }
+  ,[dispatch])
+
+  useLayoutEffect(() => {
+    if(user_info)
+    {
+      setFile(user_info.pdf_file)
+    }
+  }, [user_info]);
+
+  return user_info ?(
   <div>
     <SpinnerLoading loading={loading}/>
     <div className="resume-container">
@@ -121,7 +131,7 @@ const Resume = () => {
       </form>
   </div>
   </div>
-  );
+  ):<SpinnerLoading loading='true'/>;
 }
 
 export default Resume;
