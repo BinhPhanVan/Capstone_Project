@@ -51,7 +51,7 @@ const Profile = () => {
   return user_info ? (
     <div className="profile-page">
         <Form>
-            <Grid className="profile-container">
+            <Grid container justifyContent="flex-end" className="profile-container">
                 <Grid item xs={12} md={12} className="profile-avatar">
                     <Avatar
                         alt="John Doe"
