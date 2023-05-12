@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useLayoutEffect } from "react";
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -9,23 +9,32 @@ import { BiMessageSquareDetail } from 'react-icons/bi';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import ContentPasteSearchIcon from '@mui/icons-material/ContentPasteSearch';
 import { MdNotifications } from 'react-icons/md';
-import { logout, selectIsAdmin, selectUser } from "../../store/AuthSlice";
+import { logout, selectIsAdmin } from "../../store/AuthSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import AvatarImage from "./AvatarImage";
-import { selectFile } from "../../store/UserSlice";
+import { selectFile, selectUserInfo } from "../../store/UserSlice";
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 function Header() {
-  const user = useSelector(selectUser);
+  const user_info = useSelector(selectUserInfo);
   const file = useSelector(selectFile);
   const isAdmin = useSelector(selectIsAdmin);
   const dispatch = useDispatch();
-  const full_name = user.first_name + " " + user.last_name;
-  const [name, ] = useState(full_name ||"");
+  const [avatar, setAvatar] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const handleLogout = (e) => {
     e.preventDefault();
     dispatch(logout());
   }
+  useLayoutEffect(() => {
+    if(user_info)
+    {
+        setAvatar(user_info.avatar_url) 
+        setFirstName(user_info.account.first_name);
+        setLastName(user_info.account.last_name);
+    }
+  }, [user_info ]);
   return (
     <Navbar collapseOnSelect expand="lg">
       <Container className="navbar-text">
@@ -63,8 +72,8 @@ function Header() {
                 5
               </div>
             </Nav.Link>
-            <AvatarImage avatar_url={user.avatar_url}/>
-            <NavDropdown title={name} style={{color: "white"}}   id="collasible-nav-dropdown">
+            <AvatarImage avatar_url={avatar}/>
+            <NavDropdown title={firstName + " " + lastName} style={{color: "white"}}   id="collasible-nav-dropdown">
               <NavDropdown.Item className="header-custome-navbar-dropdown" as={NavLink} to="/profile">Profile</NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item className="header-custome-navbar-dropdown" onClick={handleLogout}>
