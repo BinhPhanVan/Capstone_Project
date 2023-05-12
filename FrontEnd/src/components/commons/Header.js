@@ -5,10 +5,11 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { NavLink } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css"; 
-import { BiMessageSquareDetail } from 'react-icons/bi';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import ContentPasteSearchIcon from '@mui/icons-material/ContentPasteSearch';
-import { MdNotifications } from 'react-icons/md';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import { logout, selectIsAdmin } from "../../store/AuthSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
@@ -58,15 +59,16 @@ function Header() {
 
             }
             <Nav.Link as={NavLink} to="candidates/search" className="navbar-text" ><AssignmentIndIcon/></Nav.Link>
+            <Nav.Link as={NavLink} to="recruiter/upload-job" className="navbar-text" ><AddCircleOutlineIcon/></Nav.Link>
             <Nav.Link eventKey={2} as={NavLink} to="/contact" className="navbar-text">
-              <BiMessageSquareDetail size={24}/>
+              <MailOutlineIcon/>
               <div className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
               <span className="visually-hidden">Notification count</span>
                 5
               </div>
             </Nav.Link>
             <Nav.Link eventKey={2} as={NavLink} to="/notify" className="navbar-text">
-              <MdNotifications size={24}/>
+              <NotificationsNoneIcon/>
               <div className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
               <span className="visually-hidden">Notification count</span>
                 5
