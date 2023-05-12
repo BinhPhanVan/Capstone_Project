@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { Button, Container, Grid, TextField, Typography } from '@material-ui/core';
 import { Form } from 'react-bootstrap';
 import Avatar from '@material-ui/core/Avatar';
@@ -6,16 +6,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import { get_information, selectUserInfo } from '../../../store/UserSlice';
 import SpinnerLoading from '../../commons/SpinnerLoading';
 import EditIcon from '@mui/icons-material/Edit';
+import { selectIsAdmin } from '../../../store/AuthSlice';
 
 
 const Profile = () => {
   const dispatch = useDispatch();
   const user_info = useSelector(selectUserInfo);
-  const [email, setEmail] = React.useState('');
-  const [avatar, setAvatar] = React.useState('');
-  const [firstName, setFirstName] = React.useState('');
-  const [lastName, setLastName] = React.useState('');
-  const [isChange, setIsChange] = React.useState(false);
+  const [email, setEmail] = useState('');
+  const [avatar, setAvatar] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [isChange, setIsChange] = useState(false);
+  const [companyName, setCompanyName] = useState('');
+  const [address, setAddress] = useState('');
+  const isAdmin = useSelector(selectIsAdmin);
   useLayoutEffect(() => {
     if(user_info)
     {
@@ -23,6 +27,8 @@ const Profile = () => {
         setEmail(user_info.account.email);
         setFirstName(user_info.account.first_name);
         setLastName(user_info.account.last_name);
+        setCompanyName(user_info?.company_name);
+        setAddress(user_info?.address);
     }
   }, [user_info ]);
 
@@ -128,6 +134,40 @@ const Profile = () => {
                                 required
                                 />
                             </Grid>
+                            { isAdmin && 
+                                <>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                        label="Company Name"
+                                        value={companyName}
+                                        onChange={(e) => 
+                                            {
+                                                setIsChange(true)
+                                                setCompanyName(e.target.value)
+                                            }
+                                        }
+                                        placeholder="Last Name"
+                                        fullWidth
+                                        required
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                        label="Address"
+                                        value={address}
+                                        onChange={(e) => 
+                                            {
+                                                setIsChange(true)
+                                                setAddress(e.target.value)
+                                            }
+                                        }
+                                        placeholder="Last Name"
+                                        fullWidth
+                                        required
+                                        />
+                                    </Grid>
+                                </>
+                            }
                             { isChange && (
                             <Grid item xs={12} justifyContent="flex-end">
                                 <Button type="submit" variant="contained" color="primary">
