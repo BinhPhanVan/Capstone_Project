@@ -21,6 +21,7 @@ urlpatterns = [
     path('employee/pdf-upload/', UploadPDFView.as_view(), name='pdf_upload'),
     path('user/get-information/', GetInformation.as_view(), name='pdf_upload'),
     path('employee/find-job/', ExtractCVView.as_view(), name='extract_cv'),
+    path('employee/get-active/', GetActiveCVView.as_view(), name='get_active_cv'),
     path('recruiter/upload-job/', UploadJobView.as_view(), name='upload_and_extract_cv'),
     path('employee/get-all-jobs/', JobRequirementListAPIView.as_view(), name='get_all_jobs'),
     path('recruiter/get-all-candidates/', GetAllCandidateListAPIView.as_view(), name='get_all_candidates'),

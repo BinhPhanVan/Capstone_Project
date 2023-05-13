@@ -16,6 +16,7 @@ import DevideSignUp from './components/pages/SignUp/DevideSignUp';
 import CandidateSignUp from './components/pages/SignUp/CandidateSignUp';
 import RecruiterSignUp from './components/pages/SignUp/RecruiterSignUp';
 import SignUp from './components/pages/SignUp';
+import Jobs from './components/pages/Jobs';
 function App() {
   return (
     <BrowserRouter>
@@ -26,9 +27,10 @@ function App() {
             <Route path="about" element={<About />} />
             <Route path="resume" element={<Resume />} />
             <Route path="profile" element={<Profile />} />
-            <Route path="jobs" element={<SearchJob />}>
+            <Route path="jobs" element={<Jobs />}>
               <Route path="turn-on" element={<TurnOnJob />} />
               <Route path="search" element={<SearchJob />} />
+              <Route path="create" element={<SearchJob />} />
             </Route>
             <Route path="candidates" element={<SearchCandidate />}>
               <Route path="search" element={<SearchCandidate />} />

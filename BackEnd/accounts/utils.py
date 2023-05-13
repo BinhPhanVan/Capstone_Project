@@ -30,10 +30,11 @@ def extract_phone_number(text) -> list:
     phone_numbers = []
     for match in phonenumbers.PhoneNumberMatcher(text, "VN"):
         phone_numbers.append(re.sub(r'\D', '', phonenumbers.format_number(match.number, phonenumbers.PhoneNumberFormat.E164)))
-    return phone_numbers
+    return phone_numbers.append(None)
 
 def extract_location(text):
     # List of location names in Vietnamese
+    matches = [None]
     locations = PROVINCES
     # Find all matches of the location names in the text
     matches = [loc for loc in locations if re.search(loc, text, re.IGNORECASE)]

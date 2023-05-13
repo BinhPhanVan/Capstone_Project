@@ -9,11 +9,13 @@ import { selectIsLoading, upload_resume } from "../../../store/ResumeSlice";
 import { toast } from "react-toastify";
 import SpinnerLoading from "../../commons/SpinnerLoading";
 import { get_information, selectUserInfo } from "../../../store/UserSlice";
+import { useNavigate } from "react-router-dom";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 const Resume = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const loading = useSelector(selectIsLoading);
   const user_info = useSelector(selectUserInfo);
   const [file, setFile] = useState(user_info?.pdf_file)
@@ -24,6 +26,7 @@ const Resume = () => {
     const actionResult = await dispatch(upload_resume(file));
     if (upload_resume.fulfilled.match(actionResult)) {
       toast.success(actionResult.payload.message);
+      navigate("/jobs/turn-on");
     }
     if (upload_resume.rejected.match(actionResult)) {
         toast.error(actionResult.payload.message);

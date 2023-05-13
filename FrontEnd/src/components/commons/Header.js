@@ -52,14 +52,19 @@ function Header() {
           </Nav>
           <Nav>
             { 
-              !isAdmin && <Nav.Link as={NavLink} to="/resume" className="navbar-text" ><PictureAsPdfIcon/></Nav.Link>
+              !isAdmin && 
+              <>
+                <Nav.Link as={NavLink} to="/resume" className="navbar-text" ><PictureAsPdfIcon/></Nav.Link>
+              </>  
             }
+            <Nav.Link as={NavLink} to="/jobs" className="navbar-text" ><ContentPasteSearchIcon/></Nav.Link>
             {
-              file && <Nav.Link as={NavLink} to="jobs/turn-on" className="navbar-text" ><ContentPasteSearchIcon/></Nav.Link>
-
+              isAdmin && 
+              <>
+                <Nav.Link as={NavLink} to="/recruiter/upload-job" className="navbar-text" ><AddCircleOutlineIcon/></Nav.Link>
+                { file && <Nav.Link as={NavLink} to="/candidates/search" activeClassName="active" className="navbar-text" ><AssignmentIndIcon/></Nav.Link>}
+              </>   
             }
-            <Nav.Link as={NavLink} to="candidates/search" className="navbar-text" ><AssignmentIndIcon/></Nav.Link>
-            <Nav.Link as={NavLink} to="recruiter/upload-job" className="navbar-text" ><AddCircleOutlineIcon/></Nav.Link>
             <Nav.Link eventKey={2} as={NavLink} to="/contact" className="navbar-text">
               <MailOutlineIcon/>
               <div className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
