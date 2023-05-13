@@ -55,14 +55,14 @@ function Header() {
               !isAdmin && 
               <>
                 <Nav.Link as={NavLink} to="/resume" className="navbar-text" ><PictureAsPdfIcon/></Nav.Link>
+                { file && <Nav.Link as={NavLink} to="/jobs" className="navbar-text" ><ContentPasteSearchIcon/></Nav.Link>}
               </>  
             }
-            <Nav.Link as={NavLink} to="/jobs" className="navbar-text" ><ContentPasteSearchIcon/></Nav.Link>
             {
               isAdmin && 
               <>
                 <Nav.Link as={NavLink} to="/recruiter/upload-job" className="navbar-text" ><AddCircleOutlineIcon/></Nav.Link>
-                { file && <Nav.Link as={NavLink} to="/candidates/search" activeClassName="active" className="navbar-text" ><AssignmentIndIcon/></Nav.Link>}
+                <Nav.Link as={NavLink} to="/candidates/search" className="navbar-text" ><AssignmentIndIcon/></Nav.Link>
               </>   
             }
             <Nav.Link eventKey={2} as={NavLink} to="/contact" className="navbar-text">

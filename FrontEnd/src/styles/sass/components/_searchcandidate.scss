@@ -19,6 +19,11 @@
     {
         padding-right: 1rem !important;
     }
+    .MuiSvgIcon-root
+    {
+        color: $black-icon !important;
+        font-size: 1em !important;
+    }
     // Candidate Item
     .btn-container{
         display: flex;
@@ -46,7 +51,7 @@
         border-radius: 10px;
         transition: all 0.3s ease-in-out;
         font-family: bitter-text;
-        .skill-text, .company-loc-text {
+        .skill-text, .company-loc-text, .email-text{
             width: 50%;
             white-space: nowrap;
             overflow: hidden;
@@ -79,7 +84,7 @@
     .search_candidate-form-container {
         width: 250px;
     }
-    .skill-text, .company-loc-text {
+    .skill-text, .company-loc-text, .email-text {
         width: 20px;
     }
 }
@@ -87,7 +92,7 @@
     .btn-container {
         display: none !important;
     }
-    .skill-text, .company-loc-text {
+    .skill-text, .company-loc-text, .email-text {
         width: 80% !important;
     }
 }

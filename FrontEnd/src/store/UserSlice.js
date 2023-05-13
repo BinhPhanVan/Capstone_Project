@@ -41,11 +41,25 @@ export const find_job = createAsyncThunk(
   }
 );
 
+export const get_all_candidate = createAsyncThunk(
+  "recruiter/get_all_candidate",
+  async (_, { rejectWithValue }) => {
+    try {
+        const res = await userService.get_all_candidate();
+        return res;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue("Access denied! Please try again.");
+    }
+  }
+);
+
 const initialState = {
   isLoading: false,
   file: null,
   user_infor: null,
   is_active: false,
+  candidates: [],
 };
 
 const userSlice = createSlice({
@@ -89,10 +103,23 @@ const userSlice = createSlice({
     builder.addCase(find_job.fulfilled, (state, action) => {
       state.isLoading = false;
     });
+    builder.addCase(get_all_candidate.pending, (state, action) => {
+      state.isLoading = true;
+      state.candidates = []
+    });
+    builder.addCase(get_all_candidate.rejected, (state, action) => {
+      state.isLoading = false;
+      state.candidates = []
+    });
+    builder.addCase(get_all_candidate.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.candidates = action.payload
+    });
   },
 });
 export const selectIsLoading = (state) => state.user.isLoading;
 export const selectIsActive = (state) => state.user.is_active;
 export const selectUserInfo = (state) => state.user.user_infor;
+export const selectCandidates = (state) => state.user.candidates;
 export const selectFile = (state) => state.user.file;
 export default userSlice.reducer;

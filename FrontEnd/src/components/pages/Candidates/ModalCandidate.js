@@ -21,10 +21,10 @@ const ModalCandidate = ({ candidate, open, handleClose }) => {
           <div className='modal-candidate-content buttons-container'>
             <button className='close-button' onClick={handleClose}>X</button>
             <Typography variant="h5">{candidate.name}</Typography>
-            <Typography variant="body1" className='skill-text'>{`Skill: ${candidate.skill}`}</Typography>
+            <Typography variant="body1" className='skill-text'>{`Skill: ${candidate.skills}`}</Typography>
             <Typography variant="body1" className='company-loc-text'>{`Location: ${candidate.location}`}</Typography>
               <PDFViewer 
-                file="https://res.cloudinary.com/dq6avgw6n/image/upload/v1683190137/o7pran26mqn0pxak4zwx.pdf" />
+                file={candidate.pdf_file} />
             <ListItemSecondaryAction className="modal-btn-container">
                 <Button className="btn-sent" variant="contained" color="primary" onClick={(e) => 
                 {

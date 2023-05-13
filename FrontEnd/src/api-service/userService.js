@@ -15,5 +15,9 @@ const get_active = async () => {
     return res;
 }
 
-const userService = {get_information, find_job, get_active};
+const get_all_candidate= async () => {
+    const res = await  httpRequest.get('recruiter/get-all-candidates/');
+    return res;
+}
+const userService = {get_information, find_job, get_active, get_all_candidate};
 export default  userService;

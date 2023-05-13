@@ -17,7 +17,7 @@ const handleCloseModal = () => {
 return (
     <List key="candidate-item">
       {candidates.map((candidate) => (
-        <CandidateItem key={candidate.id}  candidate={candidate} onCandidateClick={handleCandidateClick}/>
+        <CandidateItem key={candidate.email}  candidate={candidate} onCandidateClick={handleCandidateClick}/>
       ))}
       {selectedCandidate && (
         <ModalCandidate candidate={selectedCandidate} open={openModal} handleClose={handleCloseModal} />
