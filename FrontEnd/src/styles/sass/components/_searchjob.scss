@@ -42,7 +42,7 @@
         border-radius: 10px;
         transition: all 0.3s ease-in-out;
         font-family: bitter-text;
-        .skill-text, .company-loc-text {
+        .skill-text, .company-loc-text, .email-text {
             width: 50%;
             white-space: nowrap;
             overflow: hidden;
@@ -68,7 +68,7 @@
     .searchjob-form-container {
         width: 250px;
     }
-    .skill-text, .company-loc-text {
+    .skill-text, .company-loc-text, .email-text {
         width: 20px;
     }
 }
