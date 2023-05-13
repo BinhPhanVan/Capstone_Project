@@ -389,6 +389,10 @@ class UploadPDFView(APIView):
             # return Response({'url': uploaded_file['secure_url']}, status=200)
             employee.pdf_file = uploaded_file['secure_url']
             employee.save()
+            if ExtractCV.objects.filter(employee=employee).exists():
+                extract_cv = ExtractCV.objects.get(employee=employee)
+                extract_cv.active = False
+                extract_cv.save()
             response = {
                     "status": status.HTTP_200_OK,
                     "message": "Upload sucessfully",
@@ -463,13 +467,14 @@ class ExtractCVView(GenericAPIView):
             employee = Employee.objects.get(account_id = user_id)
             text = extract_text_from_pdf(employee.pdf_file)
             location = extract_location(text)
-            phone_number = extract_phone_number(text)
+            phone_number = extract_phone_number(text)[0]
             skills = extract_skills(text)
             if ExtractCV.objects.filter(employee=employee).exists():
                 extract_cv = ExtractCV.objects.get(employee=employee)
                 extract_cv.phone_number = phone_number
                 extract_cv.location = location
                 extract_cv.skills = skills
+                extract_cv.active = True
                 extract_cv.save()
             else:
                 extract_cv = ExtractCV.objects.create(
@@ -492,6 +497,48 @@ class ExtractCVView(GenericAPIView):
                 "data": {},
             } 
             return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+
+class GetActiveCVView(GenericAPIView):
+    permission_classes = [IsEmployeePermission, IsAuthenticated]
+    serializer_class = EmployeeSerializer
+
+    def get(self, request, *args, **kwargs):
+        try:
+            user_id = request.user.id
+            employee = Employee.objects.get(account_id=user_id)
+            
+            try:
+                extract_cv = ExtractCV.objects.get(employee=employee)
+                response = {
+                    "status": status.HTTP_200_OK,
+                    "message": "Success",
+                    "data": extract_cv.active,
+                }
+            except ExtractCV.DoesNotExist:
+                response = {
+                    "status": status.HTTP_200_OK,
+                    "message": "Success",
+                    "data": False,
+                }
+            
+            return Response(response, status=status.HTTP_200_OK)
+        
+        except Employee.DoesNotExist:
+            response = {
+                "status": status.HTTP_401_UNAUTHORIZED,
+                "message": "Employee not found",
+                "data": {},
+            }
+        
+        except Exception as e:
+            print(e)
+            response = {
+                "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
+                "message": "Internal Server Error",
+                "data": {},
+            }
+        
+        return Response(response, status=response["status"])
 
 class UploadJobView(generics.GenericAPIView):
     serializer_class = JobRequirementSerializer
