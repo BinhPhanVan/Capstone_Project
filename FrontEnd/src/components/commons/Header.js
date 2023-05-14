@@ -61,7 +61,7 @@ function Header() {
             {
               isAdmin && 
               <>
-                <Nav.Link as={NavLink} to="/recruiter/upload-job" className="navbar-text" ><AddCircleOutlineIcon/></Nav.Link>
+                <Nav.Link as={NavLink} to="/recruiter/upload-jobs" className="navbar-text" ><AddCircleOutlineIcon/></Nav.Link>
                 <Nav.Link as={NavLink} to="/candidates/search" className="navbar-text" ><AssignmentIndIcon/></Nav.Link>
               </>   
             }

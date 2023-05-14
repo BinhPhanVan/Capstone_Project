@@ -17,6 +17,8 @@ import CandidateSignUp from './components/pages/SignUp/CandidateSignUp';
 import RecruiterSignUp from './components/pages/SignUp/RecruiterSignUp';
 import SignUp from './components/pages/SignUp';
 import Jobs from './components/pages/Jobs';
+import UploadJobs from './components/pages/UploadJobs';
+import UploadFormJob from './components/pages/UploadJobs/UploadFormJob';
 function App() {
   return (
     <BrowserRouter>
@@ -32,6 +34,8 @@ function App() {
               <Route path="search" element={<SearchJob />} />
               <Route path="create" element={<SearchJob />} />
             </Route>
+            <Route path="recruiter/upload-jobs" element={<UploadJobs />}/>
+            <Route path="recruiter/create-jobs" element={<UploadFormJob />}/>
             <Route path="candidates" element={<SearchCandidate />}>
               <Route path="search" element={<SearchCandidate />} />
             </Route>
