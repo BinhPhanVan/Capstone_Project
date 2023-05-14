@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { find_job, selectIsActive, selectIsLoading } from '../../../store/UserSlice';
+import { find_job, get_active, selectIsActive, selectIsLoading } from '../../../store/UserSlice';
 import SpinnerLoading from '../../commons/SpinnerLoading';
 
 const useStyles = makeStyles({
@@ -42,8 +42,9 @@ function TurnOnJob() {
     const actionResult = await dispatch(find_job());
     console.log(actionResult);
     if (find_job.fulfilled.match(actionResult)) {
+      dispatch(get_active())
       toast.success(actionResult.payload.message);
-      navigate("/jobs/search/")
+      navigate("/jobs/search/");
     }
     else{
       toast.warning(actionResult.payload.message);
