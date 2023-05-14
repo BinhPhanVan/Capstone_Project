@@ -17,13 +17,23 @@
     }
     .resume-button-container {
         display: flex;
+        justify-content: flex-end;
         width: 100%;
         margin-top: 20px;
       }
       
     .resume-button {
-        flex: 1;
-        // margin-right: 20px;
+        margin-right: 1rem;
+    }
+    .resume-button:hover {
+      color:$dark-blue;
+    }
+
+    .turnoff-button {
+      margin-right: 0;
+      margin-left: 1rem;
+      color: white;
+      background-color: rgb(234, 47, 47);
     }
     
     .upload-button {
@@ -32,6 +42,7 @@
     }
     
     .submit-button {
+        margin-right: 0;
         background-color: #4caf50;
         color: white;
     }
@@ -126,7 +137,13 @@
     @media (min-width: 1000px)
     {
         .MuiContainer-maxWidthSm {
-            max-width: 100% !important ;
+            max-width: 100% !important ;            
         }
     }
+    @media (max-width: 800px)
+    {
+      .navigate-button{
+        padding: 0;
+      }
+    }   
 }

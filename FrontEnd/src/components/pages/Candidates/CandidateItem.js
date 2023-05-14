@@ -20,9 +20,9 @@ const CandidateItem = ({ candidate, onCandidateClick }) => {
             </ListItemAvatar>
             <div className='candidate_item-content'>
                 <Typography variant="h6">{candidate.name}</Typography>
-                <Typography variant="body1" className='skill-text'><BiotechIcon/>{`: ${candidate.skills}`}</Typography>
                 <Typography variant="body1" className='email-text'><MailIcon/>{`: ${candidate.email}`}</Typography>
                 <Typography variant="body1" className='company-loc-text'><LocationOnIcon/>{`: ${candidate.location} | `}<PhoneIcon/>{`: +${candidate.phone_number}`}</Typography>
+                <Typography variant="body1" className='skill-text'><BiotechIcon/>{`: ${candidate.skills}`}</Typography>
             </div>
             <ListItemSecondaryAction className="btn-container">
                 <Button className="btn-apply" variant="contained" color="primary" onClick={(e) => 
