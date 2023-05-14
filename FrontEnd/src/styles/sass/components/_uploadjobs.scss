@@ -1,0 +1,80 @@
+.upload-jobs-container
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 3rem !important;
+    margin-bottom: 2rem !important;
+    .button-container{
+        margin-left: auto;
+        .create-button{
+            color: white;
+            background-color: $dark-blue;
+        }
+        .create-button:hover {
+            background-color: lighten($dark-blue, 10%);
+          }
+    }
+}
+.upload-job-container 
+{
+    display: flex;
+    // flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    height: 70vh;
+
+    h1 {
+        font-size: 1.5 rem;
+        margin-bottom: 40px;
+    }
+
+    .upload-job-form{
+        width: 400px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        padding: 2rem;
+        
+        h1 
+        {
+            color: $dark-blue;
+            font-family: san-fran-form-header;
+        }
+        input 
+        {
+            font-size: 16px;
+            padding: 10px;
+            border-radius: $border-input;
+            border: none;
+            border: 1px solid #ccc;
+            width: 100%;
+            display: inline-block;
+            
+        }
+        label 
+        {
+            display: block;
+            width: 100%;
+            height: 100%;
+            margin-left: 0;
+            text-align: left;
+        }
+        select
+        {
+            display: block;
+            width: 100%;
+            height: 115%;;
+        }
+        button 
+        {
+            background-color: $blue;
+            color: #ffffff;
+            font-size: 1.1rem;
+            padding: 10px 20px;
+            border-radius: 1rem;
+        }
+    }
+}
+
