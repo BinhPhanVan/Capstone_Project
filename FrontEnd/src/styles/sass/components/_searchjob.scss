@@ -11,6 +11,11 @@
         margin-top: 2rem;
         width: 60vw;
     }
+    .MuiSvgIcon-root
+    {
+        color: $black-icon !important;
+        font-size: 1em !important;
+    }
     .MuiListItem-secondaryAction 
     {
         padding-right: 1rem !important;

@@ -31,12 +31,15 @@
     .modal-btn-container > .MuiButton-root {
         margin-left: 10px;
     }
-    .skill-text, .company-loc-text, .email-text {
+    .skill-text, .company-loc-text, .email-text .resume-text {
         text-overflow: ellipsis;
         color: #808080;
         width: 100%;
         overflow: hidden;
         white-space: nowrap;
+    }
+    .MuiTypography-colorPrimary {
+        font-size: 15px;
     }
     .close-button {
         position: absolute;
@@ -47,6 +50,11 @@
         background-color: transparent;
         border: none;
         cursor: pointer;
+    }
+    .MuiSvgIcon-root
+    {
+        color: $black-icon !important;
+        font-size: 1em !important;
     }
 }
 @media (max-width: 1100px) {

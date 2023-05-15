@@ -15,5 +15,10 @@ const upload_job = async (data) => {
     ) ;
     return res;
 }
-const jobService = {upload_job};
+const get_all_jobs= async () => {
+    const res = await  httpRequest.get('employee/get-all-jobs/');
+    return res;
+}
+
+const jobService = {upload_job, get_all_jobs};
 export default  jobService;
