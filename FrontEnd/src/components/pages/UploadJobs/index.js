@@ -1,12 +1,12 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
 import ButtonCreate from "./ButtonCreate";
+import SearchJobUpload from "./SearchJobUpload";
 function UploadJobs() 
 {
     return (
         <div className="upload-jobs-container">
             <ButtonCreate/>
-            <Outlet/>
+            <SearchJobUpload/>
         </div>
     );
 }
