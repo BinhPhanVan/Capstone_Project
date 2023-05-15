@@ -36,9 +36,7 @@ function App() {
             </Route>
             <Route path="recruiter/upload-jobs" element={<UploadJobs />}/>
             <Route path="recruiter/create-jobs" element={<UploadFormJob />}/>
-            <Route path="candidates" element={<SearchCandidate />}>
-              <Route path="search" element={<SearchCandidate />} />
-            </Route>
+            <Route path="candidates/search" element={<SearchCandidate />}></Route>
           </Route>
           <Route path="login" element={<Login />} />
           <Route path="register" element={<SignUp />}>
