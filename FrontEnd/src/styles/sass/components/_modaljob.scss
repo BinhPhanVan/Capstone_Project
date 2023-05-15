@@ -21,7 +21,11 @@
     background-color: white;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
     position: relative;
-
+    .MuiSvgIcon-root
+    {
+        color: $black-icon !important;
+        font-size: 1em !important;
+    }
     .modal-btn-container {
         display: flex;
         position: relative;
@@ -31,9 +35,15 @@
     .modal-btn-container > .MuiButton-root {
         margin-left: 10px;
     }
-    .skill-text, .company-loc-text, .email-text {
+    .company-loc-text, .email-text, .company-text, .skill-text, .jd-text {
         text-overflow: ellipsis;
         color: #808080;
+        width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+    .MuiTypography-colorPrimary {
+        font-size: 15px;
     }
     .close-button {
         position: absolute;

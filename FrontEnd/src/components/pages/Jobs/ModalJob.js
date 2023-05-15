@@ -1,7 +1,11 @@
 import React from 'react';
-import { Modal, Backdrop, Button, Typography, ListItemSecondaryAction } from '@material-ui/core';
+import { Modal, Backdrop, Button, Typography, ListItemSecondaryAction, Link } from '@material-ui/core';
 import PDFViewer from './PDFViewer';
-
+import BadgeIcon from '@mui/icons-material/Badge';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import BiotechIcon from '@mui/icons-material/Biotech';
+import MailIcon from '@mui/icons-material/Mail';
+import ContactPageIcon from '@mui/icons-material/ContactPage';
 
 const ModalJob = ({ job, open, handleClose }) => {
 
@@ -21,9 +25,15 @@ const ModalJob = ({ job, open, handleClose }) => {
           <div className='modal-job-content buttons-container'>
             <button className='close-button' onClick={handleClose}>X</button>
             <Typography variant="h5">{job.job_name}</Typography>
-            <Typography variant="body1" className='skill-text'>{`Skill: ${job.skills}`}</Typography>
-            <Typography variant="body1" className='company-loc-text'>{`Company: ${job.company_name} | Location: ${job.location}`}</Typography>
-              <PDFViewer 
+            <Typography variant="body1" className='company-text'><BadgeIcon/>{`: ${job.company_name}`}</Typography>
+            <Typography variant="body1" className='company-loc-text'><MailIcon/>{`: ${job.email} | `} <LocationOnIcon/>{`: ${job.location}`}</Typography>  
+            <Typography variant="body1" className='skill-text'><BiotechIcon/>{`: ${job.skills}`}</Typography>
+            <Typography variant="body1" className='jd-text'><ContactPageIcon/>{`: `}
+            <Link href={job.pdf_upload} target="_blank" rel="noopener">
+              Open job description
+            </Link>
+            </Typography>
+            <PDFViewer 
                 file={job.pdf_upload} />
             <ListItemSecondaryAction className="modal-btn-container">
                 <Button className="btn-apply" variant="contained" color="primary" onClick={(e) => 

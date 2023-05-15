@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { Form, Row, Col, Button } from "react-bootstrap";
 import { PROVINCES } from "../../../constants/locations";
-import { useDispatch } from "react-redux";
-import { upload_job } from "../../../store/JobSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { selectIsLoading, upload_job } from "../../../store/JobSlice";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import SpinnerLoading from "../../commons/SpinnerLoading";
 
 const UploadFormJob = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const loading = useSelector(selectIsLoading);
   const [location, setLocation] = useState("");
   const [job_name, setJobName] = useState("");
   const [file, setFile] = useState(null);
@@ -31,6 +33,7 @@ const UploadFormJob = () => {
   };
   return (
     <div>
+      <SpinnerLoading loading={loading} />
       <div className="upload-job-page">
         <div className="upload-job-container">
           <div className="form">

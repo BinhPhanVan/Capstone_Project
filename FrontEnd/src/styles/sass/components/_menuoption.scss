@@ -1,0 +1,19 @@
+.menu-container {
+    display: flex;
+    justify-content: flex-end;
+    .menu-eclipse {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        transition: all 0.3s ease-in-out;
+    }
+    .menu-eclipse:hover{
+        background-color: rgb(237, 235, 235);
+        cursor: pointer;
+        transform: scale(1.05);
+    }
+}
+  
