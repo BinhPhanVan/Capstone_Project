@@ -624,4 +624,39 @@ class GetAllCandidateListAPIView(generics.ListAPIView):
     queryset = ExtractCV.objects.filter(active=True)
     serializer_class = ExtractCVGetAll
     
-    
+class JobOwnerView(GenericAPIView):
+    permission_classes = [IsRecruiterPermission, IsAuthenticated]
+    serializer_class = JobRequirementGetAll
+
+    def get(self, request, *args, **kwargs):
+        try:
+            user_id = request.user.id
+            recruiter = Recruiter.objects.get(account_id=user_id)
+            job_requirements = JobRequirement.objects.filter(recruiter=recruiter)
+            
+            serializer = self.get_serializer(job_requirements, many=True)
+            response_data = serializer.data
+            response = {
+                "status": status.HTTP_200_OK,
+                "message": "Success",
+                "data": response_data,
+            }
+            
+            return Response(response, status=status.HTTP_200_OK)
+        
+        except Recruiter.DoesNotExist:
+            response = {
+                "status": status.HTTP_401_UNAUTHORIZED,
+                "message": "Recruiter not found",
+                "data": [],
+            }
+        
+        except Exception as e:
+            print(e)
+            response = {
+                "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
+                "message": "Internal Server Error",
+                "data": [],
+            }
+        
+        return Response(response, status=response["status"])

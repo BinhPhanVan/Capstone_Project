@@ -16,7 +16,7 @@ export const upload_job = createAsyncThunk(
 );
 
 export const get_all_jobs = createAsyncThunk(
-  "employee/get_all_candidate",
+  "employee/get_all_job",
   async (_, { rejectWithValue }) => {
     try {
         const res = await jobService.get_all_jobs();
@@ -28,9 +28,23 @@ export const get_all_jobs = createAsyncThunk(
   }
 );
 
+export const get_all_jobs_owner = createAsyncThunk(
+  "recruiter/get_all_job_owner",
+  async (_, { rejectWithValue }) => {
+    try {
+        const res = await jobService.get_all_jobs_owner();
+        return res.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue("Access denied! Please try again.");
+    }
+  }
+);
+
 const initialState = {
   isLoading: false,
   jobs : [],
+  jobs_owner: []
 };
 
 const jobSlice = createSlice({
@@ -58,8 +72,21 @@ const jobSlice = createSlice({
       state.isLoading = false;
       state.jobs = action.payload;
     });
+    builder.addCase(get_all_jobs_owner.pending, (state, action) => {
+      state.isLoading = true;
+      state.jobs_owner = [];
+    });
+    builder.addCase(get_all_jobs_owner.rejected, (state, action) => {
+      state.isLoading = false;
+      state.jobs_owner = [];
+    });
+    builder.addCase(get_all_jobs_owner.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.jobs_owner = action.payload;
+    });
   },
 });
 export const selectIsLoading = (state) => state.job.isLoading;
 export const selectJobs = (state) => state.job.jobs;
+export const selectJobsOwner = (state) => state.job.jobs_owner;
 export default jobSlice.reducer;

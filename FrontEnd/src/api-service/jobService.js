@@ -20,5 +20,10 @@ const get_all_jobs= async () => {
     return res;
 }
 
-const jobService = {upload_job, get_all_jobs};
+const get_all_jobs_owner= async () => {
+    const res = await  httpRequest.get('recruiter/get-all-jobs-owner/');
+    return res;
+}
+
+const jobService = {upload_job, get_all_jobs, get_all_jobs_owner};
 export default  jobService;
