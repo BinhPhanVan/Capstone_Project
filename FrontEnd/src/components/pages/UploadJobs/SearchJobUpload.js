@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Grid, FormControl, InputLabel, Input, Select, MenuItem } from '@material-ui/core';
 import { PROVINCES } from '../../../constants/locations';
-import { get_all_jobs, selectIsLoading, selectJobs } from '../../../store/JobSlice';
+import { get_all_jobs_owner, selectIsLoading, selectJobsOwner } from '../../../store/JobSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import SpinnerLoading from '../../commons/SpinnerLoading';
 import ListJobUpload from './ListJobUpload';
@@ -11,7 +11,7 @@ function SearchJobUpload() {
   const [selectedProvince, setSelectedProvince] = useState('');
   const dispatch = useDispatch();
   const loading = useSelector(selectIsLoading);
-  const data = useSelector(selectJobs);
+  const data = useSelector(selectJobsOwner);
   console.log(data);
   const handleSearch = (event) => {
     setSearchQuery(event.target.value);
@@ -37,7 +37,7 @@ function SearchJobUpload() {
     });
   useEffect(()=> {
       document.title = "Search Job | Hire IT"
-      dispatch(get_all_jobs());
+      dispatch(get_all_jobs_owner());
   }, [dispatch]);
 
   return (
