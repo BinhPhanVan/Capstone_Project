@@ -19,6 +19,7 @@ import SignUp from './components/pages/SignUp';
 import Jobs from './components/pages/Jobs';
 import UploadJobs from './components/pages/UploadJobs';
 import UploadFormJob from './components/pages/UploadJobs/UploadFormJob';
+import ChatApp from './components/pages/Chat';
 function App() {
   return (
     <BrowserRouter>
@@ -29,6 +30,7 @@ function App() {
             <Route path="about" element={<About />} />
             <Route path="resume" element={<Resume />} />
             <Route path="profile" element={<Profile />} />
+            <Route path="chat" element={<ChatApp />} />
             <Route path="jobs" element={<Jobs />}>
               <Route path="turn-on" element={<TurnOnJob />} />
               <Route path="search" element={<SearchJob />} />

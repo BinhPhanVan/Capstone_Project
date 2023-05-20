@@ -65,14 +65,14 @@ function Header() {
                 <Nav.Link as={NavLink} to="/candidates/search" className="navbar-text" ><AssignmentIndIcon/></Nav.Link>
               </>   
             }
-            <Nav.Link eventKey={2} as={NavLink} to="/contact" className="navbar-text">
+            <Nav.Link as={NavLink} to="/chat" className="navbar-text">
               <MailOutlineIcon/>
               <div className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
               <span className="visually-hidden">Notification count</span>
                 5
               </div>
             </Nav.Link>
-            <Nav.Link eventKey={2} as={NavLink} to="/notify" className="navbar-text">
+            <Nav.Link as={NavLink} to="/notify" className="navbar-text">
               <NotificationsNoneIcon/>
               <div className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
               <span className="visually-hidden">Notification count</span>
