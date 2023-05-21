@@ -15,7 +15,7 @@ from accounts.serializers import UserSerializer, VertifyEmailSerializer, LoginSe
     MyTokenObtainPairSerializer, ForgotPassWordSerializer, ChangePasswordSerializer
 from .email import send_opt_via_email, send_reset_password
 from .permissions import IsEmployeePermission, IsRecruiterPermission
-from .serializers import EmployeeSerializer, ExtractCVGetAll, JobRequirementGetAll, JobRequirementSerializer, PDFFileSerializer, RecruiterRegisterSerializer, RecruiterSerializer
+from .serializers import EmployeeSerializer, ExtractCVGetAll, JobRequirementGetAll, JobRequirementSerializer, PDFFileSerializer, RecruiterRegisterSerializer, RecruiterSerializer, UserRegisterSerializer
 from .utils import check_pass, extract_location, extract_phone_number, extract_skills, extract_text_from_pdf, same_pass
 from .models import ExtractCV, JobRequirement, Recruiter, User, Employee
 from django.contrib.auth import authenticate, login, logout
@@ -29,7 +29,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 class RegisterViewSet(viewsets.ViewSet, generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = (permissions.AllowAny,)
-    serializer_class = UserSerializer
+    serializer_class = UserRegisterSerializer
 
     def create(self, request, *args, **kwargs):
         try:
@@ -74,7 +74,7 @@ class RecruiterRegisterViewSet(viewsets.ViewSet, generics.CreateAPIView):
                 if serializer.is_valid(raise_exception=True):
                     account = serializer.save()
                     send_opt_via_email(user['email'])
-                    serialized_user = UserSerializer(data=user)
+                    serialized_user = UserRegisterSerializer(data=user)
                     return Response({
                         'status': status.HTTP_200_OK,
                         'message': 'Register successfully. Please check your email',

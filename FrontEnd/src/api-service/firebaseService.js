@@ -25,6 +25,32 @@ const sendMessage = (conversationId, senderId, avatar, message) => {
     });
   };
 
+const sendMessage1 = (conversationId, senderId, receiverId, content) => {
+    const messagesRef = firebase.database().ref(`conversations/${conversationId}/messages`);
+    const newMessageRef = messagesRef.push();
+    const timestamp = Date.now();
+    
+    const messageData = {
+      senderId: senderId,
+      receiverId: receiverId,
+      content: content,
+      timestamp: timestamp,
+    };
+    newMessageRef.set(messageData);
+};
+
+const initializeConversation = (conversationId, senderId, receiverId) => {
+    const conversationsRef = firebase.database().ref(`conversations/${conversationId}`);    
+    const initialData = {
+      users: {
+        [senderId]: true,
+        [receiverId]: true
+      }
+    };
+    
+    conversationsRef.set(initialData);
+};
+
 const getAllMessage = async (conversationId, callback) => {
     const messagesRef = firebase.database().ref(`conversations/${conversationId}/messages`);
     const snapshot = await messagesRef.once('value');
@@ -43,6 +69,6 @@ const getAllMessage = async (conversationId, callback) => {
 
 
 
-const firebaseService = {sendMessage, getAllMessage};
+const firebaseService = {sendMessage, getAllMessage, sendMessage1, initializeConversation};
 
 export default firebaseService;
