@@ -39,7 +39,8 @@ const sendMessage1 = (conversationId, senderId, receiverId, content) => {
     newMessageRef.set(messageData);
 };
 
-const initializeConversation = (conversationId, senderId, receiverId) => {
+const createConversation = (senderId, receiverId) => {
+    const conversationId = `${senderId}_${receiverId}`;
     const conversationsRef = firebase.database().ref(`conversations/${conversationId}`);    
     const initialData = {
       users: {
@@ -49,6 +50,43 @@ const initializeConversation = (conversationId, senderId, receiverId) => {
     };
     
     conversationsRef.set(initialData);
+};
+
+const initializeConversation = (senderId, receiverId) => {
+  const conversationsRef = firebase.database().ref('conversations');
+
+  // Query to check if conversation with specified users exists
+  const conversationQuery = conversationsRef
+    .orderByChild(`users/${senderId}`)
+    .equalTo(true)
+    .orderByChild(`users/${receiverId}`)
+    .equalTo(true)
+    .limitToFirst(1);
+
+  conversationQuery.once('value', (snapshot) => {
+    const conversation = snapshot.val();
+
+    if (conversation) {
+      console.log('Conversation already exists.');
+    } else {
+      createConversation(senderId, receiverId);
+    }
+  });
+};
+
+const getMessagesForUser = (userId) => {
+  const messagesRef = firebase.database().ref('messages');
+  const userMessagesRef = messagesRef.orderByChild(`users/${userId}`).equalTo(true);
+
+  userMessagesRef.on('value', (snapshot) => {
+    const messages = snapshot.val();
+    if (messages) {
+      console.log('Messages for User', userId);
+      console.log(messages);
+    } else {
+      console.log('No messages found for User', userId);
+    }
+  });
 };
 
 const getAllMessage = async (conversationId, callback) => {
@@ -69,6 +107,6 @@ const getAllMessage = async (conversationId, callback) => {
 
 
 
-const firebaseService = {sendMessage, getAllMessage, sendMessage1, initializeConversation};
+const firebaseService = {sendMessage, getAllMessage, sendMessage1, initializeConversation, getMessagesForUser};
 
 export default firebaseService;
