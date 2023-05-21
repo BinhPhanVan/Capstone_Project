@@ -15,6 +15,7 @@ class User(AbstractUser):
         (1, 'Employee'),
         (2, 'Recruiter')
     )
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     username = None
     email = models.EmailField(unique=True)
     is_verified = models.BooleanField(default=False)
@@ -35,6 +36,11 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
+    
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.id = uuid.uuid4()
+        return super().save(*args, **kwargs)
 
 
 class Employee(models.Model):

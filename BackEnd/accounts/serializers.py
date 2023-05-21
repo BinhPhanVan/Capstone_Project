@@ -20,8 +20,18 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['avatar_url'] = avatar_url
         return token
 
-
 class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'email', 'first_name', 'last_name', 'role']
+
+    extra_kwargs = {
+        'password': {
+            'write_only': True
+        }
+    }
+
+class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['email', 'password', 'first_name', 'last_name', 'role']
@@ -46,7 +56,7 @@ class UserSerializer(serializers.ModelSerializer):
         return account
 
 class RecruiterRegisterSerializer(serializers.ModelSerializer):
-    account = UserSerializer(required=True)
+    account = UserRegisterSerializer(required=True)
     class Meta:
         model = Recruiter
         fields = ['company_name', 'address', 'account']
