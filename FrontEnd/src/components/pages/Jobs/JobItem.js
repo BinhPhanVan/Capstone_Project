@@ -4,9 +4,13 @@ import BadgeIcon from '@mui/icons-material/Badge';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import BiotechIcon from '@mui/icons-material/Biotech';
 import MailIcon from '@mui/icons-material/Mail';
+import { useSelector } from 'react-redux';
+import { selectUserInfo } from '../../../store/UserSlice';
+
 
 const JobItem = ({ job, onJobClick }) => {
-  return (
+    const user_info = useSelector(selectUserInfo);
+    return (
     <div className='jobitem-container' onClick= {(e) => 
         {
             e.preventDefault();
@@ -30,6 +34,8 @@ const JobItem = ({ job, onJobClick }) => {
                 </Button>
                 <Button className="btn-message" variant="contained" color="secondary" onClick={(e) => {
                     console.log('Message clicked')
+                    console.log(user_info.account.id);
+                    console.log(job.id);
                     e.stopPropagation();
                 }}>
                 Message

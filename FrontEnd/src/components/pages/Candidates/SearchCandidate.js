@@ -25,10 +25,11 @@ function SearchCandidate() {
     data.forEach(candidate => {
     const { employee, phone_number, location, skills } = candidate;
     const { account } = employee;
-    const { first_name, last_name, email } = account;
+    const { first_name, last_name, email, id } = account;
     const { avatar_url, pdf_file } =  employee;
 
     const shortenedCandidate = {
+        id,
         name: `${first_name} ${last_name}`,
         email,
         phone_number,
