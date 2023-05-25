@@ -30,7 +30,10 @@ function App() {
             <Route path="about" element={<About />} />
             <Route path="resume" element={<Resume />} />
             <Route path="profile" element={<Profile />} />
-            <Route path="chat" element={<ChatApp />} />
+            <Route path="chat"element={<ChatApp />} >
+              <Route path=":chatId" element={<ChatApp />} />
+              <Route path="*" element={<NotFound />} />
+            </Route>
             <Route path="jobs" element={<Jobs />}>
               <Route path="turn-on" element={<TurnOnJob />} />
               <Route path="search" element={<SearchJob />} />

@@ -25,16 +25,18 @@ const sendMessage = (conversationId, senderId, avatar, message) => {
     });
   };
 
-const sendMessage1 = (conversationId, senderId, receiverId, content) => {
+const sendMessage1 = async (conversationId, user_info, message) => {
+    // const conversationId = await getConversationId(senderId, receiverId);
+    // console.log(conversationId)
     const messagesRef = firebase.database().ref(`conversations/${conversationId}/messages`);
     const newMessageRef = messagesRef.push();
-    const timestamp = Date.now();
-    
+    console.log(user_info);
     const messageData = {
-      senderId: senderId,
-      receiverId: receiverId,
-      content: content,
-      timestamp: timestamp,
+      senderId: user_info.account.id,
+      name: user_info.account.first_name + " " + user_info.account.last_name,
+      avatar: user_info.avatar_url,
+      message: message,
+      timestamp : firebase.database.ServerValue.TIMESTAMP
     };
     newMessageRef.set(messageData);
 };
@@ -46,50 +48,65 @@ const createConversation = (senderId, receiverId) => {
       users: {
         [senderId]: true,
         [receiverId]: true
-      }
+      },
+      messages: []
     };
     
     conversationsRef.set(initialData);
 };
 
-const initializeConversation = (senderId, receiverId) => {
+const getConversationId = async (senderId, receiverId) => {
   const conversationsRef = firebase.database().ref('conversations');
 
-  // Query to check if conversation with specified users exists
-  const conversationQuery = conversationsRef
-    .orderByChild(`users/${senderId}`)
-    .equalTo(true)
-    .orderByChild(`users/${receiverId}`)
-    .equalTo(true)
-    .limitToFirst(1);
+  const conversationQuery = conversationsRef.orderByChild(`users/${senderId}`).equalTo(true);
 
-  conversationQuery.once('value', (snapshot) => {
-    const conversation = snapshot.val();
+  try {
+    const snapshot = await conversationQuery.once('value');
+    const conversationData = snapshot.val();
 
-    if (conversation) {
-      console.log('Conversation already exists.');
-    } else {
-      createConversation(senderId, receiverId);
+    if (conversationData) {
+      for (const conversationId in conversationData) {
+        if (conversationData[conversationId].users[receiverId]) {
+          return conversationId;
+        }
+      }
     }
-  });
+    console.log('Conversation does not exist.');
+    return false;
+  } catch (error) {
+    return false;
+  }
 };
 
-const getMessagesForUser = (userId) => {
-  const messagesRef = firebase.database().ref('messages');
-  const userMessagesRef = messagesRef.orderByChild(`users/${userId}`).equalTo(true);
 
-  userMessagesRef.on('value', (snapshot) => {
-    const messages = snapshot.val();
-    if (messages) {
-      console.log('Messages for User', userId);
-      console.log(messages);
-    } else {
-      console.log('No messages found for User', userId);
-    }
-  });
+const initializeConversation = async (senderId, receiverId) => {
+  const conversationId = await getConversationId(senderId, receiverId);
+  
+  if (conversationId) {
+    console.log('Conversation already exists.');
+  } else {
+    createConversation(senderId, receiverId);
+  }
 };
 
-const getAllMessage = async (conversationId, callback) => {
+const getAllMessage = async (senderId, receiverId, callback) => {
+    const conversationId = await getConversationId(senderId, receiverId);
+    const messagesRef = firebase.database().ref(`conversations/${conversationId}/messages`);
+    const snapshot = await messagesRef.once('value');
+    const messagesData = snapshot.val();
+  
+    if (messagesData) {
+      const messagesList = Object.entries(messagesData).map(([messageId, message]) => ({
+        id: messageId,
+        ...message,
+      }));
+      return messagesList;
+    }
+  
+    return [];
+  };
+
+  const getAllMessageWithID = async (conversationId, callback) => {
     const messagesRef = firebase.database().ref(`conversations/${conversationId}/messages`);
     const snapshot = await messagesRef.once('value');
     const messagesData = snapshot.val();
@@ -107,6 +124,6 @@ const getAllMessage = async (conversationId, callback) => {
 
 
 
-const firebaseService = {sendMessage, getAllMessage, sendMessage1, initializeConversation, getMessagesForUser};
+const firebaseService = {getConversationId, sendMessage, getAllMessage, sendMessage1, initializeConversation, getAllMessageWithID};
 
 export default firebaseService;

@@ -8,9 +8,11 @@ import { Avatar } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { selectUserInfo } from '../../../store/UserSlice';
 import firebaseService from '../../../api-service/firebaseService';
+import { useNavigate } from 'react-router-dom';
 
 const CandidateItem = ({ candidate, onCandidateClick }) => {
     const user_info = useSelector(selectUserInfo);
+    const navigate = useNavigate();
     return (
     <div className='candidate_item-container' onClick= {(e) => 
         {
@@ -41,7 +43,8 @@ const CandidateItem = ({ candidate, onCandidateClick }) => {
                     console.log('Message clicked');
                     console.log(user_info.account.id);
                     console.log(candidate.id);
-                    firebaseService.initializeConversation(user_info.account.id, candidate.id);
+                    firebaseService.initializeConversation(candidate.id,user_info.account.id);
+                    navigate(`/chat/${candidate.id}_${user_info.account.id}`);
                     e.stopPropagation();
                 }}>
                 Message
