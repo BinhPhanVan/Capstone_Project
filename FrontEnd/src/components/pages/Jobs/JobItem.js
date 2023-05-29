@@ -20,7 +20,7 @@ const JobItem = ({ job, onJobClick }) => {
             onJobClick(job);
             console.log(job.name);
         }}>
-        <ListItem key={job.id} >
+        <ListItem key={job.index} >
             <div className='jobitem-content'>
                 <Typography variant="h6">{job.job_name}</Typography>
                 <Typography variant="body1" className='company-loc-text'><BadgeIcon/>{`: ${job.company_name} | `}<LocationOnIcon/>{`: ${job.location}`}</Typography>
@@ -37,13 +37,15 @@ const JobItem = ({ job, onJobClick }) => {
                 </Button>
                 <Button className="btn-message" variant="contained" color="secondary" onClick={(e) => {
                     e.stopPropagation();
-                    
-                    // console.log(user_info.account.id);
-                    // console.log(job.id);
-                    firebaseService.initializeConversation(user_info.account.id, job.id);
+                    // firebaseService.initializeConversation(user_info.account.id, job.id);
+                    firebaseService.initializeConversation(
+                        user_info.account.id, 
+                        job.id, 
+                        user_info.account.first_name + " " + user_info.account.last_name, 
+                        user_info.avatar_url, 
+                        job.name, 
+                        job.avatar_url);
                     navigate(`/chat/${user_info.account.id}_${job.id}`);
-
-                    // firebaseService.getMessagesForUser(user_info.account.id);
                     // firebaseService.sendMessage1(user_info.account.id, job.id, "ksfsjfkfjskfjskfjsfksfksfsf");
                     // console.log(firebaseService.getConversationId(user_info.account.id, job.id));
                     // console.log(firebaseService.getAllMessage(user_info.account.id, job.id));

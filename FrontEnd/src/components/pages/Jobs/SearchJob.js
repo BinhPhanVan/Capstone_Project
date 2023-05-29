@@ -20,12 +20,14 @@ function SearchJob() {
     setSelectedProvince(event.target.value);
   };
   const jobs = [];
+  let index = 1;
   data.forEach(job => {
     const { job_name, location, pdf_upload, recruiter, skills } = job;
     const { company_name, avatar_url, account } = recruiter;
     const { first_name, last_name, email, id } =  account;
 
     const shortenedJob = {
+        index: index,
         id,
         name: `${first_name} ${last_name}`,
         email,
@@ -35,6 +37,7 @@ function SearchJob() {
         pdf_upload, company_name, job_name
     };
     jobs.push(shortenedJob);
+    index++;
     });
     
   const filteredJobs = jobs.filter((job) =>

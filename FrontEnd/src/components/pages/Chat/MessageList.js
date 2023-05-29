@@ -1,33 +1,53 @@
 import { TextField } from '@material-ui/core';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import MessageUser from './MessageUser';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
+import firebaseService from '../../../api-service/firebaseService';
+import { useDispatch, useSelector } from 'react-redux';
+import { get_information, selectUserInfo } from '../../../store/UserSlice';
+import firebase from 'firebase/compat/app';
 function MessageList() {
     const [searchText, setSearchText] = useState('');
-    const messages = [
-        {
-          avatar: 'https://images.unsplash.com/photo-1508919801845-fc2ae1bc2a28?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aW1nfGVufDB8fDB8fA%3D%3D&w=1000&q=80',
-          name: 'John Doe',
-          message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam venenatis tincidunt dui eget hendrerit.'
-        },
-        {
-          avatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROBxEUaq3yrhBB_0o7a2sjwPGs7klJsNKWcdeBFz-NBPz39AyTEBm63WL34Ew41ugiRjA&usqp=CAU',
-          name: 'Jane Smith',
-          message: 'Ut consectetur tristique leo, eget dapibus ex volutpat nec. Nam eu eros et elit maximus mattis.'
-        },
-        {
-          avatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTpKLpuYMpbAQ_G8BhbBscnqnm7d3usjDexiAQTL_aFktEa9xmgKOqZ2MnRjHvpYy5_3k&usqp=CAU',
-          name: 'Mark Johnson',
-          message: 'Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Aliquam id elementum leo.'
-        },
-        ];
+    const user_info = useSelector(selectUserInfo);
+    const [messagesItem, setMessagesItem] = useState([]);
+    const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(get_information());
+    }, [dispatch]);
+    useEffect(() => {
+      const fetchUsers = () => {
+        if (user_info && user_info.account && user_info.account.id) {
+          firebaseService.getAllUsersInChatWithUser(user_info.account.id)
+            .then((messageslist) => {
+              setMessagesItem(messageslist);
+            })
+            .catch((error) => {
+              console.error('Error retrieving users:', error);
+            });
+        }
+      };
+    
+      fetchUsers();
+    
+      const conversationsRef = firebase.database().ref('conversations');
+      const listener = conversationsRef.on('value', () => {
+        fetchUsers();
+      });
+    
+      // Clean up the listener when the component unmounts
+      return () => {
+        conversationsRef.off('value', listener);
+      };
+    }, [user_info]);
+    
+        
 
     const handleSearchChange = (event) => {
         setSearchText(event.target.value);
     };
     
-    const filteredMessages = messages.filter((message) =>
+    const filteredMessages = messagesItem.filter((message) =>
         message.name.toLowerCase().includes(searchText.toLowerCase())
     );
 
@@ -48,7 +68,7 @@ function MessageList() {
           }}
       />
       {filteredMessages.map((message, index) => (
-        <MessageUser key={index} {...message} />
+        <MessageUser key={index} message={message} />
       ))}
     </>
   );

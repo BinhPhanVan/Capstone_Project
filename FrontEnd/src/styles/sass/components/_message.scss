@@ -92,14 +92,14 @@
     border-right: 1px solid $brown-icon;
     padding-right: 16px;
     .new-message {
-    max-width: 20%;
+    max-width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: 0.9rem;
     }
     .name-text{
-        max-width: 20%;
+        max-width: 100%;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
