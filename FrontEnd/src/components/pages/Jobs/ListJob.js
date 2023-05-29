@@ -16,8 +16,8 @@ const handleCloseModal = () => {
   };
 return (
     <List key="job-item">
-      {jobs.map((job) => (
-        <JobItem key={job.id}  job={job} onJobClick={handleJobClick}/>
+      {jobs.map((job, index) => (
+        <JobItem key={index}  job={job} onJobClick={handleJobClick}/>
       ))}
       {selectedJob && (
         <ModalJob job={selectedJob} open={openModal} handleClose={handleCloseModal} />

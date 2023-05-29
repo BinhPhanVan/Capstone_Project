@@ -56,7 +56,7 @@ function SearchCandidate() {
     <div>
         <SpinnerLoading loading={loading}/>
         <Grid container justifyContent="center"spacing={2} className='search_candidate-container'>
-            <Grid Grid item>
+            <Grid item>
                 <FormControl className="search_candidate-form-container">
                     <InputLabel htmlFor="search" style={{ marginRight: '2rem' }}>
                         Search
