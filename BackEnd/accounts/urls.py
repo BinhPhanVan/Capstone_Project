@@ -19,6 +19,7 @@ urlpatterns = [
     path('employee/verify-email/', VerifyOTP.as_view(), name='verify-email'),
     path("employee/logout/", Logout.as_view(), name="logout"),
     path('employee/pdf-upload/', UploadPDFView.as_view(), name='pdf_upload'),
+    path('employee/deactive/', DeactivePDFView.as_view(), name='deactive_pdf'),
     path('user/get-information/', GetInformation.as_view(), name='pdf_upload'),
     path('employee/find-job/', ExtractCVView.as_view(), name='extract_cv'),
     path('employee/get-active/', GetActiveCVView.as_view(), name='get_active_cv'),

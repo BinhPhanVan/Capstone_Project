@@ -616,6 +616,30 @@ class UploadJobView(generics.GenericAPIView):
             } 
             return Response(response, status=status.HTTP_401_UNAUTHORIZED)
 
+        
+class DeactivePDFView(APIView):
+    permission_classes = [IsEmployeePermission, IsAuthenticated]
+    def get(self, request):
+        try:
+            employee = Employee.objects.get(account_id=request.user.id)
+            extract_cv = ExtractCV.objects.get(employee=employee)
+            extract_cv.active = False
+            extract_cv.save()
+            response = {
+                    "status": status.HTTP_200_OK,
+                    "message": "Your Resume deactivated successfully.",
+                    "data": {},
+                }
+            return Response(response, status=status.HTTP_200_OK)
+        except ExtractCV.DoesNotExist:
+            response = {
+                    "status": status.HTTP_404_NOT_FOUND,
+                    "message": "Your Resume not found.",
+                    "data": {},
+                }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
+
+
 class JobRequirementListAPIView(generics.ListAPIView):
     queryset = JobRequirement.objects.filter(active=True)
     serializer_class = JobRequirementGetAll
