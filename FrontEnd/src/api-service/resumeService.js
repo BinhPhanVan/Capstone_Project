@@ -14,6 +14,11 @@ const upload_resume = async (pdf_file) => {
     return res;
 }
 
-const resumeService = {upload_resume};
+const deactive_resume= async () => {
+    const res = await  httpRequest.get('employee/deactive/');
+    return res;
+}
+
+const resumeService = {upload_resume, deactive_resume};
 
 export default  resumeService;

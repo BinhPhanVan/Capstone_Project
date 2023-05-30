@@ -5,7 +5,7 @@ import { Document, Page, pdfjs } from "react-pdf";
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import { useDispatch, useSelector } from "react-redux";
-import { selectIsLoading, upload_resume } from "../../../store/ResumeSlice";
+import { deactive_resume, selectIsLoading, upload_resume } from "../../../store/ResumeSlice";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 import { toast } from "react-toastify";
 import SpinnerLoading from "../../commons/SpinnerLoading";
@@ -49,6 +49,17 @@ const Resume = () => {
 
   const goToNextPage = () => {
     setPageNumber((prevPageNumber) => prevPageNumber + 1);
+  };
+  const handleTurnOff = async (e) => {
+    e.preventDefault();
+    const actionResult = await dispatch(deactive_resume());
+    if (deactive_resume.fulfilled.match(actionResult)) {
+      toast.success(actionResult.payload.message);
+      navigate("/jobs/turn-on");
+    }
+    if (upload_resume.rejected.match(actionResult)) {
+      toast.error(actionResult.payload.message);
+    }
   };
 
   useEffect(() => {
@@ -149,6 +160,7 @@ const Resume = () => {
                   variant="contained"
                   component="span"
                   startIcon={<PowerSettingsNewIcon />}
+                  onClick={handleTurnOff}
                 >
                   Turn Off
                 </Button>}

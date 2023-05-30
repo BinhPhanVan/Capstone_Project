@@ -14,6 +14,19 @@ export const upload_resume = createAsyncThunk(
   }
 );
 
+export const deactive_resume = createAsyncThunk(
+  "employee/deactive",
+  async (_, { rejectWithValue }) => {
+    try {
+        const res = await resumeService.deactive_resume();
+        return res;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue("Access denied! Please try again.");
+    }
+  }
+);
+
 const initialState = {
   isLoading: false,
   file: ""
@@ -30,6 +43,15 @@ const resumeSlice = createSlice({
       state.isLoading = false;
     });
     builder.addCase(upload_resume.fulfilled, (state, action) => {
+      state.isLoading = false;
+    });
+    builder.addCase(deactive_resume.pending, (state, action) => {
+      state.isLoading = true;
+    });
+    builder.addCase(deactive_resume.rejected, (state, action) => {
+      state.isLoading = false;
+    });
+    builder.addCase(deactive_resume.fulfilled, (state, action) => {
       state.isLoading = false;
     });
   },
