@@ -12,7 +12,6 @@ function SearchJobUpload() {
   const dispatch = useDispatch();
   const loading = useSelector(selectIsLoading);
   const data = useSelector(selectJobsOwner);
-  console.log(data);
   const handleSearch = (event) => {
     setSearchQuery(event.target.value);
   };
@@ -22,10 +21,12 @@ function SearchJobUpload() {
   };
   const jobs = [];
   data.forEach(job => {
-    const { job_name, location, pdf_upload, recruiter, skills } = job;
+    const { job_name, location, pdf_upload, recruiter, skills, active, id } = job;
     const { company_name, avatar_url, account } = recruiter;
     const { first_name, last_name, email } =  account;
     const shortenedJob = {
+        id,
+        active,
         name: `${first_name} ${last_name}`,
         email,
         location,
@@ -79,8 +80,8 @@ function SearchJobUpload() {
             </Select>
           </FormControl>
         </Grid>
-        <ListJobUpload jobs={jobs} />
-      </Grid>           
+        <ListJobUpload jobs={jobs} />   
+      </Grid>     
     </div>
   );
 }
