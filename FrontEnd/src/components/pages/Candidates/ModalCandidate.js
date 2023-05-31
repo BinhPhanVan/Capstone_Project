@@ -6,9 +6,14 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import MailIcon from '@mui/icons-material/Mail';
 import PhoneIcon from '@mui/icons-material/Phone';
 import ContactPageIcon from '@mui/icons-material/ContactPage';
+import { selectUserInfo } from '../../../store/UserSlice';
+import firebaseService from '../../../api-service/firebaseService';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const ModalCandidate = ({ candidate, open, handleClose }) => {
-
+  const user_info = useSelector(selectUserInfo);
+  const navigate = useNavigate();
   return (
     <>
       <div className="modal-container">
@@ -51,7 +56,14 @@ const ModalCandidate = ({ candidate, open, handleClose }) => {
                 Sent
                 </Button>
                 <Button className="btn-message" variant="contained" color="secondary" onClick={(e) => {
-                    console.log('Message clicked')
+                    firebaseService.initializeConversation(
+                        candidate.id, 
+                        user_info.account.id, 
+                        candidate.name, 
+                        candidate.avatar_url, 
+                        user_info.account.first_name + " " + user_info.account.last_name, 
+                        user_info.avatar_url);
+                    navigate(`/chat/${candidate.id}_${user_info.account.id}`);
                     e.stopPropagation();
                 }}>
                 Message
