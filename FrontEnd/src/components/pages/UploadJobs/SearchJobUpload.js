@@ -36,6 +36,11 @@ function SearchJobUpload() {
     };
     jobs.push(shortenedJob);
     });
+  const filteredJobs = jobs.filter((job) =>
+    job.job_name.toLowerCase().includes(searchQuery.toLowerCase())
+  ).filter((job) =>
+      job.location.toLowerCase().includes(selectedProvince.toLowerCase())
+  );
   useEffect(()=> {
       document.title = "Search Job | Hire IT"
       dispatch(get_all_jobs_owner());
@@ -80,7 +85,7 @@ function SearchJobUpload() {
             </Select>
           </FormControl>
         </Grid>
-        <ListJobUpload jobs={jobs} />   
+        <ListJobUpload jobs={filteredJobs} />   
       </Grid>     
     </div>
   );

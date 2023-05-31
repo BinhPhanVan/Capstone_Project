@@ -6,13 +6,12 @@ import {
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import MenuOption from "./MenuOption";
 
-const JobUploadItem = ({ job, onJobClick }) => {
+const JobUploadItem = ({ job }) => {
     return (
         <div
             className="job_upload_item-container"
             onClick={(e) => {
                 e.preventDefault();
-                onJobClick(job);
                 console.log(job.name);
             }}
         >
@@ -24,7 +23,7 @@ const JobUploadItem = ({ job, onJobClick }) => {
                         {`${job.location}`}
                     </Typography>
                 </div>
-                <MenuOption/>
+                <MenuOption job={job}/>
             </ListItem>
         </div>
     );

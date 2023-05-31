@@ -2,7 +2,7 @@ import React from 'react';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-export default function MenuOption() {
+export default function MenuOption({job}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event) => {
@@ -28,7 +28,9 @@ export default function MenuOption() {
         onClose={handleClose}
       >
         <MenuItem onClick={handleClose}>Edit Job</MenuItem>
-        <MenuItem onClick={handleClose}>Deactive</MenuItem>
+        {job.active 
+        ?<MenuItem onClick={handleClose}>Deactive</MenuItem>
+        :<MenuItem onClick={handleClose}>Active</MenuItem>}
       </Menu>
     </div>
   );
