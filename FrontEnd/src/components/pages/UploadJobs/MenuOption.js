@@ -31,6 +31,7 @@ export default function MenuOption({job}) {
         {job.active 
         ?<MenuItem onClick={handleClose}>Deactive</MenuItem>
         :<MenuItem onClick={handleClose}>Active</MenuItem>}
+        <MenuItem onClick={handleClose}>Delete Job</MenuItem>
       </Menu>
     </div>
   );
