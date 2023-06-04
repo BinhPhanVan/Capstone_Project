@@ -1,0 +1,55 @@
+pipeline {
+
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Install Dependencies') {
+            steps {
+                dir('BackEnd') {
+                    script {
+                        try {
+                            sh "ls"
+                        }
+                        catch (err) {
+                            echo err.getMessage()
+                        }
+                    }
+                    echo "Done installing dependencies"
+                }
+            }
+        }
+        stage("Clear then Build and Deploy") {
+            steps {
+                dir('BackEnd'){
+                    script {
+                        try {
+                            sh "docker rm hire_it_api -f"
+                            sh "docker rmi binhphanvan/hireit -f"
+                        }
+                        catch (err) {
+                            echo err.getMessage()
+                        }
+                    }
+                }
+            }
+        }
+        stage('Complete Setup') {
+            steps {
+                dir('BackEnd')
+                {
+                    sh "ls"
+                    sh "docker build --force-rm -t binhphanvan/hireit ."
+                    sh "docker push binhphanvan/hireit"
+                    sh "docker run --net=host --name=hire_it_api -d -p 8000:8000 binhphanvan/hireit"
+                    echo "Done"
+                }
+               
+            }
+        }
+    }
+}
