@@ -1,0 +1,48 @@
+pipeline {
+    agent {
+        docker {
+            image 'python:3.9' // Specify the desired Python version
+        }
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Install Dependencies') {
+            steps {
+                script {
+                    try {
+                        sh "mv .env .env"
+                        echo "Done reading environment"
+                    }
+                    catch (err) {
+                        echo err.getMessage()
+                    }
+                }
+                sh "pip3 install -r requirements.txt"
+                echo "Done installing dependencies"
+            }
+        }
+        stage("Clear") {
+            steps {
+                script {
+                    try {
+                        sh "docker rm hire_it_api -f"
+                        sh "docker rmi hire_it -f"
+                        sh 'docker rm $(docker ps --filter status=exited -q)'
+                    }
+                    catch (err) {
+                        echo err.getMessage()
+                    }
+                }
+            }
+        }
+        stage('Build and Deploy') {
+            steps {
+                sh "sudo docker-compose up --build -d"
+            }
+        }
+    }
+}

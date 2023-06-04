@@ -1,0 +1,24 @@
+version: '3.7'
+services:
+  db:
+    image: mysql:8
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_DATABASE=hireit_db
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=Binh12345!
+      - MYSQL_HOST=localhost
+    volumes:
+      - ./db:/var/lib/mysql
+  web:
+    container_name: hire_it_api
+    image: hire_it
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    depends_on:
+      - db
