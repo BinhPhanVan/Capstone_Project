@@ -3,6 +3,7 @@ from .models import ExtractCV, JobRequirement, User, Employee, Recruiter
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.core.validators import FileExtensionValidator
 from django.contrib.auth.hashers import make_password
+import uuid
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -21,6 +22,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         return token
 
 class UserSerializer(serializers.ModelSerializer):
+    id = serializers.SerializerMethodField()
     class Meta:
         model = User
         fields = ['id', 'email', 'first_name', 'last_name', 'role']
@@ -30,6 +32,9 @@ class UserSerializer(serializers.ModelSerializer):
             'write_only': True
         }
     }
+    def get_id(self, obj):
+        uuid_id = uuid.uuid5(uuid.NAMESPACE_DNS, str(obj.id))
+        return str(uuid_id)
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
