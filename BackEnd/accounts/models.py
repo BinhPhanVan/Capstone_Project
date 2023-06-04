@@ -15,7 +15,6 @@ class User(AbstractUser):
         (1, 'Employee'),
         (2, 'Recruiter')
     )
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     username = None
     email = models.EmailField(unique=True)
     is_verified = models.BooleanField(default=False)
@@ -36,11 +35,6 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
-    
-    def save(self, *args, **kwargs):
-        if not self.id:
-            self.id = uuid.uuid4()
-        return super().save(*args, **kwargs)
 
 
 class Employee(models.Model):
@@ -70,14 +64,14 @@ class Recruiter(models.Model):
         return self.account.first_name + ' ' + self.account.last_name
 
 class ExtractCV(models.Model):
-    employee = models.OneToOneField(Employee, on_delete=models.CASCADE, primary_key=True)
+    employee = models.OneToOneField(Employee, on_delete=models.CASCADE, primary_key=True, related_name="extract_cv")
     phone_number = models.CharField(null=True, blank=True, max_length=12)
     location = models.CharField(null=True, blank=True, max_length=100)
     skills = models.TextField()
     active = models.BooleanField(default=True)
     
 class JobRequirement(models.Model):
-    recruiter = models.ForeignKey(Recruiter, on_delete=models.CASCADE)
+    recruiter = models.ForeignKey(Recruiter, on_delete=models.CASCADE, related_name='job_requirements')
     job_name = models.CharField(max_length=255)
     location = models.CharField(null=True, blank=True, max_length=100)
     pdf_upload = models.CharField(null=True, max_length=1000, blank=True, default=None)
