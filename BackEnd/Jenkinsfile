@@ -14,25 +14,23 @@ pipeline {
                     script {
                         try {
                             sh "ls"
-                            sh "mv docker.env .env"
-                            echo "Done reading environment"
                         }
                         catch (err) {
                             echo err.getMessage()
                         }
                     }
-                    // sh "pip3 install -r requirements.txt"
                     echo "Done installing dependencies"
                 }
             }
         }
-        stage("Clear") {
+        stage("Clear then Build and Deploy") {
             steps {
                 dir('BackEnd'){
                     script {
                         try {
                             sh "docker rm hire_it_api -f"
                             sh "docker rmi hire_it -f"
+                            sh "docker rmi binhphanvan/hireit -f"
                         }
                         catch (err) {
                             echo err.getMessage()
@@ -41,11 +39,15 @@ pipeline {
                 }
             }
         }
-        stage('Build and Deploy') {
+        stage('Complete Setup') {
             steps {
                 dir('BackEnd')
                 {
-                    sh "docker compose up --build -d"
+                    sh "ls"
+                    sh "docker build --force-rm -t binhphanvan/hireit ."
+                    sh "docker push binhphanvan/hireit"
+                    sh "docker run --net=host --name=hire_it_api -d -p 8000:8000 binhphanvan/hireit"
+                    echo "Done"
                 }
                
             }
