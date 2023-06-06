@@ -142,3 +142,6 @@ class ExtractCVGetAll(serializers.ModelSerializer):
         fields = '__all__'
     def get_employee(self, obj):
         return EmployeeSerializer(obj.employee).data
+
+class DeactivedJobSerializer(serializers.Serializer):
+    job_requirement_id = serializers.CharField() 

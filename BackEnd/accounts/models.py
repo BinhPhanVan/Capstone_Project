@@ -71,6 +71,7 @@ class ExtractCV(models.Model):
     active = models.BooleanField(default=True)
     
 class JobRequirement(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, auto_created=True)
     recruiter = models.ForeignKey(Recruiter, on_delete=models.CASCADE, related_name='job_requirements')
     job_name = models.CharField(max_length=255)
     location = models.CharField(null=True, blank=True, max_length=100)

@@ -10,12 +10,13 @@ from rest_framework import status, permissions, viewsets, generics
 from rest_framework.views import APIView
 from django.conf import settings
 from rest_framework import authentication, permissions
+from rest_framework.decorators import action
 # Create your views here.
 from accounts.serializers import UserSerializer, VertifyEmailSerializer, LoginSerializer, \
     MyTokenObtainPairSerializer, ForgotPassWordSerializer, ChangePasswordSerializer
 from .email import send_opt_via_email, send_reset_password
 from .permissions import IsEmployeePermission, IsRecruiterPermission
-from .serializers import EmployeeSerializer, ExtractCVGetAll, JobRequirementGetAll, JobRequirementSerializer, PDFFileSerializer, RecruiterRegisterSerializer, RecruiterSerializer, UserRegisterSerializer
+from .serializers import EmployeeSerializer, ExtractCVGetAll, JobRequirementGetAll, JobRequirementSerializer, PDFFileSerializer, RecruiterRegisterSerializer, RecruiterSerializer, UserRegisterSerializer, DeactivedJobSerializer
 from .utils import check_pass, extract_location, extract_phone_number, extract_skills, extract_text_from_pdf, same_pass
 from .models import ExtractCV, JobRequirement, Recruiter, User, Employee
 from django.contrib.auth import authenticate, login, logout
@@ -684,3 +685,37 @@ class JobOwnerView(GenericAPIView):
             }
         
         return Response(response, status=response["status"])
+
+class DeleteJobView(viewsets.ModelViewSet):
+    permission_classes = [IsRecruiterPermission, IsAuthenticated]
+    queryset = JobRequirement.objects.all()
+    serializer_class = DeactivedJobSerializer
+    def update(self, request, *args, **kwargs):
+        try:
+            serializer = self.get_serializer(data=request.data)
+            if serializer.is_valid():
+                job_requirement_id = serializer.data['job_requirement_id']
+                job_requirement = JobRequirement.objects.get(id = job_requirement_id)
+                job_requirement.active = not job_requirement.active
+                job_requirement.save()
+                response = {
+                    "status": status.HTTP_201_CREATED,
+                    "message": "Updated successfully",
+                    "data": job_requirement_id,
+                }
+                return Response(response, status=status.HTTP_201_CREATED)
+            else:
+                response = {
+                    "status": status.HTTP_400_BAD_REQUEST,
+                    "message": "Updated failed",
+                    "data": serializer.errors,
+                }
+                return Response(response, status= status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            print(e)
+            response = {
+                "status": status.HTTP_401_UNAUTHORIZED,
+                "message": "Updated Failed",
+                "data": {},
+            } 
+            return Response(response, status=status.HTTP_401_UNAUTHORIZED) 
