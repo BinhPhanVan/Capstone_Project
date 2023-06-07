@@ -699,11 +699,11 @@ class DeleteJobView(viewsets.ModelViewSet):
                 job_requirement.active = not job_requirement.active
                 job_requirement.save()
                 response = {
-                    "status": status.HTTP_201_CREATED,
+                    "status": status.HTTP_200_OK,
                     "message": "Updated successfully",
                     "data": job_requirement_id,
                 }
-                return Response(response, status=status.HTTP_201_CREATED)
+                return Response(response, status=status.HTTP_200_OK)
             else:
                 response = {
                     "status": status.HTTP_400_BAD_REQUEST,
@@ -719,3 +719,23 @@ class DeleteJobView(viewsets.ModelViewSet):
                 "data": {},
             } 
             return Response(response, status=status.HTTP_401_UNAUTHORIZED) 
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            job_requirement_id = instance.id
+            self.perform_destroy(instance)
+            response = {
+                "status": status.HTTP_204_NO_CONTENT,
+                "message": "Deleted successfully",
+                "data": job_requirement_id,
+            }
+            return Response(response, status=status.HTTP_204_NO_CONTENT)
+        except Exception as e:
+            print(e)
+            response = {
+                "status": status.HTTP_401_UNAUTHORIZED,
+                "message": "Deleted Failed",
+                "data": {},
+            } 
+            return Response(response, status=status.HTTP_401_UNAUTHORIZED)

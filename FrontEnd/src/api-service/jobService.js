@@ -25,5 +25,19 @@ const get_all_jobs_owner= async () => {
     return res;
 }
 
-const jobService = {upload_job, get_all_jobs, get_all_jobs_owner};
+const update_job_status = async (id) => {
+    const res = await httpRequest.put(`recruiter/job/${id}`, {
+        "job_requirement_id": id,
+    });
+    return  res;
+};
+
+const delete_job = async (id) => {
+    const res = await httpRequest.delete(`recruiter/job/${id}`, {
+        "job_requirement_id": id,
+    });
+    return  res;
+};
+
+const jobService = {upload_job, get_all_jobs, get_all_jobs_owner, update_job_status, delete_job};
 export default  jobService;
