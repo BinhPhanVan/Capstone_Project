@@ -14,9 +14,9 @@ from rest_framework.decorators import action
 # Create your views here.
 from accounts.serializers import UserSerializer, VertifyEmailSerializer, LoginSerializer, \
     MyTokenObtainPairSerializer, ForgotPassWordSerializer, ChangePasswordSerializer
-from .email import send_opt_via_email, send_reset_password
+from .email import send_email_with_cv, send_email_with_job, send_opt_via_email, send_reset_password, send_email_with_template
 from .permissions import IsEmployeePermission, IsRecruiterPermission
-from .serializers import EmployeeSerializer, ExtractCVGetAll, JobRequirementGetAll, JobRequirementSerializer, PDFFileSerializer, RecruiterRegisterSerializer, RecruiterSerializer, UserRegisterSerializer, DeactivedJobSerializer
+from .serializers import EmailCVSerializer, EmailJobSerializer, EmployeeSerializer, ExtractCVGetAll, JobRequirementGetAll, JobRequirementSerializer, PDFFileSerializer, RecruiterRegisterSerializer, RecruiterSerializer, UserRegisterSerializer, DeactivedJobSerializer
 from .utils import check_pass, extract_location, extract_phone_number, extract_skills, extract_text_from_pdf, same_pass
 from .models import ExtractCV, JobRequirement, Recruiter, User, Employee
 from django.contrib.auth import authenticate, login, logout
@@ -38,7 +38,7 @@ class RegisterViewSet(viewsets.ViewSet, generics.CreateAPIView):
                 serializer = self.get_serializer(data=request.data)
                 if serializer.is_valid(raise_exception=True):
                     account = serializer.save()
-                    send_opt_via_email(serializer.data['email'])
+                    send_email_with_template(serializer.data['email'])
                     return Response({
                         'status': status.HTTP_200_OK,
                         'message': 'Register successfully. Please check your email',
@@ -739,3 +739,91 @@ class DeleteJobView(viewsets.ModelViewSet):
                 "data": {},
             } 
             return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+    
+class EmailCVView(APIView):
+    permission_classes = [IsEmployeePermission, IsAuthenticated]
+    serializer_class = EmailCVSerializer
+    @swagger_auto_schema(
+        request_body=EmailCVSerializer,
+        operation_description="Send email with CV",
+        responses={
+            200: "Email sent successfully",
+            401: "Unauthorized",
+        }
+    )
+    def post(self, request):
+        serializer = EmailCVSerializer(data=request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            job_name = serializer.validated_data['job_name']
+            company_name = serializer.validated_data['company_name']
+            pdf_file = serializer.validated_data['pdf_file']
+            name = serializer.validated_data['name']
+            email_user = serializer.validated_data['email_user']
+            try:
+                send_email_with_cv(email, job_name, company_name, pdf_file, name, email_user)
+                response = {
+                    "status": status.HTTP_200_OK,
+                    "message": "Email sent successfully.",
+                    "data": {},
+                }
+                return Response(response, status=status.HTTP_200_OK)
+            except Exception as e:
+                print(e)
+                response = {
+                    "status": status.HTTP_401_UNAUTHORIZED,
+                    "message": "Email sent failed",
+                    "data": {},
+                } 
+                return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+        response = {
+            "status": status.HTTP_401_UNAUTHORIZED,
+            "message": "Email sent failed",
+            "data": {},
+        } 
+        return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+
+class EmailJobView(APIView):
+    permission_classes = [IsRecruiterPermission, IsAuthenticated]
+    serializer_class = EmailJobSerializer
+
+    @swagger_auto_schema(
+        request_body=EmailJobSerializer,
+        operation_description="Send email with Job",
+        responses={
+            200: "Email sent successfully",
+            401: "Unauthorized",
+        }
+    )
+    def post(self, request):
+        serializer = EmailJobSerializer(data=request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            name_candidate = serializer.validated_data['name_candidate']
+            job_name = serializer.validated_data['job_name']
+            pdf_upload = serializer.validated_data['pdf_upload']
+            company_name = serializer.validated_data['company_name']
+            name = serializer.validated_data['name']
+            email_user = serializer.validated_data['email_user']
+            try:
+                send_email_with_job(email, name_candidate, job_name, pdf_upload, company_name, name, email_user)
+                response = {
+                    "status": status.HTTP_200_OK,
+                    "message": "Email sent successfully.",
+                    "data": {},
+                }
+                return Response(response, status=status.HTTP_200_OK)
+            except Exception as e:
+                print(e)
+                response = {
+                    "status": status.HTTP_401_UNAUTHORIZED,
+                    "message": "Email sent failed",
+                    "data": {},
+                }
+                return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+        response = {
+            "status": status.HTTP_401_UNAUTHORIZED,
+            "message": "Email sent failed",
+            "data": {},
+        }
+        return Response(response, status=status.HTTP_401_UNAUTHORIZED)

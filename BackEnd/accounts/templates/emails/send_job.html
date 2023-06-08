@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Job Interview Invitation</title>
+    <style>
+        body {
+            background-color: #104271;
+            font-family: Calisto MT;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+        }
+
+        h2 {
+            text-align: center;
+            font-family: Calisto MT;
+        }
+
+        p {
+            text-align: justify;
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        .contact-info {
+            margin-bottom: 30px;
+        }
+
+        .contact-info p {
+            margin-bottom: 5px;
+        }
+
+        .footer {
+            font-size: 14px;
+            text-align: center;
+            margin-top: 30px;
+        }
+        .logo {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .logo img {
+        max-width: 150px;
+      }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="https://res.cloudinary.com/dq6avgw6n/image/upload/v1686232503/logo_i7raij.png" alt="Logo">
+        </div>
+        <h2>Job Interview Invitation</h2>
+
+        <p>
+            Dear <strong>{{name_candidate}}</strong>,
+        </p>
+
+        <p>
+            RE: Invitation for Job Interview
+        </p>
+
+        <p>
+            We are pleased to inform you that after careful consideration of your application for the
+            <a href="{{pdf_upload}}">{{job_name}}</a> at <strong>{{company_name}}</strong>, we would like to invite you for a job
+            interview.
+        </p>
+
+        <p>
+            Your qualifications and experience align perfectly with the requirements of the position, and we believe
+            that you have the potential to make a significant contribution to our company. We were impressed by your
+            specific skills, experience, or achievements
+        </p>
+
+        <p>
+            Please confirm your availability by contacting our HR department with replying to this email ( {{email_user}}).
+            We are excited about the possibility of having you join our team and contribute to our company's success.
+            Should you have any questions or require any additional information prior to the interview, please feel free
+            to reach out to us.
+        </p>
+
+        <p>
+            We look forward to meeting you in person and getting to know you better.
+        </p>
+
+        <div class="footer">
+            <p>
+                Best regards,
+                <br>
+                {{name}}
+                <br>
+                HR at {{company_name}}
+            </p>
+        </div>
+    </div>
+    <!-- Add Bootstrap JS scripts (jQuery and Bootstrap) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
