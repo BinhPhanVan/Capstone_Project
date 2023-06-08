@@ -33,7 +33,7 @@ const sendMessage1 = async (conversationId, user_info, message) => {
       name: user_info.account.first_name + " " + user_info.account.last_name,
       avatar: user_info.avatar_url,
       message: message,
-      timestamp : firebase.database.ServerValue.TIMESTAMP
+      timestamp : Date.now()
     };
     newMessageRef.set(messageData);
     await Promise.all([newMessageRef.set(messageData), updateLastMessage(conversationId, messageData)]);
