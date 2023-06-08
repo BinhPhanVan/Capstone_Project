@@ -8,7 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import ContentPasteSearchIcon from '@mui/icons-material/ContentPasteSearch';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import TextsmsIcon from '@mui/icons-material/Textsms';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import { logout, selectIsAdmin } from "../../store/AuthSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -66,7 +66,7 @@ function Header() {
               </>   
             }
             <Nav.Link as={NavLink} to="/chat" className="navbar-text">
-              <MailOutlineIcon/>
+              <TextsmsIcon/>
               <div className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
               <span className="visually-hidden">Notification count</span>
                 5
