@@ -28,5 +28,7 @@ urlpatterns = [
     path('employee/get-all-jobs/', JobRequirementListAPIView.as_view(), name='get_all_jobs'),
     path('recruiter/get-all-candidates/', GetAllCandidateListAPIView.as_view(), name='get_all_candidates'),
     path('recruiter/get-all-jobs-owner/', JobOwnerView.as_view(), name='get_all_candidates'),
+    path('employee/send-email/', EmailCVView.as_view(), name='send_cv'),
+    path('recruiter/send-email/', EmailJobView.as_view(), name='send_job'),
 ]
 urlpatterns += router.urls

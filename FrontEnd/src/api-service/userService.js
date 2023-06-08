@@ -19,5 +19,13 @@ const get_all_candidate= async () => {
     const res = await  httpRequest.get('recruiter/get-all-candidates/');
     return res;
 }
-const userService = {get_information, find_job, get_active, get_all_candidate};
+
+const send_email_with_job =  async (data) => {
+    const res = await  httpRequest.post('recruiter/send-email/', {
+        data
+    });
+    return res;
+}
+
+const userService = {get_information, find_job, get_active, get_all_candidate, send_email_with_job};
 export default  userService;

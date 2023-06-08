@@ -145,3 +145,20 @@ class ExtractCVGetAll(serializers.ModelSerializer):
 
 class DeactivedJobSerializer(serializers.Serializer):
     job_requirement_id = serializers.CharField() 
+
+class EmailCVSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    job_name = serializers.CharField()
+    company_name = serializers.CharField()
+    pdf_file = serializers.CharField()
+    name = serializers.CharField()
+    email_user = serializers.EmailField()
+
+class EmailJobSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    job_name = serializers.CharField()
+    company_name = serializers.CharField()
+    pdf_upload = serializers.CharField()
+    name_candidate = serializers.CharField()
+    name = serializers.CharField()
+    email_user = serializers.EmailField()
