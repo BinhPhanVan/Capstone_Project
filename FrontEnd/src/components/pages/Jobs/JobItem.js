@@ -4,17 +4,41 @@ import BadgeIcon from '@mui/icons-material/Badge';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import BiotechIcon from '@mui/icons-material/Biotech';
 import MailIcon from '@mui/icons-material/Mail';
-import { useSelector } from 'react-redux';
-import { selectUserInfo } from '../../../store/UserSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectIsLoading, selectUserInfo, send_email_with_cv } from '../../../store/UserSlice';
 import firebaseService from '../../../api-service/firebaseService';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import SpinnerLoading from '../../commons/SpinnerLoading';
 
 
 const JobItem = ({ job, onJobClick }) => {
     const user_info = useSelector(selectUserInfo);
     const navigate = useNavigate();
-    return (
-    <div className='jobitem-container' onClick= {(e) => 
+    const dispatch = useDispatch();
+    const loading = useSelector(selectIsLoading);
+    const SendCV = async (job, user_info) =>
+    {
+        console.log(job, user_info);
+        const data = 
+        {
+            'email': job.email,
+            'job_name': job.job_name,
+            'company_name': job.company_name,
+            'pdf_file': user_info.pdf_file,
+            'name': user_info.account.first_name + " " + user_info.account.last_name,
+            'email_user': user_info.account.email,
+        }
+        const actionResult = await dispatch(send_email_with_cv(data));
+        if (send_email_with_cv.fulfilled.match(actionResult)) {
+            toast.success(actionResult.payload["message"]);
+        }
+        if (send_email_with_cv.rejected.match(actionResult)) {
+            toast.error(actionResult.payload["message"]);
+        }
+        };
+    return loading?<SpinnerLoading loading={loading}/> 
+    :(<div className='jobitem-container' onClick= {(e) => 
         {
             e.preventDefault();
             onJobClick(job);
@@ -30,14 +54,13 @@ const JobItem = ({ job, onJobClick }) => {
             <ListItemSecondaryAction className="btn-container">
                 <Button className="btn-apply" variant="contained" color="primary" onClick={(e) => 
                 {
-                    console.log('Apply clicked')
+                    SendCV(job, user_info);
                     e.stopPropagation();
                 }}>
                 Apply
                 </Button>
                 <Button className="btn-message" variant="contained" color="secondary" onClick={(e) => {
                     e.stopPropagation();
-                    // firebaseService.initializeConversation(user_info.account.id, job.id);
                     firebaseService.initializeConversation(
                         user_info.account.id, 
                         job.id, 
@@ -46,16 +69,6 @@ const JobItem = ({ job, onJobClick }) => {
                         job.name, 
                         job.avatar_url);
                     navigate(`/chat/${user_info.account.id}_${job.id}`);
-                    // firebaseService.sendMessage1(user_info.account.id, job.id, "ksfsjfkfjskfjskfjsfksfksfsf");
-                    // console.log(firebaseService.getConversationId(user_info.account.id, job.id));
-                    // console.log(firebaseService.getAllMessage(user_info.account.id, job.id));
-                    // firebaseService.getAllMessage(user_info.account.id, job.id).then((messages) => {
-                    //     // Handle the messages
-                    //     console.log(messages);
-                    // })
-                    // .catch((error) => {
-                    //     console.error('Error getting messages:', error);
-                    // });
                 }}>
                 Message
                 </Button>
