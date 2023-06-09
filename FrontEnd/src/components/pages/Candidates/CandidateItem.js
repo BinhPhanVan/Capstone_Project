@@ -13,6 +13,9 @@ import { useNavigate } from 'react-router-dom';
 const CandidateItem = ({ candidate, onCandidateClick }) => {
     const user_info = useSelector(selectUserInfo);
     const navigate = useNavigate();
+    const SendJob = (candidate, user_info) => {
+        console.log(candidate, user_info);
+    };
     return (
     <div className='candidate_item-container' onClick= {(e) => 
         {
@@ -31,30 +34,15 @@ const CandidateItem = ({ candidate, onCandidateClick }) => {
                 <Typography variant="body1" className='skill-text'><BiotechIcon/>{`: ${candidate.skills}`}</Typography>
             </div>
             <ListItemSecondaryAction className="btn-container">
-                <Button className="btn-apply" variant="contained" color="primary" onClick={(e) => 
+                <Button className="btn-apply" variant="contained" color="primary" onClick={ (e) => 
                 {
-                    console.log('Apply clicked')
-                    firebaseService.getAllUsersInChatWithUser(user_info.account.id)
-                    .then((users) => {
-                        // Log the user list with all information
-                        users.forEach((user) => {
-                        console.log('User ID:', user.id);
-                        console.log('User Name:', user.name);
-                        console.log('User Avatar:', user.avatar);
-                        console.log('Last Message:', user.lastMessage.text);
-                        console.log('----------------------------------');
-                        });
-                    })
-                    .catch((error) => {
-                        console.error('Error retrieving users:', error);
-                    });
+                    SendJob(candidate, user_info);
                     e.stopPropagation();
                 }}>
                 Invite
                 </Button>
                 <Button className="btn-message" variant="contained" color="secondary" onClick={(e) => {
                     e.preventDefault();
-                    console.log('Message clicked');
                     firebaseService.initializeConversation(
                         candidate.id, 
                         user_info.account.id, 

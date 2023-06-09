@@ -21,11 +21,20 @@ const get_all_candidate= async () => {
 }
 
 const send_email_with_job =  async (data) => {
+
     const res = await  httpRequest.post('recruiter/send-email/', {
-        data
+        ...data
     });
     return res;
 }
 
-const userService = {get_information, find_job, get_active, get_all_candidate, send_email_with_job};
+const send_email_with_cv =  async (data) => {
+    console.log(data);
+    const res = await  httpRequest.post('employee/send-email/', {
+        ...data
+    });
+    return res;
+}
+
+const userService = {get_information, find_job, get_active, get_all_candidate, send_email_with_job, send_email_with_cv};
 export default  userService;

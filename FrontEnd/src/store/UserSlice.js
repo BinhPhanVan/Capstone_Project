@@ -67,6 +67,19 @@ export const send_email_with_job = createAsyncThunk(
   }
 );
 
+export const send_email_with_cv = createAsyncThunk(
+  "employee/send_email_with_cv",
+  async ( data, { rejectWithValue }) => {
+    try {
+        const res = await userService.send_email_with_cv(data);
+        return res;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue("Access denied! Please try again.");
+    }
+  }
+);
+
 const initialState = {
   isLoading: false,
   file: null,
@@ -135,6 +148,15 @@ const userSlice = createSlice({
       state.isLoading = false;
     });
     builder.addCase(send_email_with_job.fulfilled, (state, action) => {
+      state.isLoading = false;
+    });
+    builder.addCase(send_email_with_cv.pending, (state, action) => {
+      state.isLoading = true;
+    });
+    builder.addCase(send_email_with_cv.rejected, (state, action) => {
+      state.isLoading = false;
+    });
+    builder.addCase(send_email_with_cv.fulfilled, (state, action) => {
       state.isLoading = false;
     });
   },
