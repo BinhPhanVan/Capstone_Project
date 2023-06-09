@@ -41,19 +41,12 @@ const ModalCandidate = ({ candidate, open, handleClose }) => {
             <PDFViewer 
                 file={candidate.pdf_file} />
             <ListItemSecondaryAction className="modal-btn-container">
-                <Button className="btn-down" variant="contained" color="primary" onClick={(e) => 
-                {
-                    console.log('Down clicked')
-                    e.stopPropagation();
-                }}>
-                Download
-                </Button>
                 <Button className="btn-sent" variant="contained" color="primary" onClick={(e) => 
                 {
-                    console.log('Apply clicked')
                     e.stopPropagation();
+                    
                 }}>
-                Sent
+                Invite
                 </Button>
                 <Button className="btn-message" variant="contained" color="secondary" onClick={(e) => {
                     firebaseService.initializeConversation(
