@@ -18,7 +18,7 @@ from django.urls import path, include, re_path
 from drf_yasg.views import get_schema_view as swagger_get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
-
+import debug_toolbar
 schema_view = swagger_get_schema_view(
    openapi.Info(
       title="Capstone Project API",
@@ -43,4 +43,5 @@ urlpatterns = [
     path('api/v1/', include('accounts.urls')),
     path('admin/', admin.site.urls),
     path('social-auth/', include('social_django.urls'), name='social'),
+    path("__debug__/", include(debug_toolbar.urls)),
 ]

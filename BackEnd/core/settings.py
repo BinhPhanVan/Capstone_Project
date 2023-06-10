@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'social_django',
     'rest_framework_simplejwt',
     'drf_yasg',
+    'debug_toolbar',
 
 ]
 
@@ -61,6 +62,11 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+]
+
+INTERNAL_IPS = [
+    "127.0.0.1",
 ]
 
 ROOT_URLCONF = 'core.urls'

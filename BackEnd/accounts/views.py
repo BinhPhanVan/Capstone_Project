@@ -74,7 +74,7 @@ class RecruiterRegisterViewSet(viewsets.ViewSet, generics.CreateAPIView):
                 serializer = self.get_serializer(data=request.data)
                 if serializer.is_valid(raise_exception=True):
                     account = serializer.save()
-                    send_opt_via_email(user['email'])
+                    send_email_with_template(user['email'])
                     serialized_user = UserRegisterSerializer(data=user)
                     return Response({
                         'status': status.HTTP_200_OK,
@@ -507,7 +507,7 @@ class GetActiveCVView(GenericAPIView):
         try:
             user_id = request.user.id
             employee = Employee.objects.get(account_id=user_id)
-            
+
             try:
                 extract_cv = ExtractCV.objects.get(employee=employee)
                 response = {
