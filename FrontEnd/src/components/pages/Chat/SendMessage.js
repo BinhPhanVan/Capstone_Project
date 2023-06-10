@@ -62,7 +62,18 @@ function SendMessage() {
     setModalOpen(false);
   };
   const handleItemClick = (job) => {
-    setSelectedItem(job);
+    if(selectedItem?.id !== job?.id)
+    {
+        setSelectedItem(job);
+    }
+    else if(selectedItem !== null)
+    {
+        setSelectedItem(null);
+    }
+    else
+    {
+        setSelectedItem(job);
+    }
   };
   const sendMessage = () => {
     if (message.trim() !== '') {
@@ -107,7 +118,7 @@ function SendMessage() {
                       <div className={`job_upload_item-content ${selectedItem?.id === job.id ? 'job_upload_item_selected' : ''}`} 
                         key={job.id} 
                         onClick={() => handleItemClick(job)}>
-                        <Typography variant="h7">
+                        <Typography variant="subtitle1">
                           {job.job_name}
                         </Typography>
                           <Typography variant="body1" className="company-loc-text">
@@ -117,10 +128,10 @@ function SendMessage() {
                       </div>
                     ))}
                     <ListItemSecondaryAction className="modal-btn-container">
-                      <Button className="btn-cancel" variant="contained" color="dark" onClick={(e) => 
+                      <Button className="btn-cancel" variant="contained" color="default" onClick={(e) => 
                       {
-                          console.log('Apply clicked')
                           e.stopPropagation();
+                          handleCloseModal();
                       }}>
                       Cancel
                       </Button>
