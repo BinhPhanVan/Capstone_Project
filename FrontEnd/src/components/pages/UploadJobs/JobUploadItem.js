@@ -12,7 +12,6 @@ const JobUploadItem = ({ job }) => {
             className="job_upload_item-container"
             onClick={(e) => {
                 e.preventDefault();
-                console.log(job.name);
             }}
         >
             <ListItem key={job.id}>
