@@ -44,9 +44,9 @@ pipeline {
                 dir('BackEnd')
                 {
                     sh "ls"
-                    sh "docker build --force-rm -t binhphanvan/hireit ."
-                    sh "docker push binhphanvan/hireit"
-                    sh "docker run --net=host --name=hire_it_api -d -p 8000:8000 binhphanvan/hireit"
+                    sh "docker build -t binhphanvan/hireit ."
+                    // sh "docker push binhphanvan/hireit"
+                    sh "docker run --name=hire_it_api -d -p 8000:8000 binhphanvan/hireit"
                     echo "Done"
                 }
                
