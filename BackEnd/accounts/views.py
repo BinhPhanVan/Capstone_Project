@@ -16,9 +16,9 @@ from accounts.serializers import UserSerializer, VertifyEmailSerializer, LoginSe
     MyTokenObtainPairSerializer, ForgotPassWordSerializer, ChangePasswordSerializer
 from .email import send_email_with_cv, send_email_with_job, send_opt_via_email, send_reset_password, send_email_with_template
 from .permissions import IsEmployeePermission, IsRecruiterPermission
-from .serializers import EmailCVSerializer, EmailJobSerializer, EmployeeSerializer, ExtractCVGetAll, JobRequirementGetAll, JobRequirementSerializer, PDFFileSerializer, RecruiterRegisterSerializer, RecruiterSerializer, UserRegisterSerializer, DeactivedJobSerializer
+from .serializers import EmailCVSerializer, EmailJobSerializer, EmployeeSerializer, ExtractCVGetAll, JobRequirementGetAll, JobRequirementSerializer, PDFFileSerializer, RecruiterRegisterSerializer, RecruiterSerializer, UserRegisterSerializer, DeactivedJobSerializer, InterviewSerializer, InterviewUpdateSerializer
 from .utils import check_pass, extract_location, extract_phone_number, extract_skills, extract_text_from_pdf, same_pass
-from .models import ExtractCV, JobRequirement, Recruiter, User, Employee
+from .models import ExtractCV, JobRequirement, Recruiter, User, Employee, Interview
 from django.contrib.auth import authenticate, login, logout
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.shortcuts import get_object_or_404
@@ -827,3 +827,121 @@ class EmailJobView(APIView):
             "data": {},
         }
         return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+
+
+class InterviewCreateAPIView(GenericAPIView):
+    @swagger_auto_schema(request_body=InterviewSerializer)
+    def post(self, request):
+        serializer = InterviewSerializer(data=request.data)
+        if serializer.is_valid():
+            employee_email = serializer.data["employee_email"]
+            recruiter_email = serializer.data["recruiter_email"]
+            hour_start = serializer.data["hour_start"]
+            minute_start = serializer.data["minute_start"]
+            hour_end = serializer.data["hour_end"]
+            minute_end = serializer.data["minute_end"]
+            date = serializer.data["date"]
+
+            # Create the scheduled time using the provided date and time components
+            employee = Employee.objects.get(account__email=employee_email)
+            recruiter = Recruiter.objects.get(account__email=recruiter_email)
+
+            # Check if the interview already exists
+            existing_interview = Interview.objects.filter(
+                employee=employee,
+                recruiter=recruiter,
+                date=date,
+            ).first()
+
+            if existing_interview:
+                response = {
+                    "status": status.HTTP_400_BAD_REQUEST,
+                    "message": "Interview already exists.",
+                    "data": {
+                        "interview_id": existing_interview.id,
+                        "employee_email": employee_email,
+                        "recruiter_email": recruiter_email,
+                    },
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+            # Create the Interview object
+            interview = Interview.objects.create(
+                employee=employee,
+                recruiter=recruiter,
+                hour_start=hour_start,
+                minute_start=minute_start,
+                hour_end=hour_end,
+                minute_end=minute_end,
+                date=date,
+            )
+
+            response = {
+                "status": status.HTTP_201_CREATED,
+                "message": "Scheduling successfull.",
+                "data": {
+                    "interview_id": interview.id,
+                    "employee_email": employee_email,
+                    "recruiter_email": recruiter_email,
+                },
+            }
+            return Response(response, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class InterviewViewSet(viewsets.ViewSet):
+    def get_permissions(self):
+        if self.action == 'update':
+            permission_classes = [IsAuthenticated] 
+        elif self.action == 'destroy':
+            permission_classes = [IsAuthenticated, IsRecruiterPermission]  
+        else:
+            permission_classes = [] 
+        return [permission() for permission in permission_classes]
+    
+    @swagger_auto_schema(request_body=InterviewUpdateSerializer)
+    def update(self, request, pk):
+        try:
+            interview = Interview.objects.get(id=pk)
+        except Interview.DoesNotExist:
+            response = {
+                "status": status.HTTP_404_NOT_FOUND,
+                "message": "Interview not found",
+                "data": {},
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = InterviewUpdateSerializer(interview, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            response = {
+                "status": status.HTTP_200_OK,
+                "message": "Interview updated successfully.",
+                "data": {},
+            }
+            return Response(response, status=status.HTTP_200_OK)
+        
+        response = {
+            "status": status.HTTP_400_BAD_REQUEST,
+            "message": "Interview update failed.",
+            "data": {},
+        }
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+    def destroy(self, request, pk):
+        try:
+            interview = Interview.objects.get(id=pk)
+        except Interview.DoesNotExist:
+            response = {
+                "status": status.HTTP_404_NOT_FOUND,
+                "message": "Interview not found",
+                "data": {},
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
+        
+        interview.delete()
+        response = {
+            "status": status.HTTP_200_OK,
+            "message": "Interview deleted successfully.",
+            "data": {},
+        }
+        return Response(response, status=status.HTTP_200_OK)

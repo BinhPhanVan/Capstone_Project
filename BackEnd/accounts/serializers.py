@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ExtractCV, JobRequirement, User, Employee, Recruiter
+from .models import ExtractCV, JobRequirement, User, Employee, Recruiter, Interview
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.core.validators import FileExtensionValidator
 from django.contrib.auth.hashers import make_password
@@ -162,3 +162,25 @@ class EmailJobSerializer(serializers.Serializer):
     name_candidate = serializers.CharField()
     name = serializers.CharField()
     email_user = serializers.EmailField()
+
+class InterviewSerializer(serializers.ModelSerializer):
+    employee_email = serializers.EmailField()
+    recruiter_email = serializers.EmailField()
+    class Meta:
+        model = Interview
+        fields = ['employee_email', 'recruiter_email', 'hour_start', 'minute_start', 'hour_end', 'minute_end', 'date']
+
+    def validate(self, data):
+        if data['hour_start'] > data['hour_end'] or (data['hour_start'] == data['hour_end'] and data['minute_start'] >= data['minute_end']):
+            raise serializers.ValidationError("Start time must be before end time")
+        return data   
+
+class InterviewUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Interview
+        fields = ['hour_start', 'minute_start', 'hour_end', 'minute_end', 'date', 'status']
+
+    def validate(self, data):
+        if data['hour_start'] > data['hour_end'] or (data['hour_start'] == data['hour_end'] and data['minute_start'] >= data['minute_end']):
+            raise serializers.ValidationError("Start time must be before end time")
+        return data   

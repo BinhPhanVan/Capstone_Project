@@ -36,6 +36,8 @@ class User(AbstractUser):
     def __str__(self):
         return self.email
 
+    class Meta:
+        db_table = 'User'
 
 class Employee(models.Model):
     account = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
@@ -69,6 +71,9 @@ class ExtractCV(models.Model):
     location = models.CharField(null=True, blank=True, max_length=100)
     skills = models.TextField()
     active = models.BooleanField(default=True)
+
+    class Meta:
+        db_table = 'ExtractCV'
     
 class JobRequirement(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, auto_created=True)
@@ -78,3 +83,29 @@ class JobRequirement(models.Model):
     pdf_upload = models.CharField(null=True, max_length=1000, blank=True, default=None)
     skills = models.TextField(null=True, blank=True)
     active = models.BooleanField(default=True)
+
+
+    class Meta:
+        db_table = 'JobRequirement'
+
+class Interview(models.Model):
+
+    INTERVIEW_STATUS_CHOICES = (
+        ('pending', 'Pending'),
+        ('cancel', 'Canceled'),
+        ('approval', 'Approved'),
+    )
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, auto_created=True)
+    employee = models.ForeignKey('Employee', on_delete=models.CASCADE)
+    recruiter = models.ForeignKey('Recruiter', on_delete=models.CASCADE)
+    hour_start = models.IntegerField()
+    minute_start = models.IntegerField()
+    hour_end = models.IntegerField()
+    minute_end = models.IntegerField()
+    date = models.DateField()
+    status = models.CharField(choices=INTERVIEW_STATUS_CHOICES, default='pending', max_length=20)
+    class Meta:
+        db_table = 'Interview'
+
+    def __str__(self):
+        return f"Interview {self.id}"
