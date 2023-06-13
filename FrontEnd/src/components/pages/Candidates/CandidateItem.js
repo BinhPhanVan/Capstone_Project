@@ -116,9 +116,11 @@ const CandidateItem = ({ candidate, onCandidateClick }) => {
                         candidate.id, 
                         user_info.account.id, 
                         candidate.name, 
-                        candidate.avatar_url, 
+                        candidate.avatar_url,
+                        candidate.email, 
                         user_info.account.first_name + " " + user_info.account.last_name, 
-                        user_info.avatar_url);
+                        user_info.avatar_url,
+                        user_info.account.email);
                     navigate(`/chat/${candidate.id}_${user_info.account.id}`);
                     e.stopPropagation();
                 }}>
