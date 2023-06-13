@@ -43,18 +43,20 @@ const sendMessage1 = async (conversationId, user_info, message) => {
     }
 };
 
-const createConversation = (senderId, receiverId, senderName, senderAvatar, receiverName, receiverAvatar) => {
+const createConversation = (senderId, receiverId, senderName, senderAvatar, senderEmail, receiverName, receiverAvatar, receiverEmail) => {
     const conversationId = `${senderId}_${receiverId}`;
     const conversationsRef = firebase.database().ref(`conversations/${conversationId}`);    
     const initialData = {
       users: {
         [senderId]: {
           name: senderName,
-          avatar: senderAvatar
+          avatar: senderAvatar,
+          email: senderEmail
         },
         [receiverId]: {
           name: receiverName,
-          avatar: receiverAvatar
+          avatar: receiverAvatar,
+          email: receiverEmail
         }
       },
       messages: []
@@ -88,12 +90,12 @@ const getConversationId = async (senderId, receiverId) => {
 };
 
 
-const initializeConversation = async (senderId, receiverId, senderName, senderAvatar, receiverName, receiverAvatar) => {
+const initializeConversation = async (senderId, receiverId, senderName, senderAvatar, senderEmail,  receiverName, receiverAvatar, receiverEmail) => {
   const conversationId = await getConversationId(senderId, receiverId);
   if (conversationId) {
     console.log('Conversation already exists.');
   } else {
-    createConversation(senderId, receiverId, senderName, senderAvatar, receiverName, receiverAvatar);
+    createConversation(senderId, receiverId, senderName, senderAvatar, senderEmail, receiverName, receiverAvatar, receiverEmail);
   }
 };
 
@@ -213,6 +215,7 @@ const getUserInChatWithId = (chatId, userId) => {
             id: userId,
             name: user.name,
             avatar: user.avatar,
+            email: user.email,
           }))[0];
         return user;
       } else {

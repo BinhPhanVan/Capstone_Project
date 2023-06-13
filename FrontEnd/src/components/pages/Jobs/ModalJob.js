@@ -53,9 +53,11 @@ const ModalJob = ({ job, open, handleClose }) => {
                         user_info.account.id, 
                         job.id, 
                         user_info.account.first_name + " " + user_info.account.last_name, 
-                        user_info.avatar_url, 
+                        user_info.avatar_url,
+                        user_info.account.email, 
                         job.name, 
-                        job.avatar_url);
+                        job.avatar_url,
+                        job.email);
                     navigate(`/chat/${user_info.account.id}_${job.id}`);
                     e.stopPropagation();
                 }}>
