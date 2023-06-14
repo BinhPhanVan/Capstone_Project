@@ -13,9 +13,6 @@ function BaseContainer() {
   useEffect(() => {
       dispatch(get_information());
   }, [dispatch]);
-  useEffect(() => {
-      document.title = "Home | Hire IT";
-    }, []);
 
   useEffect(() => {
     if (account === null || !account) 

@@ -5,16 +5,33 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUserInfo } from '../../../store/UserSlice';
-import { interview_setup, selectIsLoading } from '../../../store/InterviewSlice';
+import { get_interview, interview_setup, selectIsInterview } from '../../../store/InterviewSlice';
 import { toast } from 'react-toastify';
-import SpinnerLoading from '../../commons/SpinnerLoading';
 
 const CalendarModal = ({ showModal, handleCloseModal, user }) => {
   const [selectedDate, setSelectedDate] = useState('');
   const dispatch = useDispatch();
   const user_info = useSelector(selectUserInfo);
-  const handleChange = (event) => {
+  const isInterview = useSelector(selectIsInterview);
+  const [events, setEvents] = useState([]);
+  const handleChange = async (event) => {
     const date = event.target.value;
+    const data = 
+    {
+      "date": date,
+      "recruiter_email": user_info.account.email,
+    };
+    
+    const actionResult = await dispatch(get_interview(data));
+
+    if (actionResult.meta.requestStatus === "fulfilled") {
+      setEvents(actionResult.payload.data);
+      toast.success(actionResult.payload["message"]);
+    }
+
+    if (actionResult.meta.requestStatus === "rejected") {
+      toast.error(actionResult.payload);
+    }
     setSelectedDate(date);
   };
 
@@ -76,9 +93,8 @@ const CalendarModal = ({ showModal, handleCloseModal, user }) => {
     }
     handleCloseModal();
   };
-  const loading = useSelector(selectIsLoading);
 
-  return loading?<SpinnerLoading loading={loading}/> :(
+  return (
     <Modal
       className="modal-calendar-container"
       open={showModal}
@@ -132,9 +148,18 @@ const CalendarModal = ({ showModal, handleCloseModal, user }) => {
               </div>
             </div>
           </form>
+          <br/>
+          <div className='all-interview-container'>
+              <label>
+                All Interview
+              </label>
+              <br/>
+            </div>
         </div>
         <div className="modal-btn-calendar">
-          <Button variant="contained" onClick={handleSchedule} disabled={selectedDate === ""}>
+          <Button 
+            className='schedule-btn'
+            onClick={handleSchedule} disabled={selectedDate === ""}>
             Schedule
           </Button>
         </div>

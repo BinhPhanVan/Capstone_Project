@@ -1,6 +1,10 @@
 import HomeImageMain from "./HomeImageMain"
 import {Row, Col } from "react-bootstrap";
+import { useEffect } from "react";
 function Home() {
+  useEffect(() => {
+    document.title = "Home | Hire IT";
+  }, []);
   return (
     <div className="home-container">
       <Row>

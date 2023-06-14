@@ -53,7 +53,23 @@
         border: none;
         cursor: pointer;
     }
-      
+    .schedule-btn{
+        background-color: #0765f1;
+        color: #ffffff;
+        padding: 0.5rem;
+    }
+    
+    .schedule-btn:hover{
+        background-color: #0343a3;
+        color: #ffffff;
+    }
+
+    .schedule-btn:disabled {
+        background-color: #e0e0e0;
+        color: #a0a0a0;
+        cursor: not-allowed;
+    }
+
     .MuiSvgIcon-root {
         color: $black-icon !important;
         font-size: 1em !important;
@@ -70,6 +86,9 @@
           width: 90vw;
         }
     }
+}
+.all-interview-container{
+    width: 200px;
 }
 
 #menu- 
