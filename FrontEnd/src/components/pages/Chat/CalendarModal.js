@@ -5,7 +5,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUserInfo } from '../../../store/UserSlice';
-import { interview_setup, selectIsLoading } from '../../../store/InterviewSlice';
+import { get_interview, interview_setup, selectIsLoading } from '../../../store/InterviewSlice';
 import { toast } from 'react-toastify';
 import SpinnerLoading from '../../commons/SpinnerLoading';
 
@@ -13,8 +13,20 @@ const CalendarModal = ({ showModal, handleCloseModal, user }) => {
   const [selectedDate, setSelectedDate] = useState('');
   const dispatch = useDispatch();
   const user_info = useSelector(selectUserInfo);
-  const handleChange = (event) => {
+  const handleChange = async (event) => {
     const date = event.target.value;
+    const data = 
+    {
+      "date": date,
+      "recruiter_email": user_info.account.email,
+    };
+    const actionResult = await dispatch(get_interview(data));
+    if (get_interview.fulfilled.match(actionResult)) {
+        toast.success(actionResult.payload["message"]);
+    }
+    if (get_interview.rejected.match(actionResult)) {
+        toast.error(actionResult.payload);
+    }
     setSelectedDate(date);
   };
 

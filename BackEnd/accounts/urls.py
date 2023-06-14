@@ -32,5 +32,6 @@ urlpatterns = [
     path('employee/send-email/', EmailCVView.as_view(), name='send_cv'),
     path('recruiter/send-email/', EmailJobView.as_view(), name='send_job'),
     path('interviews/set-up/', InterviewCreateAPIView.as_view(), name='interview-setup'),
+    path('interviews/get-interview/', InterviewListAPIView.as_view(), name='interview-list'),
 ]
 urlpatterns += router.urls

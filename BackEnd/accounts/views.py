@@ -16,7 +16,7 @@ from accounts.serializers import UserSerializer, VertifyEmailSerializer, LoginSe
     MyTokenObtainPairSerializer, ForgotPassWordSerializer, ChangePasswordSerializer
 from .email import send_email_with_cv, send_email_with_job, send_opt_via_email, send_reset_password, send_email_with_template
 from .permissions import IsEmployeePermission, IsRecruiterPermission
-from .serializers import EmailCVSerializer, EmailJobSerializer, EmployeeSerializer, ExtractCVGetAll, JobRequirementGetAll, JobRequirementSerializer, PDFFileSerializer, RecruiterRegisterSerializer, RecruiterSerializer, UserRegisterSerializer, DeactivedJobSerializer, InterviewSerializer, InterviewUpdateSerializer
+from .serializers import EmailCVSerializer, EmailJobSerializer, EmployeeSerializer, ExtractCVGetAll, InterviewListSerializer, JobRequirementGetAll, JobRequirementSerializer, PDFFileSerializer, RecruiterRegisterSerializer, RecruiterSerializer, UserRegisterSerializer, DeactivedJobSerializer, InterviewSerializer, InterviewUpdateSerializer
 from .utils import check_pass, extract_location, extract_phone_number, extract_skills, extract_text_from_pdf, same_pass
 from .models import ExtractCV, JobRequirement, Recruiter, User, Employee, Interview
 from django.contrib.auth import authenticate, login, logout
@@ -853,7 +853,7 @@ class InterviewCreateAPIView(GenericAPIView):
                 date=date,
             ).first()
 
-            if existing_interview:
+            if existing_interview and existing_interview.status != 'cancel':
                 response = {
                     "status": status.HTTP_400_BAD_REQUEST,
                     "message": "Interview already exists.",
@@ -887,6 +887,55 @@ class InterviewCreateAPIView(GenericAPIView):
             }
             return Response(response, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class InterviewListAPIView(generics.GenericAPIView):
+    def get(self, request):
+        serializer = InterviewListSerializer(data=request.GET)
+        if serializer.is_valid():
+            try: 
+                date = serializer.validated_data['date']
+                recruiter_email = serializer.validated_data['recruiter_email']
+
+                interviews = Interview.objects.filter(date=date, recruiter__account__email=recruiter_email)
+
+                interview_data = []
+                for interview in interviews:
+                    if interview.status != 'cancel':
+                        interview_data.append({
+                            'interview_id': interview.id,
+                            'employee_email': interview.employee.account.email,
+                            'recruiter_email': interview.recruiter.account.email,
+                            'hour_start': interview.hour_start,
+                            'minute_start': interview.minute_start,
+                            'hour_end': interview.hour_end,
+                            'minute_end': interview.minute_end,
+                            'status': interview.status,
+                        })
+
+                if not interview_data:
+                    response = {
+                        'status': status.HTTP_404_NOT_FOUND,
+                        'message': 'No interviews found.',
+                        'data': [],
+                    }
+                else:
+                    response = {
+                        'status': status.HTTP_200_OK,
+                        'message': 'Interviews retrieved successfully.',
+                        'data': interview_data,
+                    }
+
+                return Response(response)
+            except Exception as e:
+                response = {
+                    "status": status.HTTP_401_UNAUTHORIZED,
+                    "message": "Email sent failed",
+                    "data": {},
+                }
+                return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class InterviewViewSet(viewsets.ViewSet):
     def get_permissions(self):
