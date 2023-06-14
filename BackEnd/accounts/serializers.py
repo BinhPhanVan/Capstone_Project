@@ -184,3 +184,7 @@ class InterviewUpdateSerializer(serializers.ModelSerializer):
         if data['hour_start'] > data['hour_end'] or (data['hour_start'] == data['hour_end'] and data['minute_start'] >= data['minute_end']):
             raise serializers.ValidationError("Start time must be before end time")
         return data   
+
+class InterviewListSerializer(serializers.Serializer):
+    date = serializers.DateField()
+    recruiter_email = serializers.EmailField()
