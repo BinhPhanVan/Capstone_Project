@@ -830,6 +830,10 @@ class EmailJobView(APIView):
 
 
 class InterviewCreateAPIView(GenericAPIView):
+
+    serializer_class = InterviewSerializer
+    permission_classes = [IsRecruiterPermission, IsAuthenticated]
+
     @swagger_auto_schema(request_body=InterviewSerializer)
     def post(self, request):
         serializer = InterviewSerializer(data=request.data)
@@ -909,6 +913,7 @@ class InterviewListAPIView(generics.GenericAPIView):
                             'minute_start': interview.minute_start,
                             'hour_end': interview.hour_end,
                             'minute_end': interview.minute_end,
+                            'date': interview.date,
                             'status': interview.status,
                         })
 

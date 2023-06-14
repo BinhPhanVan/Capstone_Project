@@ -31,6 +31,7 @@ export const get_interview = createAsyncThunk(
 
 const initialState = {
   isLoading: false,
+  events : [],
 };
 
 const interviewSlice = createSlice({
@@ -48,14 +49,18 @@ const interviewSlice = createSlice({
       });
       builder.addCase(get_interview.pending, (state, action) => {
         state.isLoading = true;
+        state.events = [];
       });
       builder.addCase(get_interview.rejected, (state, action) => {
         state.isLoading = false;
+        state.events = [];
       });
       builder.addCase(get_interview.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.events = action.payload.data;
       });
   },
 });
-export const selectIsLoading = (state) => state.job.isLoading;
+export const selectIsLoading = (state) => state.interview.isLoading;
+export const selectIsInterview = (state) => state.interview.events;
 export default interviewSlice.reducer;
