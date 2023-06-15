@@ -167,7 +167,7 @@ const CalendarModal = ({ showModal, handleCloseModal, user }) => {
               </label>
               <br/>
               <br></br>
-              {events.length !== 0 ? <EventList events={events} /> : <p>There are no interviews today</p>}
+              {events.length !== 0 ? <EventList events={events} /> : <p style={{ color: '#999' }}>There are no interviews today.</p>}
           </div>
         </div>
         <div className="modal-btn-calendar">
