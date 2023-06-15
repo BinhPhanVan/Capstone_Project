@@ -89,9 +89,17 @@ const CalendarModal = ({ showModal, handleCloseModal, user }) => {
     
     const actionResult = await dispatch(interview_setup(data));
     if (interview_setup.fulfilled.match(actionResult)) {
-        toast.success(actionResult.payload["message"]);
-        handleCloseModal();
-        setSelectedDate('');
+        if(actionResult.payload["status"] !== 201)
+        {
+          toast.error(actionResult.payload["message"]);
+        }
+        else
+        {
+          toast.success(actionResult.payload["message"]);
+          handleCloseModal();
+          setSelectedDate('');
+          setEvents([]);
+        }
     }
     if (interview_setup.rejected.match(actionResult)) {
         toast.error(actionResult.payload);
