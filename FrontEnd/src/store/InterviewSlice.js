@@ -9,8 +9,7 @@ export const interview_setup = createAsyncThunk(
           const res = await interviewService.setup_interview(data);
           return res;
       } catch (error) {
-        console.log(error);
-        return rejectWithValue("Interview already exists today");
+        return error.response.data;
       }
     }
 );

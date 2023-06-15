@@ -1,5 +1,4 @@
 import axios from "axios";
-import { handleError } from "../utils/handleError";
 import store from "../store"
 const httpRequest = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
@@ -46,10 +45,6 @@ httpRequest.interceptors.request.use(
 httpRequest.interceptors.response.use(
   (response) => {
     return response.data;
-  },
-  function (error) {
-    const message = handleError(error);
-    return Promise.reject({ message: message });
   }
 );
 export default httpRequest;
