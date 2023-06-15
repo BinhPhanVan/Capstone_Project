@@ -3,9 +3,9 @@ import EventItem from "./EventItem";
 
 function EventList({ events }) {
   return (
-    <div>
-      {events.map((event) => (
-        <EventItem key={event.id} event={event} />
+    <div className="event-list-row">
+      {events.map((event, index) => (
+        <EventItem key={index} event={event} />
       ))}
     </div>
   );
