@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-// import firebaseService from '../../../api-service/firebaseService';
 import { selectUserInfo } from '../../../store/UserSlice';
 import MessageItem from './MessageItem';
 import MessageNav from './MessageNav';
@@ -66,7 +65,7 @@ function ChatContent() {
                 avatar={message.avatar}
                 name={message.name}
                 message={message.message}
-                align={user_info.account.id === message.senderId ? 'right': 'left'}
+                align={user_info?.account.id === message.senderId ? 'right': 'left'}
                 timestamp={message.timestamp}
                 />
             ))}

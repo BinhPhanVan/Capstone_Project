@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, FormControl, InputLabel, Input, Select, MenuItem } from '@material-ui/core';
+import { Grid, FormControl, InputLabel, Input, Select, MenuItem, Typography } from '@material-ui/core';
 import { PROVINCES } from '../../../constants/locations';
 import ListJob from './ListJob';
 import { get_all_jobs, selectIsLoading, selectJobs } from '../../../store/JobSlice';
@@ -41,7 +41,9 @@ function SearchJob() {
     });
     
   const filteredJobs = jobs.filter((job) =>
-    job.job_name.toLowerCase().includes(searchQuery.toLowerCase())
+    job.job_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    job.skills.toLowerCase().includes(searchQuery.toLowerCase())   ||
+    job.company_name.toLowerCase().includes(searchQuery.toLowerCase())
   ).filter((job) =>
       job.location.toLowerCase().includes(selectedProvince.toLowerCase())
   );
@@ -90,7 +92,10 @@ function SearchJob() {
           </FormControl>
         </Grid>
         <ListJob jobs={filteredJobs} />
-      </Grid>           
+      </Grid>
+      <div className="no-item-search">
+        {filteredJobs.length !== 0 ? <></>:  <Typography variant="body1" className='no-value-center'>No job found.</Typography>}
+      </div>            
     </div>
   );
 }

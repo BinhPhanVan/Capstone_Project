@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, FormControl, InputLabel, Input, Select, MenuItem } from '@material-ui/core';
+import { Grid, FormControl, InputLabel, Input, Select, MenuItem, Typography } from '@material-ui/core';
 import { PROVINCES } from '../../../constants/locations';
 import ListCandidate from './ListCandidate';
 import { useDispatch, useSelector } from 'react-redux';
@@ -43,7 +43,8 @@ function SearchCandidate() {
     
 
     const filteredCandidates = candidates.filter((candidate) =>
-        candidate.name.toLowerCase().includes(searchQuery.toLowerCase())
+        candidate.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        candidate.skills.toLowerCase().includes(searchQuery.toLowerCase())
     ).filter((candidate) =>
         candidate.location.toLowerCase().includes(selectedProvince.toLowerCase())
     );
@@ -91,8 +92,11 @@ function SearchCandidate() {
                     </Select>
                 </FormControl>
             </Grid>
-            <ListCandidate candidates={filteredCandidates} />
+            <ListCandidate candidates={filteredCandidates}/>
         </Grid>
+        <div className="no-item-search">
+            {filteredCandidates.length !== 0 ? <></>:  <Typography variant="body1" className='no-value-center'>No candidate found.</Typography>}
+        </div> 
     </div>
   );
 }
