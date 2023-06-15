@@ -30,8 +30,8 @@ function ChatContent() {
     });
     const fetchUser = async () => {
       try {
-        if (user_info && user_info.account && user_info.account.id && chatId) {
-          const user = await firebaseService.getUserInChatWithId(chatId, user_info.account.id);
+        if (user_info && user_info?.account && user_info?.account.id && chatId) {
+          const user = await firebaseService.getUserInChatWithId(chatId, user_info?.account.id);
           if (user) {
             setUser(user);
           } else {

@@ -11,6 +11,7 @@ from rest_framework.views import APIView
 from django.conf import settings
 from rest_framework import authentication, permissions
 from rest_framework.decorators import action
+from datetime import datetime
 # Create your views here.
 from accounts.serializers import UserSerializer, VertifyEmailSerializer, LoginSerializer, \
     MyTokenObtainPairSerializer, ForgotPassWordSerializer, ChangePasswordSerializer
@@ -845,9 +846,56 @@ class InterviewCreateAPIView(GenericAPIView):
             hour_end = serializer.data["hour_end"]
             minute_end = serializer.data["minute_end"]
             date = serializer.data["date"]
+            start_time = datetime.strptime(f"{hour_start}:{minute_start}", "%H:%M").time()
+            end_time = datetime.strptime(f"{hour_end}:{minute_end}", "%H:%M").time()
 
+            current_datetime = datetime.now().date()
+
+            # Convert the date string to a datetime object
+            interview_date = datetime.strptime(date, "%Y-%m-%d").date()
+
+            if interview_date <= current_datetime:
+                response = {
+                    "status": status.HTTP_400_BAD_REQUEST,
+                    "message": "Invalid date. Date must be in the future.",
+                    "data": {},
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+            if start_time >= end_time:
+                response = {
+                    "status": status.HTTP_400_BAD_REQUEST,
+                    "message": "Invalid time range. Start time must be before end time.",
+                    "data": {},
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            
             # Create the scheduled time using the provided date and time components
             employee = Employee.objects.get(account__email=employee_email)
+
+            existing_interviews = Interview.objects.filter(
+                employee=employee,
+                date=date,
+            )
+
+            for existing_interview in existing_interviews:
+                existing_start_time = datetime.strptime(f"{existing_interview.hour_start}:{existing_interview.minute_start}", "%H:%M").time()
+                existing_end_time = datetime.strptime(f"{existing_interview.hour_end}:{existing_interview.minute_end}", "%H:%M").time()
+                if (
+                    (start_time >= existing_start_time and start_time < existing_end_time) or
+                    (end_time > existing_start_time and end_time <= existing_end_time)
+                ):
+                    response = {
+                        "status": status.HTTP_400_BAD_REQUEST,
+                        "message": "Time conflict with existing interview.",
+                        "data": {
+                            "interview_id": existing_interview.id,
+                            "employee_email": employee_email,
+                            "recruiter_email": recruiter_email,
+                        },
+                    }
+                    return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
             recruiter = Recruiter.objects.get(account__email=recruiter_email)
 
             # Check if the interview already exists
@@ -908,6 +956,7 @@ class InterviewListAPIView(generics.GenericAPIView):
                         interview_data.append({
                             'interview_id': interview.id,
                             'employee_email': interview.employee.account.email,
+                            'employee_name': interview.employee.account.first_name + " " + interview.employee.account.last_name,
                             'recruiter_email': interview.recruiter.account.email,
                             'hour_start': interview.hour_start,
                             'minute_start': interview.minute_start,

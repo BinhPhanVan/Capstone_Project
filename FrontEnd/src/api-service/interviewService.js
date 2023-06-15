@@ -9,7 +9,6 @@ const setup_interview =  async (data) => {
 }
 
 const get_interview =  async (data) => {
-    console.log(data);
     const res = await  httpRequest.get('interviews/get-interview/', {
         params: data
     });

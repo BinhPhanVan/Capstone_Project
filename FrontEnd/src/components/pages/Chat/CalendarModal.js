@@ -5,14 +5,15 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUserInfo } from '../../../store/UserSlice';
-import { get_interview, interview_setup, selectIsInterview } from '../../../store/InterviewSlice';
+import { get_interview, interview_setup, selectIsLoading } from '../../../store/InterviewSlice';
 import { toast } from 'react-toastify';
+import EventList from '../Events/EventList';
+import SpinnerLoading from '../../commons/SpinnerLoading';
 
 const CalendarModal = ({ showModal, handleCloseModal, user }) => {
   const [selectedDate, setSelectedDate] = useState('');
   const dispatch = useDispatch();
   const user_info = useSelector(selectUserInfo);
-  const isInterview = useSelector(selectIsInterview);
   const [events, setEvents] = useState([]);
   const handleChange = async (event) => {
     const date = event.target.value;
@@ -40,6 +41,7 @@ const CalendarModal = ({ showModal, handleCloseModal, user }) => {
   const interval = 30;
   const [selectedStartTime, setSelectedStartTime] = useState(startTime);
   const [selectedEndTime, setSelectedEndTime] = useState(endTime);
+  const loading = useSelector(selectIsLoading);
 
   const generateTimeOptions = () => {
     const options = [];
@@ -84,17 +86,19 @@ const CalendarModal = ({ showModal, handleCloseModal, user }) => {
       "minute_end": endMinute,
       "date": selectedDate,
     };
+    
     const actionResult = await dispatch(interview_setup(data));
     if (interview_setup.fulfilled.match(actionResult)) {
         toast.success(actionResult.payload["message"]);
+        handleCloseModal();
+        setSelectedDate('');
     }
     if (interview_setup.rejected.match(actionResult)) {
         toast.error(actionResult.payload);
     }
-    handleCloseModal();
   };
 
-  return (
+  return  loading?<SpinnerLoading loading={loading}/>:(
     <Modal
       className="modal-calendar-container"
       open={showModal}
@@ -154,7 +158,9 @@ const CalendarModal = ({ showModal, handleCloseModal, user }) => {
                 All Interview
               </label>
               <br/>
-            </div>
+              <br></br>
+              {events.length !== 0 ? <EventList events={events} /> : <p>There are no interviews today</p>}
+          </div>
         </div>
         <div className="modal-btn-calendar">
           <Button 

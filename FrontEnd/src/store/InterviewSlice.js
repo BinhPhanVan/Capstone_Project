@@ -22,7 +22,6 @@ export const get_interview = createAsyncThunk(
           const res = await interviewService.get_interview(data);
           return res;
       } catch (error) {
-        console.log(error);
         return rejectWithValue("No interviews found.");
       }
     }
