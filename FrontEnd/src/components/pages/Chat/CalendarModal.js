@@ -9,8 +9,11 @@ import { get_interview, interview_setup, selectIsLoading } from '../../../store/
 import { toast } from 'react-toastify';
 import EventList from '../Events/EventList';
 import SpinnerLoading from '../../commons/SpinnerLoading';
+import firebaseService from '../../../api-service/firebaseService';
+import { useParams } from 'react-router-dom';
 
 const CalendarModal = ({ showModal, handleCloseModal, user }) => {
+  const { chatId } = useParams();
   const [selectedDate, setSelectedDate] = useState('');
   const dispatch = useDispatch();
   const user_info = useSelector(selectUserInfo);
@@ -99,6 +102,18 @@ const CalendarModal = ({ showModal, handleCloseModal, user }) => {
           handleCloseModal();
           setSelectedDate('');
           setEvents([]);
+          const interview = {
+            interview_id: actionResult.payload.data.interview_id,
+            date: selectedDate,
+            employee_email: user.email,
+            hour_end: endHour,
+            hour_start: startHour,
+            minute_end: endMinute,
+            minute_start: startMinute,
+            recruiter_email: user_info.account.email,
+            status: "pending",
+          };
+          firebaseService.sendMessage1(chatId, user_info, interview, 'interview');
         }
     }
     if (interview_setup.rejected.match(actionResult)) {

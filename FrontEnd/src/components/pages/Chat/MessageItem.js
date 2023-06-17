@@ -3,7 +3,7 @@ import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
-function MessageItem({ avatar, name, message, align, timestamp }) {
+function MessageItem({ message, align}) {
   const containerClass = align === 'left' ? 'messageitem_container_left' : 'messageitem_container_right';
   const emebed =  (timestamp) =>
   {
@@ -19,16 +19,16 @@ function MessageItem({ avatar, name, message, align, timestamp }) {
   return (
     <Box className="messageitem_container" mb={1}>
       {align === 'left' ? (
-        <Avatar src={avatar} alt={name} />
+        <Avatar src={message.avatar} alt={message.name} />
       ) : (
         <Box flex="0 0 40px" />
       )}
       <div className={`${containerClass}`}>
         <Box ml={align === 'left' ? 2 : 'auto'} className="message_content">
-          <Typography variant="body1">{message}</Typography>
+          <Typography variant="body1">{message.message}</Typography>
         </Box>
         <Typography variant="caption" color="textSecondary" className="timestamp">
-          {emebed(timestamp)}
+          {emebed(message.timestamp)}
         </Typography>
       </div>
     </Box>

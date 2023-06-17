@@ -7,6 +7,7 @@ import MessageNav from './MessageNav';
 import SendMessage from './SendMessage';
 import firebase from 'firebase/compat/app';
 import firebaseService from '../../../api-service/firebaseService';
+import MessageSchedule from './MessageSchedule';
 function ChatContent() {
   const { chatId } = useParams();
   const [messages, setMessages] = useState([]);
@@ -55,20 +56,36 @@ function ChatContent() {
     }
   }, [messages]);
 
-  return chatId ? (
+  return chatId && user_info ? (
     <>
             <MessageNav user={user}/>
             <div className='chat_container' ref={chatContainerRef}>
-                {messages.map((message) => (
-                <MessageItem
-                key={message.id}
-                avatar={message.avatar}
-                name={message.name}
-                message={message.message}
-                align={user_info?.account.id === message.senderId ? 'right': 'left'}
-                timestamp={message.timestamp}
-                />
-            ))}
+                {messages.map((message) => {
+                  if (message.type === 'message')
+                  {
+                    return (
+                      <MessageItem
+                      key={message.id}
+                      message={message}
+                      align={user_info?.account.id === message.senderId ? 'right': 'left'}
+                      />
+                    ) 
+                  }
+                  else if (message.type === 'interview')
+                  {
+                    return (
+                      <MessageSchedule
+                      key={message.id}
+                      message={message}
+                      align={user_info?.account.id === message.senderId ? 'right': 'left'}
+                      />
+                    ) 
+                  }
+                  else
+                  {
+                    return null;
+                  }
+                })}
             </div>
             <SendMessage/>
     </>

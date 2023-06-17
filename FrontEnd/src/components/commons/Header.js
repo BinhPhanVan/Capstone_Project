@@ -9,7 +9,7 @@ import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import ContentPasteSearchIcon from '@mui/icons-material/ContentPasteSearch';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import TextsmsIcon from '@mui/icons-material/Textsms';
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import EventNoteIcon from '@mui/icons-material/EventNote';
 import { logout, selectIsAdmin } from "../../store/AuthSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
@@ -67,17 +67,9 @@ function Header() {
             }
             <Nav.Link as={NavLink} to="/chat" className="navbar-text">
               <TextsmsIcon/>
-              <div className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-              <span className="visually-hidden">Notification count</span>
-                5
-              </div>
             </Nav.Link>
             <Nav.Link as={NavLink} to="/notify" className="navbar-text">
-              <NotificationsNoneIcon/>
-              <div className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-              <span className="visually-hidden">Notification count</span>
-                5
-              </div>
+              <EventNoteIcon/>
             </Nav.Link>
             <AvatarImage avatar_url={avatar}/>
             <NavDropdown title={firstName + " " + lastName} style={{color: "white"}}   id="collasible-nav-dropdown">

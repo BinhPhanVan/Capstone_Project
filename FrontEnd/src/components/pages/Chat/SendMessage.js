@@ -77,7 +77,7 @@ function SendMessage() {
   };
   const sendMessage = () => {
     if (message.trim() !== '') {
-      firebaseService.sendMessage1(chatId, user_info, message);
+      firebaseService.sendMessage1(chatId, user_info, message, 'message');
       setMessage('');
     }
   };
