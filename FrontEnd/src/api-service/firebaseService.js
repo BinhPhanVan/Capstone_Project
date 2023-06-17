@@ -25,7 +25,7 @@ const sendMessage = (conversationId, senderId, avatar, message) => {
     });
   };
 
-const sendMessage1 = async (conversationId, user_info, message) => {
+const sendMessage1 = async (conversationId, user_info, message, type) => {
     const messagesRef = firebase.database().ref(`conversations/${conversationId}/messages`);
     const newMessageRef = messagesRef.push();
     const messageData = {
@@ -33,7 +33,8 @@ const sendMessage1 = async (conversationId, user_info, message) => {
       name: user_info.account.first_name + " " + user_info.account.last_name,
       avatar: user_info.avatar_url,
       message: message,
-      timestamp : Date.now()
+      timestamp : Date.now(),
+      type: type,
     };
     newMessageRef.set(messageData);
     await Promise.all([newMessageRef.set(messageData), updateLastMessage(conversationId, messageData)]);
