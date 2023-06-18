@@ -17,12 +17,13 @@ from accounts.serializers import UserSerializer, VertifyEmailSerializer, LoginSe
     MyTokenObtainPairSerializer, ForgotPassWordSerializer, ChangePasswordSerializer
 from .email import send_email_with_cv, send_email_with_interview, send_email_with_job, send_opt_via_email, send_reset_password, send_email_with_template
 from .permissions import IsEmployeePermission, IsRecruiterPermission
-from .serializers import EmailCVSerializer, EmailJobSerializer, EmployeeSerializer, ExtractCVCreateSerializer, ExtractCVGetAll, InterviewListSerializer, InterviewStatuserializer, JobRequirementGetAll, JobRequirementSerializer, PDFFileSerializer, RecruiterRegisterSerializer, RecruiterSerializer, UserRegisterSerializer, DeactivedJobSerializer, InterviewSerializer, InterviewUpdateSerializer
+from .serializers import EmailCVSerializer, EmailJobSerializer, EmployeeSerializer, ExtractCVCreateSerializer, ExtractCVGetAll, InterviewAllSerializer, InterviewListSerializer, InterviewStatuserializer, JobRequirementGetAll, JobRequirementSerializer, PDFFileSerializer, RecruiterRegisterSerializer, RecruiterSerializer, UserRegisterSerializer, DeactivedJobSerializer, InterviewSerializer, InterviewUpdateSerializer
 from .utils import check_pass, extract_location, extract_phone_number, extract_skills, extract_text_from_pdf, same_pass
 from .models import ExtractCV, JobRequirement, Recruiter, User, Employee, Interview
 from django.contrib.auth import authenticate, login, logout
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.shortcuts import get_object_or_404
+from django.db.models import Q
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -1029,7 +1030,58 @@ class InterviewListAPIView(generics.GenericAPIView):
             except Exception as e:
                 response = {
                     "status": status.HTTP_401_UNAUTHORIZED,
-                    "message": "Email sent failed",
+                    "message": "Get interview failed",
+                    "data": {},
+                }
+                return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class InterviewListView(generics.GenericAPIView):
+    def get(self, request):
+        serializer = InterviewAllSerializer(data=request.GET)
+        if serializer.is_valid():
+            try: 
+                email = serializer.validated_data['email']
+                interviews = Interview.objects.filter(
+                    Q(recruiter__account__email=email) |
+                    Q(employee__account__email=email)
+                )
+
+                interview_data = []
+                for interview in interviews:
+                    if interview.status != 'cancel':
+                        interview_data.append({
+                            'interview_id': interview.id,
+                            'employee_email': interview.employee.account.email,
+                            'employee_name': interview.employee.account.first_name + " " + interview.employee.account.last_name,
+                            'recruiter_email': interview.recruiter.account.email,
+                            'hour_start': interview.hour_start,
+                            'minute_start': interview.minute_start,
+                            'hour_end': interview.hour_end,
+                            'minute_end': interview.minute_end,
+                            'date': interview.date,
+                            'status': interview.status,
+                        })
+
+                if not interview_data:
+                    response = {
+                        'status': status.HTTP_404_NOT_FOUND,
+                        'message': 'No interviews found.',
+                        'data': [],
+                    }
+                else:
+                    response = {
+                        'status': status.HTTP_200_OK,
+                        'message': 'Get all interviews successfully.',
+                        'data': interview_data,
+                    }
+
+                return Response(response)
+            except Exception as e:
+                response = {
+                    "status": status.HTTP_401_UNAUTHORIZED,
+                    "message": "Get all interviews failed",
                     "data": {},
                 }
                 return Response(response, status=status.HTTP_401_UNAUTHORIZED)

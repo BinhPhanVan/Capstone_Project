@@ -20,6 +20,7 @@ import Jobs from './components/pages/Jobs';
 import UploadJobs from './components/pages/UploadJobs';
 import UploadFormJob from './components/pages/UploadJobs/UploadFormJob';
 import ChatApp from './components/pages/Chat';
+import Calendar from './components/pages/Calendar';
 function App() {
   return (
     <BrowserRouter>
@@ -30,6 +31,7 @@ function App() {
             <Route path="about" element={<About />} />
             <Route path="resume" element={<Resume />} />
             <Route path="profile" element={<Profile />} />
+            <Route path="calendar" element={<Calendar />} />
             <Route path="chat"element={<ChatApp />} >
               <Route path=":chatId" element={<ChatApp />} />
               <Route path="*" element={<NotFound />} />

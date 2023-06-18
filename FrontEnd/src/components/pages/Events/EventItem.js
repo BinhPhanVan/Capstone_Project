@@ -11,10 +11,10 @@ function EventItem({ event }) {
         </Typography>
         <Typography variant="body1">Interview: {event.employee_name}</Typography>
         <Typography variant="body2">
-          Start Time: {event.hour_start}:{event.minute_start}
+          Start Time: {event.hour_start.toString().padStart(2, '0')}:{event.minute_start.toString().padStart(2, '0')}
         </Typography>
         <Typography variant="body2">
-          End Time: {event.hour_end}:{event.minute_end}
+          End Time: {event.hour_end.toString().padStart(2, '0')}:{event.minute_end.toString().padStart(2, '0')}
         </Typography>
       </Paper>
     </div>
