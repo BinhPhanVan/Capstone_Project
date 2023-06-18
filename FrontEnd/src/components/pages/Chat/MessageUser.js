@@ -32,13 +32,20 @@ function MessageUser({ message }) {
       <Avatar src={message.avatar} alt="Avatar" />
       <Box ml={2}>
         <Typography variant="h6" className='name-text'>{message.name}</Typography>
-        {message.lastMessage?.type === 'message' ?
-        <>
-          <Typography variant="body1" className='new-message'>{message.lastMessage?.message}</Typography>
-        </> :
-        <>
-          <Typography variant="body1" className='new-message'>Sent Interview</Typography>
-        </>
+        {
+          message.lastMessage?.type === 'message' ? (
+            <>
+              <Typography variant="body1" className='new-message'>{message.lastMessage?.message}</Typography>
+            </>
+          ) : (
+            message.lastMessage?.type === 'interview' ? (
+              <>
+                <Typography variant="body1" className='new-message'>Sent Interview</Typography>
+              </>
+            ) : (
+              <></>
+            )
+          )
         }
       </Box>
     </Box>

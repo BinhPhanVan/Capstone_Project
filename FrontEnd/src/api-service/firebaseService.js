@@ -44,6 +44,18 @@ const sendMessage1 = async (conversationId, user_info, message, type) => {
     }
 };
 
+const updateMessagesStatusByInterviewId = async (conversationId, interviewId, newStatus) => {
+  const messagesRef = firebase.database().ref(`conversations/${conversationId}/messages`);
+  const query = messagesRef.orderByChild("message/interview_id").equalTo(interviewId);
+  const snapshot = await query.once("value");
+
+  snapshot.forEach(childSnapshot => {
+    const messageRef = childSnapshot.ref.child("message");
+    messageRef.update({ status: newStatus });
+  });
+};
+
+
 const createConversation = (senderId, receiverId, senderName, senderAvatar, senderEmail, receiverName, receiverAvatar, receiverEmail) => {
     const conversationId = `${senderId}_${receiverId}`;
     const conversationsRef = firebase.database().ref(`conversations/${conversationId}`);    
@@ -234,6 +246,6 @@ const getUserInChatWithId = (chatId, userId) => {
   
 
 
-const firebaseService = {getUserInChatWithId, getAllUsersInChatWithUser, getConversationId, sendMessage, getAllMessage, sendMessage1, initializeConversation, getAllMessageWithID, getUsersInConversationsByUser};
+const firebaseService = {getUserInChatWithId, getAllUsersInChatWithUser, getConversationId, sendMessage, getAllMessage, sendMessage1, initializeConversation, getAllMessageWithID, getUsersInConversationsByUser, updateMessagesStatusByInterviewId};
 
 export default firebaseService;

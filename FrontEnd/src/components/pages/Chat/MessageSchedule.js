@@ -1,10 +1,19 @@
 import React from 'react';
 import Button from '@mui/material/Button';
 import { Avatar, Box, Typography } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUserInfo } from '../../../store/UserSlice';
+import { update_interview_status } from '../../../store/InterviewSlice';
+import { toast } from 'react-toastify';
+import { APPROVAL, CANCEL, PENDING } from '../../../constants/interviewtype';
+import firebaseService from '../../../api-service/firebaseService';
+import { useParams } from 'react-router-dom';
 
 function MessageSchedule({ message, align }) {
-    
+  const user_info = useSelector(selectUserInfo);
+  const dispatch = useDispatch();
   const containerClass = align === 'left' ? 'messageitem_container_left' : 'messageitem_container_right';
+  const { chatId } = useParams();
   const emebed =  (timestamp) =>
   {
     var date = new Date(timestamp);
@@ -15,12 +24,38 @@ function MessageSchedule({ message, align }) {
     var year = date.getFullYear();
     return hours +":"+ minutes + ", "+ day + "/"+ month + "/" + year;
   };
-  const handleApprove = () => {
-    // Handle approve button click
+  const handleApprove = async (message) => {
+    const data = {
+      id: message.message.interview_id,
+      status : APPROVAL,
+    }
+    const actionResult = await dispatch(update_interview_status(data))
+    if (update_interview_status.fulfilled.match(actionResult))
+    {
+      firebaseService.updateMessagesStatusByInterviewId(chatId, message.message.interview_id, APPROVAL)
+      toast.success("Approve interview");
+    }
+    if (update_interview_status.rejected.match(actionResult))
+    {
+      toast.error("Approve failed");
+    }
   };
 
-  const handleCancel = () => {
-    // Handle cancel button click
+  const handleCancel = async (message) => {
+    const data = {
+      id: message.message.interview_id,
+      status : CANCEL,
+    }
+    const actionResult = await dispatch(update_interview_status(data))
+    if (update_interview_status.fulfilled.match(actionResult))
+    {
+      firebaseService.updateMessagesStatusByInterviewId(chatId, message.message.interview_id, CANCEL)
+      toast.success("Cancel interview");
+    }
+    if (update_interview_status.rejected.match(actionResult))
+    {
+      toast.error("Cancel failed");
+    }
   };
 
   return (
@@ -36,30 +71,39 @@ function MessageSchedule({ message, align }) {
             <h4 className='schedule-title' >Interview</h4>
             <Typography variant="body1" className='schedule-content'><b>Time: </b>{message.message.hour_start}:{message.message.minute_start} to {message.message.hour_end}:{message.message.minute_end} </Typography>
             <Typography variant="body1" className='schedule-content'><b>Date: </b>{message.message.date}</Typography>
-            {message.message.status === 'pending' ? (
+            {message.message.status === PENDING ? (
                 <>
-                    <Button variant="contained" color="primary" className='btn btn-approve' onClick={handleApprove}>
-                    Approve
-                    </Button>
-                    <Button variant="contained" className='btn btn-cancel' onClick={handleCancel}>
+                    {user_info.account.id === message.senderId ? 
+                    <>
+                      <Button variant="contained" color="primary" disabled className='btn btn-approve'>
+                        Approve
+                      </Button>
+                    </> : 
+                    <>
+                      <Button variant="contained" color="primary" className='btn btn-approve' onClick={()=>handleApprove(message)}>
+                        Approve
+                      </Button>
+                    </>}
+                    
+                    <Button variant="contained" className='btn btn-cancel' onClick={()=>handleCancel(message)}>
                     Cancel
                     </Button>
                 </>
-            ) : message.message.status === 'approve' ? (
+            ) : message.message.status === APPROVAL ? (
                 <>
-                    <Button variant="contained" color="primary" className='btn btn-approval' onClick={handleApprove}>
+                    <Button variant="contained" color="primary" className='btn btn-approval'>
                     Approval
                     </Button>
-                    <Button variant="contained" className='btn btn-cancel' disabled onClick={handleCancel}>
+                    <Button variant="contained" className='btn btn-cancel' disabled>
                     Cancel
                     </Button>
                 </>
             ) : 
                 <>
-                    <Button variant="contained" color="primary" className='btn btn-approve' disabled onClick={handleApprove}>
+                    <Button variant="contained" color="primary" className='btn btn-approve' disabled >
                     Approval
                     </Button>
-                    <Button variant="contained" className='btn btn-cancelled' onClick={handleCancel}>
+                    <Button variant="contained" className='btn btn-cancelled'>
                     Cancelled
                     </Button>
                 </>

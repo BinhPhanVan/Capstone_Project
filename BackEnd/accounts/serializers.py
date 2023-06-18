@@ -188,3 +188,7 @@ class InterviewUpdateSerializer(serializers.ModelSerializer):
 class InterviewListSerializer(serializers.Serializer):
     date = serializers.DateField()
     recruiter_email = serializers.EmailField()
+
+class InterviewStatuserializer(serializers.Serializer):
+    status = serializers.CharField(max_length=30)
+    
