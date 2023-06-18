@@ -69,7 +69,8 @@ function MessageSchedule({ message, align }) {
         <Box ml={align === 'left' ? 2 : 'auto'} className="message_content">
         <div className="message_schedule_container">
             <h4 className='schedule-title' >Interview</h4>
-            <Typography variant="body1" className='schedule-content'><b>Time: </b>{message.message.hour_start}:{message.message.minute_start} to {message.message.hour_end}:{message.message.minute_end} </Typography>
+            <Typography variant="body1" className='schedule-content'><b>Time: </b>{message.message.hour_start.toString().padStart(2, '0')}:{message.message.minute_start.toString().padStart(2, '0')}  
+             <span> - </span>{message.message.hour_end.toString().padStart(2, '0')}:{message.message.minute_end.toString().padStart(2, '0')} </Typography>
             <Typography variant="body1" className='schedule-content'><b>Date: </b>{message.message.date}</Typography>
             {message.message.status === PENDING ? (
                 <>

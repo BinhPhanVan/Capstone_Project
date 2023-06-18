@@ -68,7 +68,7 @@ function Header() {
             <Nav.Link as={NavLink} to="/chat" className="navbar-text">
               <TextsmsIcon/>
             </Nav.Link>
-            <Nav.Link as={NavLink} to="/notify" className="navbar-text">
+            <Nav.Link as={NavLink} to="/calendar" className="navbar-text">
               <EventNoteIcon/>
             </Nav.Link>
             <AvatarImage avatar_url={avatar}/>

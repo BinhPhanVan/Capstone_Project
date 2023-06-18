@@ -54,7 +54,7 @@ export default function MenuOption({job}) {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleClose}>Edit Job</MenuItem>
+        {/* <MenuItem onClick={handleClose}>Edit Job</MenuItem> */}
         {job.active 
         ?<MenuItem onClick={() => handleUpdateStatus(job)}>Deactive</MenuItem>
         :<MenuItem onClick={() => handleUpdateStatus(job)}>Active</MenuItem>}

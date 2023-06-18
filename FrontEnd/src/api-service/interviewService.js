@@ -22,5 +22,12 @@ const update_interview_status = async (data) => {
     return  res;
 };
 
-const interviewService = {setup_interview, get_interview, update_interview_status};
+const get_interview_by_email =  async (data) => {
+    const res = await  httpRequest.get('interviews/get-by-email/', {
+        params: data
+    });
+    return res;
+}
+
+const interviewService = {setup_interview, get_interview, update_interview_status, get_interview_by_email};
 export default  interviewService;
