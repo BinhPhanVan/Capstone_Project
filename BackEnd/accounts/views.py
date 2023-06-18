@@ -17,7 +17,7 @@ from accounts.serializers import UserSerializer, VertifyEmailSerializer, LoginSe
     MyTokenObtainPairSerializer, ForgotPassWordSerializer, ChangePasswordSerializer
 from .email import send_email_with_cv, send_email_with_interview, send_email_with_job, send_opt_via_email, send_reset_password, send_email_with_template
 from .permissions import IsEmployeePermission, IsRecruiterPermission
-from .serializers import EmailCVSerializer, EmailJobSerializer, EmployeeSerializer, ExtractCVGetAll, InterviewListSerializer, InterviewStatuserializer, JobRequirementGetAll, JobRequirementSerializer, PDFFileSerializer, RecruiterRegisterSerializer, RecruiterSerializer, UserRegisterSerializer, DeactivedJobSerializer, InterviewSerializer, InterviewUpdateSerializer
+from .serializers import EmailCVSerializer, EmailJobSerializer, EmployeeSerializer, ExtractCVCreateSerializer, ExtractCVGetAll, InterviewListSerializer, InterviewStatuserializer, JobRequirementGetAll, JobRequirementSerializer, PDFFileSerializer, RecruiterRegisterSerializer, RecruiterSerializer, UserRegisterSerializer, DeactivedJobSerializer, InterviewSerializer, InterviewUpdateSerializer
 from .utils import check_pass, extract_location, extract_phone_number, extract_skills, extract_text_from_pdf, same_pass
 from .models import ExtractCV, JobRequirement, Recruiter, User, Employee, Interview
 from django.contrib.auth import authenticate, login, logout
@@ -134,7 +134,7 @@ class VerifyOTP(APIView):
                 refresh = MyTokenObtainPairSerializer.get_token(user)
                 return Response({
                     'status': status.HTTP_202_ACCEPTED,
-                    'message': 'Register successful!',
+                    'message': 'Register successfully!',
                     'data': {
                         'email': user.email,
                         'refresh_token': str(refresh),
@@ -469,8 +469,44 @@ class ExtractCVView(GenericAPIView):
             employee = Employee.objects.get(account_id = user_id)
             text = extract_text_from_pdf(employee.pdf_file)
             location = extract_location(text)
-            phone_number = extract_phone_number(text)[0]
+            phone_numbers = extract_phone_number(text)
+            phone_number = phone_numbers[0] if phone_numbers else None
             skills = extract_skills(text)
+            response = {
+                "status": status.HTTP_200_OK,
+                "message": "Extract sucessfully.",
+                "data": {
+                    'location': location,
+                    'phone_number': phone_number,
+                    'skills': skills 
+                },
+            } 
+            return Response(response, status=status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+            response = {
+                "status": status.HTTP_401_UNAUTHORIZED,
+                "message": "Turned on Failed",
+                "data": {},
+            } 
+            return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+
+class ExtractCVCreateView(generics.GenericAPIView):
+    permission_classes = [IsEmployeePermission, IsAuthenticated]
+    serializer_class = ExtractCVCreateSerializer
+    def post(self, request, *args, **kwargs):
+        try:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+
+            user_id = request.user.id
+            employee = Employee.objects.get(account_id=user_id)
+
+            data = serializer.validated_data
+            location = data.get('location')
+            phone_number = data.get('phone_number')
+            skills = data.get('skills')
+
             if ExtractCV.objects.filter(employee=employee).exists():
                 extract_cv = ExtractCV.objects.get(employee=employee)
                 extract_cv.phone_number = phone_number
@@ -485,11 +521,16 @@ class ExtractCVView(GenericAPIView):
                     location=location,
                     skills=skills
                 )
+
             response = {
                 "status": status.HTTP_200_OK,
-                "message": "Turned on sucessfully.",
-                "data": extract_cv.skills,
-            } 
+                "message": "Turned on successfully.",
+                "data": {
+                    'location': location,
+                    'phone_number': phone_number,
+                    'skills': skills 
+                },
+            }
             return Response(response, status=status.HTTP_200_OK)
         except Exception as e:
             print(e)
@@ -497,7 +538,7 @@ class ExtractCVView(GenericAPIView):
                 "status": status.HTTP_401_UNAUTHORIZED,
                 "message": "Turned on Failed",
                 "data": {},
-            } 
+            }
             return Response(response, status=status.HTTP_401_UNAUTHORIZED)
 
 class GetActiveCVView(GenericAPIView):
@@ -935,7 +976,7 @@ class InterviewCreateAPIView(GenericAPIView):
 
             response = {
                 "status": status.HTTP_201_CREATED,
-                "message": "Scheduling successfull.",
+                "message": "Scheduling successfully!",
                 "data": {
                     "interview_id": interview.id,
                     "employee_email": employee_email,

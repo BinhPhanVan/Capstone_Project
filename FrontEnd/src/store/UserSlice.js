@@ -41,6 +41,19 @@ export const find_job = createAsyncThunk(
   }
 );
 
+export const verify_cv = createAsyncThunk(
+  "employee/verify_cv",
+  async ( data, { rejectWithValue }) => {
+    try {
+        const res = await userService.verify_cv(data);
+        return res;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue("Access denied! Please try again.");
+    }
+  }
+);
+
 export const get_all_candidate = createAsyncThunk(
   "recruiter/get_all_candidate",
   async (_, { rejectWithValue }) => {
@@ -124,9 +137,17 @@ const userSlice = createSlice({
     });
     builder.addCase(find_job.rejected, (state, action) => {
       state.isLoading = false;
-
     });
     builder.addCase(find_job.fulfilled, (state, action) => {
+      state.isLoading = false;
+    });
+    builder.addCase(verify_cv.pending, (state, action) => {
+      state.isLoading = true;
+    });
+    builder.addCase(verify_cv.rejected, (state, action) => {
+      state.isLoading = false;
+    });
+    builder.addCase(verify_cv.fulfilled, (state, action) => {
       state.isLoading = false;
     });
     builder.addCase(get_all_candidate.pending, (state, action) => {
