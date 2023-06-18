@@ -73,6 +73,21 @@ def send_email_with_cv(email, job_name, company_name, pdf_file, name, email_user
     except Exception as e:
         print(e)
 
+def send_email_with_interview(email, company_name, date, time):
+    email_from = settings.EMAIL_HOST
+    subject = 'Job Interview'
+    try:
+        template = get_template('emails/send_interview.html')
+        context = {
+            'company_name': company_name,
+            'interview_date': date,
+            'interview_time': time,
+        }
+        message = template.render(context)
+        send_mail(subject, '', email_from, [email], html_message=message)
+    except Exception as e:
+        print(e)
+
 
 def send_reset_password(email):
     subject = "Your account needs to change its password"

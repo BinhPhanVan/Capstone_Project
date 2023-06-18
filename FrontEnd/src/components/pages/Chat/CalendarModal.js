@@ -30,11 +30,6 @@ const CalendarModal = ({ showModal, handleCloseModal, user }) => {
 
     if (actionResult.meta.requestStatus === "fulfilled") {
       setEvents(actionResult.payload.data);
-      toast.success(actionResult.payload["message"]);
-    }
-
-    if (actionResult.meta.requestStatus === "rejected") {
-      toast.error(actionResult.payload);
     }
     setSelectedDate(date);
   };

@@ -15,5 +15,12 @@ const get_interview =  async (data) => {
     return res;
 }
 
-const interviewService = {setup_interview, get_interview};
+const update_interview_status = async (data) => {
+    const res = await httpRequest.put(`interviews/${data.id}`, {
+        "status": data.status,
+    });
+    return  res;
+};
+
+const interviewService = {setup_interview, get_interview, update_interview_status};
 export default  interviewService;

@@ -15,9 +15,9 @@ from datetime import datetime
 # Create your views here.
 from accounts.serializers import UserSerializer, VertifyEmailSerializer, LoginSerializer, \
     MyTokenObtainPairSerializer, ForgotPassWordSerializer, ChangePasswordSerializer
-from .email import send_email_with_cv, send_email_with_job, send_opt_via_email, send_reset_password, send_email_with_template
+from .email import send_email_with_cv, send_email_with_interview, send_email_with_job, send_opt_via_email, send_reset_password, send_email_with_template
 from .permissions import IsEmployeePermission, IsRecruiterPermission
-from .serializers import EmailCVSerializer, EmailJobSerializer, EmployeeSerializer, ExtractCVGetAll, InterviewListSerializer, JobRequirementGetAll, JobRequirementSerializer, PDFFileSerializer, RecruiterRegisterSerializer, RecruiterSerializer, UserRegisterSerializer, DeactivedJobSerializer, InterviewSerializer, InterviewUpdateSerializer
+from .serializers import EmailCVSerializer, EmailJobSerializer, EmployeeSerializer, ExtractCVGetAll, InterviewListSerializer, InterviewStatuserializer, JobRequirementGetAll, JobRequirementSerializer, PDFFileSerializer, RecruiterRegisterSerializer, RecruiterSerializer, UserRegisterSerializer, DeactivedJobSerializer, InterviewSerializer, InterviewUpdateSerializer
 from .utils import check_pass, extract_location, extract_phone_number, extract_skills, extract_text_from_pdf, same_pass
 from .models import ExtractCV, JobRequirement, Recruiter, User, Employee, Interview
 from django.contrib.auth import authenticate, login, logout
@@ -881,20 +881,21 @@ class InterviewCreateAPIView(GenericAPIView):
             for existing_interview in existing_interviews:
                 existing_start_time = datetime.strptime(f"{existing_interview.hour_start}:{existing_interview.minute_start}", "%H:%M").time()
                 existing_end_time = datetime.strptime(f"{existing_interview.hour_end}:{existing_interview.minute_end}", "%H:%M").time()
-                if (
-                    (start_time >= existing_start_time and start_time < existing_end_time) or
-                    (end_time > existing_start_time and end_time <= existing_end_time)
-                ):
-                    response = {
-                        "status": status.HTTP_400_BAD_REQUEST,
-                        "message": "Time conflict with existing interview.",
-                        "data": {
-                            "interview_id": existing_interview.id,
-                            "employee_email": employee_email,
-                            "recruiter_email": recruiter_email,
-                        },
-                    }
-                    return Response(response, status=status.HTTP_400_BAD_REQUEST)
+                if (existing_interview.status != 'cancel'):
+                    if (
+                        (start_time >= existing_start_time and start_time < existing_end_time) or
+                        (end_time > existing_start_time and end_time <= existing_end_time)
+                    ):
+                        response = {
+                            "status": status.HTTP_400_BAD_REQUEST,
+                            "message": "Time conflict with existing interview.",
+                            "data": {
+                                "interview_id": existing_interview.id,
+                                "employee_email": employee_email,
+                                "recruiter_email": recruiter_email,
+                            },
+                        }
+                        return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
             recruiter = Recruiter.objects.get(account__email=recruiter_email)
 
@@ -927,6 +928,10 @@ class InterviewCreateAPIView(GenericAPIView):
                 minute_end=minute_end,
                 date=date,
             )
+            
+            time  = str(hour_start) + ":" + str(minute_start) + " to " + str(hour_end) + ":" + str(minute_end)
+
+            send_email_with_interview(employee.account.email, recruiter.company_name, date, time);
 
             response = {
                 "status": status.HTTP_201_CREATED,
@@ -991,7 +996,11 @@ class InterviewListAPIView(generics.GenericAPIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class InterviewViewSet(viewsets.ViewSet):
+
+class InterviewViewSet(viewsets.ModelViewSet):
+    queryset = Interview.objects.all()
+    serializer_class = InterviewStatuserializer
+
     def get_permissions(self):
         if self.action == 'update':
             permission_classes = [IsAuthenticated] 
@@ -1001,10 +1010,10 @@ class InterviewViewSet(viewsets.ViewSet):
             permission_classes = [] 
         return [permission() for permission in permission_classes]
     
-    @swagger_auto_schema(request_body=InterviewUpdateSerializer)
+    @swagger_auto_schema(request_body=InterviewStatuserializer)
     def update(self, request, pk):
         try:
-            interview = Interview.objects.get(id=pk)
+            interview = self.get_object()
         except Interview.DoesNotExist:
             response = {
                 "status": status.HTTP_404_NOT_FOUND,
@@ -1013,9 +1022,10 @@ class InterviewViewSet(viewsets.ViewSet):
             }
             return Response(response, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = InterviewUpdateSerializer(interview, data=request.data, partial=True)
+        serializer = InterviewStatuserializer(interview, data=request.data, partial=True)
         if serializer.is_valid():
-            serializer.save()
+            interview.status = request.data['status']
+            interview.save()
             response = {
                 "status": status.HTTP_200_OK,
                 "message": "Interview updated successfully.",
@@ -1032,7 +1042,7 @@ class InterviewViewSet(viewsets.ViewSet):
 
     def destroy(self, request, pk):
         try:
-            interview = Interview.objects.get(id=pk)
+            interview = self.get_object()
         except Interview.DoesNotExist:
             response = {
                 "status": status.HTTP_404_NOT_FOUND,

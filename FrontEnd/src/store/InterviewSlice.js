@@ -26,6 +26,18 @@ export const get_interview = createAsyncThunk(
     }
 );
 
+export const update_interview_status = createAsyncThunk(
+  "interview/update-status",
+  async (data, { rejectWithValue }) => {
+    try {
+        const res = await interviewService.update_interview_status(data);
+        return res;
+    } catch (error) {
+      return rejectWithValue("Update failed: " + error.message);
+    }
+  }
+);
+
 
 const initialState = {
   isLoading: false,
@@ -56,6 +68,15 @@ const interviewSlice = createSlice({
       builder.addCase(get_interview.fulfilled, (state, action) => {
         state.isLoading = false;
         state.events = action.payload.data;
+      });
+      builder.addCase(update_interview_status.pending, (state, action) => {
+        state.isLoading = true;
+      });
+      builder.addCase(update_interview_status.rejected, (state, action) => {
+        state.isLoading = false;
+      });
+      builder.addCase(update_interview_status.fulfilled, (state, action) => {
+        state.isLoading = false;
       });
   },
 });
