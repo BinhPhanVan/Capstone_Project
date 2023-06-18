@@ -143,6 +143,11 @@ class ExtractCVGetAll(serializers.ModelSerializer):
     def get_employee(self, obj):
         return EmployeeSerializer(obj.employee).data
 
+class ExtractCVCreateSerializer(serializers.Serializer):
+    location = serializers.CharField(max_length=255)
+    phone_number = serializers.CharField(max_length=20)
+    skills = serializers.CharField()
+
 class DeactivedJobSerializer(serializers.Serializer):
     job_requirement_id = serializers.CharField() 
 

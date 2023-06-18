@@ -34,14 +34,18 @@ def extract_phone_number(text) -> list:
 
 def extract_location(text):
     # List of location names in Vietnamese
-    matches = [None]
     locations = PROVINCES
     # Find all matches of the location names in the text
     matches = [loc for loc in locations if re.search(loc, text, re.IGNORECASE)]
-    if matches[0] in PROVINCES_2:
-        index = PROVINCES_2.index(matches[0])
-        return PROVINCES_1[index]
-    return matches[0]
+    
+    if matches:
+        if matches[0] in PROVINCES_2:
+            index = PROVINCES_2.index(matches[0])
+            return PROVINCES_1[index]
+        return matches[0]
+    else:
+        return None
+
 
 nlp = spacy.load("en_core_web_sm")
 def extract_skills(nlp_text):

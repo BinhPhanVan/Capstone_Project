@@ -36,5 +36,12 @@ const send_email_with_cv =  async (data) => {
     return res;
 }
 
-const userService = {get_information, find_job, get_active, get_all_candidate, send_email_with_job, send_email_with_cv};
+const verify_cv =  async (data) => {
+    const res = await  httpRequest.post('employee/verify-cv/', {
+        ...data
+    });
+    return res;
+}
+
+const userService = {get_information, find_job, get_active, get_all_candidate, send_email_with_job, send_email_with_cv, verify_cv};
 export default  userService;
