@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     'debug_toolbar',
 
 ]
+SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -63,6 +65,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'django.middleware.security.SecurityMiddleware',
 ]
 
 INTERNAL_IPS = [
