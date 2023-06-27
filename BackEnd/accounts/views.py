@@ -671,14 +671,14 @@ class DeactivePDFView(APIView):
             extract_cv.save()
             response = {
                     "status": status.HTTP_200_OK,
-                    "message": "Your Resume deactivated successfully.",
+                    "message": "Your resume deactivated successfully.",
                     "data": {},
                 }
             return Response(response, status=status.HTTP_200_OK)
         except ExtractCV.DoesNotExist:
             response = {
                     "status": status.HTTP_404_NOT_FOUND,
-                    "message": "Your Resume not found.",
+                    "message": "Your resume not found.",
                     "data": {},
                 }
             return Response(response, status=status.HTTP_404_NOT_FOUND)

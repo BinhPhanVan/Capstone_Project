@@ -6,14 +6,36 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import BiotechIcon from '@mui/icons-material/Biotech';
 import MailIcon from '@mui/icons-material/Mail';
 import ContactPageIcon from '@mui/icons-material/ContactPage';
-import { useSelector } from 'react-redux';
-import { selectUserInfo } from '../../../store/UserSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUserInfo, send_email_with_cv } from '../../../store/UserSlice';
 import firebaseService from '../../../api-service/firebaseService';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const ModalJob = ({ job, open, handleClose }) => {
   const user_info = useSelector(selectUserInfo);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const SendCV = async (job, user_info) =>
+    {
+        console.log(job, user_info);
+        const data = 
+        {
+            'email': job.email,
+            'job_name': job.job_name,
+            'company_name': job.company_name,
+            'pdf_file': user_info.pdf_file,
+            'name': user_info.account.first_name + " " + user_info.account.last_name,
+            'email_user': user_info.account.email,
+        }
+        const actionResult = await dispatch(send_email_with_cv(data));
+        if (send_email_with_cv.fulfilled.match(actionResult)) {
+            toast.success(actionResult.payload["message"]);
+        }
+        if (send_email_with_cv.rejected.match(actionResult)) {
+            toast.error(actionResult.payload["message"]);
+        }
+    };
   return (
     <>
       <div className="modal-container">
@@ -43,8 +65,9 @@ const ModalJob = ({ job, open, handleClose }) => {
             <ListItemSecondaryAction className="modal-btn-container">
                 <Button className="btn-apply" variant="contained" color="primary" onClick={(e) => 
                 {
-                    console.log('Apply clicked')
-                    e.stopPropagation();
+                  handleClose();
+                  SendCV(job, user_info);
+                  e.stopPropagation();
                 }}>
                 Apply
                 </Button>

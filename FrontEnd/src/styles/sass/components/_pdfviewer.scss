@@ -15,7 +15,11 @@
             overflow: auto; /* allow scrolling inside the PDFViewer */
         }
         .react-pdf__Page__canvas{
-            width: 100% !important;
+            // width: 100% !important;
+        }
+        .react-pdf__Page {
+            display: flex;
+            justify-content: center;
         }
     
         .MuiContainer-root,  .MuiContainer-maxWidthSm
