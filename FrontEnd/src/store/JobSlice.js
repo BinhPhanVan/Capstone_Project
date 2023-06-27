@@ -97,7 +97,7 @@ const jobSlice = createSlice({
     });
     builder.addCase(get_all_jobs.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.jobs = action.payload;
+      state.jobs = action.payload.data;
     });
     builder.addCase(get_all_jobs_owner.pending, (state, action) => {
       state.isLoading = true;

@@ -684,13 +684,76 @@ class DeactivePDFView(APIView):
             return Response(response, status=status.HTTP_404_NOT_FOUND)
 
 
-class JobRequirementListAPIView(generics.ListAPIView):
-    queryset = JobRequirement.objects.filter(active=True)
-    serializer_class = JobRequirementGetAll
+class JobRequirementListAPIView(APIView):
+    permission_classes = [IsEmployeePermission, IsAuthenticated]
+    def get(self, request, format=None):
+        try: 
+            user_id = request.user.id
+            cv = ExtractCV.objects.get(employee__account_id=user_id)
+            cv_skill = cv.skills
+            job_requirements = JobRequirement.objects.filter(active=True)
+            list_overlap = []
+            for job_requirement in job_requirements:
+                job_skills = job_requirement.skills
+                common_skills =  set(cv_skill.split(", ")).intersection(set(job_skills.split(", ")))
+                overlap_percentage = (len(common_skills) / len(set(cv_skill.split(", ")))) * 100
+                list_overlap.append(overlap_percentage)
+            combined_data = zip(job_requirements, list_overlap)
+            sorted_data = sorted(combined_data, key=lambda x: x[1], reverse=True)
+            sorted_job_requirements, sorted_list_overlap = zip(*sorted_data)
+            serializer = JobRequirementGetAll(sorted_job_requirements, many=True)
+            response = {
+                "status": status.HTTP_200_OK,
+                "message": "Get all jobs successfully",
+                "data": serializer.data,
+            }
+            return Response(response, status=status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+            response = {
+                "status": status.HTTP_401_UNAUTHORIZED,
+                "message": "Get all jobs failed",
+                "data": {},
+            } 
+            return Response(response, status=status.HTTP_401_UNAUTHORIZED)
 
-class GetAllCandidateListAPIView(generics.ListAPIView):
-    queryset = ExtractCV.objects.filter(active=True)
-    serializer_class = ExtractCVGetAll
+
+class GetAllCandidateListAPIView(APIView):
+    permission_classes = [IsRecruiterPermission, IsAuthenticated]
+    def get(self, request, format=None):
+        try: 
+            user_id = request.user.id
+            all_jobs_active = JobRequirement.objects.filter(recruiter__account_id=user_id, active=True)
+            all_candidates = ExtractCV.objects.filter(active=True)
+            skills_of_company = []
+            list_overlap = []
+            for job in all_jobs_active:
+                skills_of_company+=(job.skills.split(", "))
+            
+            for candidate in all_candidates:
+                candidate_skills = candidate.skills
+                common_skills =  set(candidate_skills.split(", ")).intersection(set(skills_of_company))
+                overlap_percentage = (len(common_skills) / len(set(skills_of_company))) * 100
+                list_overlap.append(overlap_percentage)
+
+            combined_data = zip(all_candidates, list_overlap)
+            sorted_data = sorted(combined_data, key=lambda x: x[1], reverse=True)
+            sorted_all_candidates, sorted_list_overlap = zip(*sorted_data)
+            serializer = ExtractCVGetAll(sorted_all_candidates, many=True)
+            response = {
+                "status": status.HTTP_200_OK,
+                "message": "Get all candidates successfully",
+                "data": serializer.data,
+            }
+            return Response(response, status=status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+            response = {
+                "status": status.HTTP_401_UNAUTHORIZED,
+                "message": "Get all candidates failed",
+                "data": {},
+            } 
+            return Response(response, status=status.HTTP_401_UNAUTHORIZED)
     
 class JobOwnerView(GenericAPIView):
     permission_classes = [IsRecruiterPermission, IsAuthenticated]

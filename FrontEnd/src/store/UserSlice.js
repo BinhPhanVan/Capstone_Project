@@ -160,7 +160,7 @@ const userSlice = createSlice({
     });
     builder.addCase(get_all_candidate.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.candidates = action.payload
+      state.candidates = action.payload.data
     });
     builder.addCase(send_email_with_job.pending, (state, action) => {
       state.isLoading = true;
