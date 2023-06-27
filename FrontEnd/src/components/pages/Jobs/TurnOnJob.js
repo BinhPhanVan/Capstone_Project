@@ -9,6 +9,7 @@ import SpinnerLoading from '../../commons/SpinnerLoading';
 import { ListItemSecondaryAction, Modal } from '@mui/material';
 import { Col, Form, Row } from 'react-bootstrap';
 import { PROVINCES } from '../../../constants/locations';
+import { handlePhone } from '../../../utils/handlePhone';
 
 const useStyles = makeStyles({
   container: {
@@ -64,15 +65,22 @@ function TurnOnJob() {
       'phone_number': phone_number,
       'skills': skills
     }
-    const actionResult = await dispatch(verify_cv(data));
-    if (verify_cv.fulfilled.match(actionResult)) {
-      dispatch(get_active())
-      toast.success(actionResult.payload.message);
-      setModalOpen(false);
-      navigate("/jobs/search/");
+    console.log(handlePhone(phone_number));
+    if (handlePhone(phone_number))
+    {
+      const actionResult = await dispatch(verify_cv(data));
+      if (verify_cv.fulfilled.match(actionResult)) {
+        dispatch(get_active())
+        toast.success(actionResult.payload.message);
+        setModalOpen(false);
+        navigate("/jobs/search/");
+      }
+      else{
+        toast.warning(actionResult.payload.message);
+      }
     }
     else{
-      toast.warning(actionResult.payload.message);
+      toast.warning("Incorrect phone number.");
     }
   }
   useEffect(() => {
@@ -103,11 +111,12 @@ function TurnOnJob() {
       <div className='modal-container'>
         <Modal open={modalOpen} onClose={handleCloseModal} className='modal-list-job'>
           <div className="job_upload_item-content  job_upload_item_container info_cv_item-content">
-            <button className='close-button' onClick={handleCloseModal}>X</button>
+            
             <div className="info-cv-page">
-              <div className="info-cv-container">
+              {/* <div className="info-cv-container"> */}
                 <div className="form">
                 <Form className="info-cv-form" onSubmit={handleTurnOnJob}>
+                    <button className='close-button' onClick={handleCloseModal}>X</button>
                     <h3>Verify Information</h3>
                     <Form.Group
                       as={Row}
@@ -183,7 +192,7 @@ function TurnOnJob() {
                     </ListItemSecondaryAction>
                   </Form>
                 </div>
-              </div>
+              {/* </div> */}
             </div>
           </div>
         </Modal>

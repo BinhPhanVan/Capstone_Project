@@ -36,7 +36,7 @@ const JobItem = ({ job, onJobClick }) => {
         if (send_email_with_cv.rejected.match(actionResult)) {
             toast.error(actionResult.payload["message"]);
         }
-        };
+    };
     return loading?<SpinnerLoading loading={loading}/> 
     :(<div className='jobitem-container' onClick= {(e) => 
         {

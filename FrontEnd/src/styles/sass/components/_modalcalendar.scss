@@ -56,7 +56,9 @@
     .schedule-btn{
         background-color: #0765f1;
         color: #ffffff;
-        padding: 0.5rem;
+        padding: 0.5rem !important;
+        border-radius: 4px !important;
+        text-transform: uppercase;
     }
     
     .schedule-btn:hover{

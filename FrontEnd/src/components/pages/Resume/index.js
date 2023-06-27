@@ -58,7 +58,7 @@ const Resume = () => {
       navigate("/jobs/turn-on");
     }
     if (upload_resume.rejected.match(actionResult)) {
-      toast.error(actionResult.payload.message);
+      toast.error("Inappropriate file format");
     }
   };
 
