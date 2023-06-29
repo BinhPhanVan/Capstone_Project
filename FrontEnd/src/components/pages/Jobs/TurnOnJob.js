@@ -168,7 +168,8 @@ function TurnOnJob() {
                     <Form.Group
                       as={Row}
                       className="mb-3"
-                      controlId="formHorizontalDescription"
+                      controlId="formHorizontalDescription" 
+                      style={{ display: "none" }}
                     >
                       <Form.Label>Skills</Form.Label>
                       <Col sm={20}>
