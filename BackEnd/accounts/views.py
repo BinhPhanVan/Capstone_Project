@@ -1,4 +1,5 @@
 import email
+import threading
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import UserManager
 from django.shortcuts import render
@@ -40,7 +41,9 @@ class RegisterViewSet(viewsets.ViewSet, generics.CreateAPIView):
                 serializer = self.get_serializer(data=request.data)
                 if serializer.is_valid(raise_exception=True):
                     account = serializer.save()
-                    send_email_with_template(serializer.data['email'])
+                    # send_email_with_template(serializer.data['email'])
+                    email_thread = threading.Thread(target=send_email_with_template, args=(serializer.data['email']))
+                    email_thread.start()
                     return Response({
                         'status': status.HTTP_200_OK,
                         'message': 'Register successfully. Please check your email',
@@ -867,7 +870,9 @@ class EmailCVView(APIView):
             name = serializer.validated_data['name']
             email_user = serializer.validated_data['email_user']
             try:
-                send_email_with_cv(email, job_name, company_name, pdf_file, name, email_user)
+                # send_email_with_cv(email, job_name, company_name, pdf_file, name, email_user)
+                email_thread = threading.Thread(target=send_email_with_cv, args=(email, job_name, company_name, pdf_file, name, email_user))
+                email_thread.start()
                 response = {
                     "status": status.HTTP_200_OK,
                     "message": "Email sent successfully.",
@@ -912,7 +917,9 @@ class EmailJobView(APIView):
             name = serializer.validated_data['name']
             email_user = serializer.validated_data['email_user']
             try:
-                send_email_with_job(email, name_candidate, job_name, pdf_upload, company_name, name, email_user)
+                # send_email_with_job(email, name_candidate, job_name, pdf_upload, company_name, name, email_user)
+                email_thread = threading.Thread(target=send_email_with_job, args=(email, name_candidate, job_name, pdf_upload, company_name, name, email_user))
+                email_thread.start()
                 response = {
                     "status": status.HTTP_200_OK,
                     "message": "Email sent successfully.",
@@ -1036,8 +1043,9 @@ class InterviewCreateAPIView(GenericAPIView):
             
             time  = str(hour_start) + ":" + str(minute_start) + " to " + str(hour_end) + ":" + str(minute_end)
 
-            send_email_with_interview(employee.account.email, recruiter.company_name, date, time);
-
+            # send_email_with_interview(employee.account.email, recruiter.company_name, date, time);
+            email_thread = threading.Thread(target=send_email_with_interview, args=(employee.account.email, recruiter.company_name, date, time))
+            email_thread.start()
             response = {
                 "status": status.HTTP_201_CREATED,
                 "message": "Scheduling successfully!",
