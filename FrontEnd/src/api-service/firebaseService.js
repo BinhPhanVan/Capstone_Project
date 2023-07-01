@@ -146,7 +146,7 @@ const getAllMessageWithID = async (conversationId, callback) => {
   };
 
 
-  const getUsersInConversationsByUser = (userId) => {
+const getUsersInConversationsByUser = (userId) => {
     const conversationsRef = firebase.database().ref('conversations');
   
     return conversationsRef.once('value')
@@ -176,6 +176,62 @@ const getAllMessageWithID = async (conversationId, callback) => {
         throw error;
       });
 }; 
+
+const updateUsersInConversations = (userId, name, avatar) => {
+  const conversationsRef = firebase.database().ref('conversations');
+
+  return conversationsRef.once('value')
+    .then((snapshot) => {
+      const conversationsData = snapshot.val();
+      if (conversationsData) {
+        const updatedConversations = {};
+
+        Object.entries(conversationsData).forEach(([conversationId, conversation]) => {
+          const updatedUsers = { ...conversation.users };
+          const updatedMessages = { ...conversation.messages };
+
+          if (userId in updatedUsers) {
+            updatedUsers[userId] = {
+              ...updatedUsers[userId],
+              name: name,
+              avatar: avatar,
+            };
+          }
+          Object.entries(updatedMessages).forEach(([messageId, message]) => {
+            if (message.senderId === userId) {
+              updatedMessages[messageId] = {
+                ...message,
+                name: name,
+                avatar: avatar,
+              };
+            }
+          });
+          updatedConversations[conversationId] = {
+            ...conversation,
+            users: updatedUsers,
+            messages: updatedMessages,
+          };
+        });
+
+        // Update the conversations in the database
+        return conversationsRef.set(updatedConversations)
+          .then(() => {
+            console.log('Users updated in conversations successfully.');
+          })
+          .catch((error) => {
+            console.error('Error updating users in conversations:', error);
+            throw error;
+          });
+      } else {
+        return;
+      }
+    })
+    .catch((error) => {
+      console.error('Error retrieving conversations:', error);
+      throw error;
+    });
+};
+
 
 const getAllUsersInChatWithUser = (userId) => {
   const conversationsRef = firebase.database().ref('conversations');
@@ -246,6 +302,6 @@ const getUserInChatWithId = (chatId, userId) => {
   
 
 
-const firebaseService = {getUserInChatWithId, getAllUsersInChatWithUser, getConversationId, sendMessage, getAllMessage, sendMessage1, initializeConversation, getAllMessageWithID, getUsersInConversationsByUser, updateMessagesStatusByInterviewId};
+const firebaseService = {updateUsersInConversations, getUserInChatWithId, getAllUsersInChatWithUser, getConversationId, sendMessage, getAllMessage, sendMessage1, initializeConversation, getAllMessageWithID, getUsersInConversationsByUser, updateMessagesStatusByInterviewId};
 
 export default firebaseService;

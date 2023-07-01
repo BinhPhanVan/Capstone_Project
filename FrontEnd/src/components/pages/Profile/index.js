@@ -3,23 +3,25 @@ import { Button, Container, Grid, TextField, Typography } from '@material-ui/cor
 import { Form } from 'react-bootstrap';
 import Avatar from '@material-ui/core/Avatar';
 import { useDispatch, useSelector } from 'react-redux';
-import { get_information, selectUserInfo } from '../../../store/UserSlice';
+import { get_information, selectIsLoading, selectUserInfo, upload_employee_profile, upload_recruiter_profile } from '../../../store/UserSlice';
 import SpinnerLoading from '../../commons/SpinnerLoading';
 import EditIcon from '@mui/icons-material/Edit';
 import { selectIsAdmin } from '../../../store/AuthSlice';
-
+import { toast } from 'react-toastify';
 
 const Profile = () => {
   const dispatch = useDispatch();
   const user_info = useSelector(selectUserInfo);
   const [email, setEmail] = useState('');
   const [avatar, setAvatar] = useState('');
+  const [fileA, setFileA] = useState(null);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [isChange, setIsChange] = useState(false);
   const [companyName, setCompanyName] = useState('');
   const [address, setAddress] = useState('');
   const isAdmin = useSelector(selectIsAdmin);
+  const loading = useSelector(selectIsLoading);
   useLayoutEffect(() => {
     if(user_info)
     {
@@ -43,6 +45,7 @@ const Profile = () => {
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
+    setFileA(e.target.files[0]);
     reader.onload = (event) => {
       const imageUrl = event.target.result;
       setAvatar(imageUrl); // Update the avatar image URL
@@ -53,10 +56,50 @@ const Profile = () => {
     };
     reader.readAsDataURL(file);
   };
+  const handleUploadProfile = async (e) => {
+    e.preventDefault();
+    if(isAdmin)
+    {
+        const data = {
+            "first_name": firstName.trim(),
+            "last_name": lastName.trim(),
+            "company_name": companyName.trim(),
+            "address": address.trim(),
+            "avatar_img": fileA,
+        }
+
+        const actionResult = await dispatch(upload_recruiter_profile(data));
+        if (upload_recruiter_profile.fulfilled.match(actionResult)) {
+            toast.success(actionResult.payload.message);
+        }
+        if (upload_recruiter_profile.rejected.match(actionResult)) {
+            toast.error(actionResult.payload.message);
+        }
+    }
+    else 
+    {
+        const data = {
+            "first_name": firstName.trim(),
+            "last_name": lastName.trim(),
+            "avatar_img": fileA,
+        }
+
+        const actionResult = await dispatch(upload_employee_profile(data));
+        if (upload_employee_profile.fulfilled.match(actionResult)) {
+            toast.success(actionResult.payload.message);
+        }
+        if (upload_employee_profile.rejected.match(actionResult)) {
+            toast.error(actionResult.payload.message);
+        }
+    }
+    setIsChange(false);
+  };
 
   return user_info ? (
+    <>
+    <SpinnerLoading loading={loading}/>
     <div className="profile-page">
-        <Form>
+        <Form onSubmit={handleUploadProfile}>
             <Grid container justifyContent="flex-end" className="profile-container">
                 <Grid item xs={12} md={12} className="profile-avatar">
                     <Avatar
@@ -181,7 +224,7 @@ const Profile = () => {
                 </Grid>
             </Grid>
         </Form>
-    </div>
+    </div></>
   ) : <SpinnerLoading loading='true'/>;
 };
 
