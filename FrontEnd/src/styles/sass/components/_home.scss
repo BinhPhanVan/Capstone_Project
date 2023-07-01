@@ -9,7 +9,7 @@
         text-align: center;
     }
     .row{
-        margin-top: 2rem;
+        // margin-top: 2rem;
     }
 }
 .home-image-container {
@@ -34,5 +34,47 @@
       
     .float-right {
         float: right;
+    }
+}
+.about-content
+{
+    font-family: san-fran-form-header;
+    color: $dark-blue;
+    text-align: justify;
+    font-size: 1.3rem !important;
+    margin-left: 1rem;
+    padding: 1rem;
+    font-weight: bold;
+    font-style: italic;
+}
+.avatar-about {
+    transform: scale(10);
+}
+.technology-use {
+    margin-top: 3rem;
+    img {
+        max-width: 200px;
+        max-height: 200px;
+    }
+}
+.tech-about{
+    font-family: san-fran-form-header;
+    color: $dark-blue;
+    text-align: center;
+    padding-top: 3rem;
+}
+.about 
+{
+    .MuiGrid-spacing-xs-2 {
+        display: flex;
+        text-align: center;
+        justify-content: center;
+    }
+    .images-about {
+        transition: transform 0.3s
+
+    }
+    .images-about:hover {
+        transform: scale(1.1)
     }
 }
