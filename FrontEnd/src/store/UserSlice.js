@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import userService from "../api-service/userService";
+import firebaseService from "../api-service/firebaseService";
 
 
 export const get_information = createAsyncThunk(
@@ -93,6 +94,32 @@ export const send_email_with_cv = createAsyncThunk(
   }
 );
 
+export const upload_employee_profile = createAsyncThunk(
+  "user/upload_employee_profile",
+  async ( data, { rejectWithValue }) => {
+    try {
+        const res = await userService.upload_employee_profile(data);
+        return res.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue("Access denied! Please try again.");
+    }
+  }
+);
+
+export const upload_recruiter_profile = createAsyncThunk(
+  "user/upload_recruiter_profile",
+  async ( data, { rejectWithValue }) => {
+    try {
+        const res = await userService.upload_recruiter_profile(data);
+        return res.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue("Access denied! Please try again.");
+    }
+  }
+);
+
 const initialState = {
   isLoading: false,
   file: null,
@@ -118,6 +145,36 @@ const userSlice = createSlice({
       state.isLoading = false;
       state.user_infor = action.payload;
       state.file = action.payload.pdf_file;
+    });
+    builder.addCase(upload_employee_profile.pending, (state, action) => {
+      state.isLoading = true;
+      
+    });
+    builder.addCase(upload_employee_profile.rejected, (state, action) => {
+      state.isLoading = false;
+      state.user_infor = null;
+      state.file = null;
+    });
+    builder.addCase(upload_employee_profile.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.user_infor = action.payload;
+      state.file = action.payload.pdf_file;
+      firebaseService.updateUsersInConversations(state.user_infor.account.id, state.user_infor.account.first_name + " " + state.user_infor.account.last_name, state.user_infor.avatar_url);
+    });
+    builder.addCase(upload_recruiter_profile.pending, (state, action) => {
+      state.isLoading = true;
+      
+    });
+    builder.addCase(upload_recruiter_profile.rejected, (state, action) => {
+      state.isLoading = false;
+      state.user_infor = null;
+      state.file = null;
+    });
+    builder.addCase(upload_recruiter_profile.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.user_infor = action.payload;
+      state.file = action.payload.pdf_file;
+      firebaseService.updateUsersInConversations(state.user_infor.account.id, state.user_infor.account.first_name + " " + state.user_infor.account.last_name, state.user_infor.avatar_url);
     });
     builder.addCase(get_active.pending, (state, action) => {
       state.isLoading = true;
