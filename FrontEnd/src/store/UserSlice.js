@@ -99,7 +99,7 @@ export const upload_employee_profile = createAsyncThunk(
   async ( data, { rejectWithValue }) => {
     try {
         const res = await userService.upload_employee_profile(data);
-        return res.data;
+        return res;
     } catch (error) {
       console.log(error);
       return rejectWithValue("Access denied! Please try again.");
@@ -112,7 +112,7 @@ export const upload_recruiter_profile = createAsyncThunk(
   async ( data, { rejectWithValue }) => {
     try {
         const res = await userService.upload_recruiter_profile(data);
-        return res.data;
+        return res;
     } catch (error) {
       console.log(error);
       return rejectWithValue("Access denied! Please try again.");
@@ -152,13 +152,12 @@ const userSlice = createSlice({
     });
     builder.addCase(upload_employee_profile.rejected, (state, action) => {
       state.isLoading = false;
-      state.user_infor = null;
       state.file = null;
     });
     builder.addCase(upload_employee_profile.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.user_infor = action.payload;
-      state.file = action.payload.pdf_file;
+      state.user_infor = action.payload.data;
+      state.file = action.payload.data.pdf_file;
       firebaseService.updateUsersInConversations(state.user_infor.account.id, state.user_infor.account.first_name + " " + state.user_infor.account.last_name, state.user_infor.avatar_url);
     });
     builder.addCase(upload_recruiter_profile.pending, (state, action) => {
@@ -167,13 +166,12 @@ const userSlice = createSlice({
     });
     builder.addCase(upload_recruiter_profile.rejected, (state, action) => {
       state.isLoading = false;
-      state.user_infor = null;
       state.file = null;
     });
     builder.addCase(upload_recruiter_profile.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.user_infor = action.payload;
-      state.file = action.payload.pdf_file;
+      state.user_infor = action.payload.data;
+      state.file = action.payload.data.pdf_file;
       firebaseService.updateUsersInConversations(state.user_infor.account.id, state.user_infor.account.first_name + " " + state.user_infor.account.last_name, state.user_infor.avatar_url);
     });
     builder.addCase(get_active.pending, (state, action) => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { ListItem, ListItemSecondaryAction, Button, Typography, ListItemAvatar } from '@material-ui/core';
 import BiotechIcon from '@mui/icons-material/Biotech';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectIsLoading, selectUserInfo, send_email_with_job } from '../../../store/UserSlice';
 import firebaseService from '../../../api-service/firebaseService';
 import { useNavigate } from 'react-router-dom';
-import { get_all_jobs_owner, selectJobsOwner } from '../../../store/JobSlice';
+import { selectJobsOwner } from '../../../store/JobSlice';
 import SpinnerLoading from '../../commons/SpinnerLoading';
 import { toast } from 'react-toastify';
 
@@ -82,10 +82,19 @@ const CandidateItem = ({ candidate, onCandidateClick }) => {
         e.stopPropagation();
         SendJob(selectedItem, candidate);
         setModalOpenJob(false);
+        const chatId = `${candidate.id}_${user_info.account.id}`;
+        firebaseService.initializeConversation(
+          candidate.id, 
+          user_info.account.id, 
+          candidate.name, 
+          candidate.avatar_url,
+          candidate.email, 
+          user_info.account.first_name + " " + user_info.account.last_name, 
+          user_info.avatar_url,
+          user_info.account.email);
+          navigate(`/chat/${candidate.id}_${user_info.account.id}`);
+        firebaseService.sendMessage1(chatId, user_info, `Send invitation for ${selectedItem.job_name} position.`, 'message');
     }
-    useEffect(()=> {
-        dispatch(get_all_jobs_owner());
-    }, [dispatch]);
     return loading?<SpinnerLoading loading={loading}/> 
     :(<div className='candidate_item-container' onClick= {(e) => 
         {

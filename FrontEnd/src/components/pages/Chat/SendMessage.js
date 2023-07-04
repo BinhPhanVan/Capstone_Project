@@ -82,8 +82,11 @@ function SendMessage() {
     }
   };
   useEffect(()=> {
+    if(isAdmin)
+    {
       dispatch(get_all_jobs_owner());
-  }, [dispatch]);
+    }
+  }, [dispatch, isAdmin]);
   return (
     <TextField
         className='input-send-container'

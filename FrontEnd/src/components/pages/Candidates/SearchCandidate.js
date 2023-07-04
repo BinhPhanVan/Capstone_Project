@@ -5,6 +5,7 @@ import ListCandidate from './ListCandidate';
 import { useDispatch, useSelector } from 'react-redux';
 import { get_all_candidate, selectCandidates, selectIsLoading } from '../../../store/UserSlice';
 import SpinnerLoading from '../../commons/SpinnerLoading';
+import { get_all_jobs_owner } from '../../../store/JobSlice';
 
 function SearchCandidate() {
     const [searchQuery, setSearchQuery] = useState('');
@@ -51,6 +52,7 @@ function SearchCandidate() {
     useEffect(()=> {
         document.title = "Search Candidate | Hire IT"
         dispatch(get_all_candidate());
+        dispatch(get_all_jobs_owner());
     }, [dispatch]);
 
   return (

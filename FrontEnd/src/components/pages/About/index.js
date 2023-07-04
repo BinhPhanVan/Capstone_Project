@@ -35,7 +35,7 @@ const images = [
 ];
 const images1 = [
   'http://dut.udn.vn/Files/admin/images/Tin_tuc/Khac/2020/LogoDUT/image002.jpg',
-  'https://scontent.fdad3-4.fna.fbcdn.net/v/t39.30808-6/308181803_453974736759567_4516344133144668315_n.jpg?_nc_cat=105&cb=99be929b-59f725be&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=izR6NgCR4gsAX-oG-kn&_nc_ht=scontent.fdad3-4.fna&oh=00_AfB0UUMRd78gRWijRvxpO2mewnUq24OT-MhborSN7wit5A&oe=64A5621E',
+  'https://res.cloudinary.com/dq6avgw6n/image/upload/v1688488125/logoKhoa_ivb0ft.jpg',
 
 ];
 

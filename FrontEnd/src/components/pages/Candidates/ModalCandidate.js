@@ -76,10 +76,22 @@ const ModalCandidate = ({ candidate, open, handleClose }) => {
         }
   };
   const handleSelectItem = (e) => {
-      e.stopPropagation();
-      SendJob(selectedItem, candidate);
-      setModalOpenJob(false);
-      handleClose();
+        e.stopPropagation();
+        SendJob(selectedItem, candidate);
+        setModalOpenJob(false);
+        handleClose();
+        const chatId = `${candidate.id}_${user_info.account.id}`;
+        firebaseService.initializeConversation(
+          candidate.id, 
+          user_info.account.id, 
+          candidate.name, 
+          candidate.avatar_url,
+          candidate.email, 
+          user_info.account.first_name + " " + user_info.account.last_name, 
+          user_info.avatar_url,
+          user_info.account.email);
+          navigate(`/chat/${candidate.id}_${user_info.account.id}`);
+        firebaseService.sendMessage1(chatId, user_info, `Send invitation for ${selectedItem.job_name} position.`, 'message');
   }
 const navigate = useNavigate();
   return (
