@@ -8,6 +8,7 @@ import SendMessage from './SendMessage';
 import firebase from 'firebase/compat/app';
 import firebaseService from '../../../api-service/firebaseService';
 import MessageSchedule from './MessageSchedule';
+import MessageLink from './MessageLink';
 function ChatContent() {
   const { chatId } = useParams();
   const [messages, setMessages] = useState([]);
@@ -83,7 +84,13 @@ function ChatContent() {
                   }
                   else
                   {
-                    return null;
+                    return (
+                      <MessageLink
+                      key={message.id}
+                      message={message}
+                      align={user_info?.account.id === message.senderId ? 'right': 'left'}
+                      />
+                    ) 
                   }
                 })}
             </div>

@@ -75,13 +75,13 @@ const ModalCandidate = ({ candidate, open, handleClose }) => {
             toast.error(actionResult.payload["message"]);
         }
   };
-  const handleSelectItem = (e) => {
+  const handleSelectItem = async (e) => {
         e.stopPropagation();
         SendJob(selectedItem, candidate);
         setModalOpenJob(false);
         handleClose();
         const chatId = `${candidate.id}_${user_info.account.id}`;
-        firebaseService.initializeConversation(
+        await firebaseService.initializeConversation(
           candidate.id, 
           user_info.account.id, 
           candidate.name, 
@@ -90,7 +90,7 @@ const ModalCandidate = ({ candidate, open, handleClose }) => {
           user_info.account.first_name + " " + user_info.account.last_name, 
           user_info.avatar_url,
           user_info.account.email);
-          navigate(`/chat/${candidate.id}_${user_info.account.id}`);
+        await navigate(`/chat/${candidate.id}_${user_info.account.id}`);
         firebaseService.sendMessage1(chatId, user_info, `Send invitation for ${selectedItem.job_name} position.`, 'message');
   }
 const navigate = useNavigate();

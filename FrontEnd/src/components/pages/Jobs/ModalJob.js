@@ -62,13 +62,13 @@ const ModalJob = ({ job, open, handleClose }) => {
             <PDFViewer 
                 file={job.pdf_upload} />
             <ListItemSecondaryAction className="modal-btn-container">
-                <Button className="btn-apply" variant="contained" color="primary" onClick={(e) => 
+                <Button className="btn-apply" variant="contained" color="primary" onClick={async (e) => 
                 {
                   handleClose();
                   SendCV(job, user_info);
                   e.stopPropagation();
                   const chatId = `${user_info.account.id}_${job.id}`;
-                    firebaseService.initializeConversation(
+                  await firebaseService.initializeConversation(
                         user_info.account.id, 
                         job.id, 
                         user_info.account.first_name + " " + user_info.account.last_name, 
@@ -77,7 +77,7 @@ const ModalJob = ({ job, open, handleClose }) => {
                         job.name, 
                         job.avatar_url,
                         job.email);
-                    navigate(`/chat/${user_info.account.id}_${job.id}`);
+                  await navigate(`/chat/${user_info.account.id}_${job.id}`);
                   firebaseService.sendMessage1(chatId, user_info, `Sent your job application for ${job.job_name} position.`, 'message');
                 }}>
                 Apply
