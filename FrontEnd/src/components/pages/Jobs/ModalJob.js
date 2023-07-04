@@ -18,7 +18,6 @@ const ModalJob = ({ job, open, handleClose }) => {
   const dispatch = useDispatch();
   const SendCV = async (job, user_info) =>
     {
-        console.log(job, user_info);
         const data = 
         {
             'email': job.email,
@@ -68,6 +67,18 @@ const ModalJob = ({ job, open, handleClose }) => {
                   handleClose();
                   SendCV(job, user_info);
                   e.stopPropagation();
+                  const chatId = `${user_info.account.id}_${job.id}`;
+                    firebaseService.initializeConversation(
+                        user_info.account.id, 
+                        job.id, 
+                        user_info.account.first_name + " " + user_info.account.last_name, 
+                        user_info.avatar_url, 
+                        user_info.account.email,
+                        job.name, 
+                        job.avatar_url,
+                        job.email);
+                    navigate(`/chat/${user_info.account.id}_${job.id}`);
+                  firebaseService.sendMessage1(chatId, user_info, `Sent your job application for ${job.job_name} position.`, 'message');
                 }}>
                 Apply
                 </Button>

@@ -72,8 +72,9 @@ const Profile = () => {
         if (upload_recruiter_profile.fulfilled.match(actionResult)) {
             toast.success(actionResult.payload.message);
         }
-        if (upload_recruiter_profile.rejected.match(actionResult)) {
-            toast.error(actionResult.payload.message);
+        else if (upload_recruiter_profile.rejected.match(actionResult)) {
+            toast.error("Invalid data");
+            dispatch(get_information());
         }
     }
     else 
@@ -89,7 +90,8 @@ const Profile = () => {
             toast.success(actionResult.payload.message);
         }
         if (upload_employee_profile.rejected.match(actionResult)) {
-            toast.error(actionResult.payload.message);
+            toast.error("Invalid data");
+            dispatch(get_information());
         }
     }
     setIsChange(false);
@@ -157,7 +159,7 @@ const Profile = () => {
                                         setFirstName(e.target.value)
                                     }
                                 }
-                                placeholder="First Name"
+                                placeholder="First Name (10)"
                                 fullWidth
                                 required
                                 />
@@ -172,7 +174,7 @@ const Profile = () => {
                                         setLastName(e.target.value)
                                     }
                                 }
-                                placeholder="Last Name"
+                                placeholder="Last Name (10)"
                                 fullWidth
                                 required
                                 />
@@ -189,7 +191,7 @@ const Profile = () => {
                                                 setCompanyName(e.target.value)
                                             }
                                         }
-                                        placeholder="Last Name"
+                                        placeholder="Company Name"
                                         fullWidth
                                         required
                                         />
@@ -204,7 +206,7 @@ const Profile = () => {
                                                 setAddress(e.target.value)
                                             }
                                         }
-                                        placeholder="Last Name"
+                                        placeholder="Address"
                                         fullWidth
                                         required
                                         />
