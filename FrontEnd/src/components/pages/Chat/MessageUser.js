@@ -43,7 +43,9 @@ function MessageUser({ message }) {
                 <Typography variant="body1" className='new-message'>Sent Interview</Typography>
               </>
             ) : (
-              <></>
+              <>
+                <Typography variant="body1" className='new-message'>Sent Information</Typography>
+              </>
             )
           )
         }

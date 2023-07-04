@@ -48,7 +48,12 @@ function SendMessage() {
   };
   const handleSendResume = (e) => {
     e.preventDefault();
-    setMessage("My resume: " + user_info.pdf_file);
+    // setMessage("My resume: " + user_info.pdf_file);
+    const link = {
+      title: "My resume",
+      link_access: user_info.pdf_file
+    }
+    firebaseService.sendMessage1(chatId, user_info, link, 'link');
   };
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -140,7 +145,12 @@ function SendMessage() {
                       </Button>
                       <Button className="btn-select" variant="contained" color="primary" disabled={selectedItem === null} onClick={(e) => {
                           e.stopPropagation();
-                          setMessage(selectedItem?.job_name + ": " +selectedItem?.pdf_upload);
+                          // setMessage(selectedItem?.job_name + ": " +selectedItem?.pdf_upload);
+                          const link = {
+                            title: selectedItem?.job_name,
+                            link_access: selectedItem?.pdf_upload
+                          }
+                          firebaseService.sendMessage1(chatId, user_info, link, 'link');
                           setSelectedItem(null);
                           inputRef.current.focus();
                           handleCloseModal();
