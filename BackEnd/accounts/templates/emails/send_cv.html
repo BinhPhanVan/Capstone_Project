@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Job Application</title>
+    <!-- Add Bootstrap CSS link -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+      body {
+        background-color: #104271;
+        color: #0a0a0a;
+        margin: 20px;
+        font-family: Calisto MT;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        padding: 20px;
+      }
+      p {
+        text-align: justify;
+        font-size: 1rem;
+      }
+      .logo {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .logo img {
+        max-width: 150px;
+      }
+      h2 
+      {
+        text-align: center;
+        font-family: Calisto MT;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo">
+        <img src="https://res.cloudinary.com/dq6avgw6n/image/upload/v1686232503/logo_i7raij.png" alt="Logo">
+      </div>
+      <h2 class="mt-4">Job Application</h2>
+      
+      <div class="row">
+        <div class="col-md-12">
+          <br/>
+          <p>
+            Dear HR Department,
+          </p>
+          
+          <p>
+            I am writing to submit my application for the <b>{{job_name}}</b> at {{company_name}}. I learned about this job opportunity through <b>HireIT</b> website.
+          </p>
+          
+          <p>
+            I am confident that my skills and experience make me a strong candidate for this role, and I am excited about the opportunity to contribute to your team. I have gained valuable experience in the field of IT, where I have developed skills. I believe these skills will enable me to work effectively in the position.
+          </p>
+          
+          <p>
+            I have researched {{company_name}} and I am impressed with the company's mission, values, and achievements. I am eager to contribute to the company and work alongside industry experts in IT. I believe that my growth will be accelerated through collaboration with talented colleagues at the company.
+          </p>
+          
+          <p>
+            I have attached <a href="{{pdf_file}}">my resume</a>, which includes my CV and a list of relevant projects. I hope these documents will provide you with an overview of my experience and accomplishments.
+          </p>
+          
+          <p>
+            Thank you for considering my job application. I look forward to the opportunity to discuss how I can contribute to the company. I am available for an interview or to provide any additional information you may require.
+          </p>
+          
+          <p>
+            Sincerely,<br>
+            {{name}}<br>
+            {{email}}
+          </p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Add Bootstrap JS scripts (jQuery and Bootstrap) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>

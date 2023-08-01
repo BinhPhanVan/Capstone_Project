@@ -1,0 +1,166 @@
+.upload-job-page{
+    margin-top: 2rem !important;
+}
+.upload-jobs-container
+{
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem !important;
+    margin-bottom: 2rem !important;
+    .button-container{
+        display: flex;
+        justify-content: flex-end;
+        margin-right: 2rem;
+        .create-button{
+            color: white;
+            background-color: $dark-blue;
+        }
+        .create-button:hover {
+            background-color: lighten($dark-blue, 10%);
+          }
+    }
+    .search_job_upload-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 1rem !important;
+        margin-bottom: 2rem !important;
+        .MuiPaper-root .MuiMenu-paper .MuiPopover-paper{
+            max-height: 300px !important;
+        }
+        .MuiList-root{
+            margin-top: 2rem;
+            width: 60vw;
+        }
+        .MuiSvgIcon-root
+        {
+            color: $black-icon !important;
+            font-size: 1em !important;
+        }
+        .MuiListItem-secondaryAction 
+        {
+            padding-right: 1rem !important;
+        }
+        // Job Item
+        .btn-container{
+            display: flex;
+            justify-content : flex-end;
+            align-items: center;
+    
+        }
+        .job_upload_item-container:hover {
+            // background-color:#f6f4f4;
+            cursor: pointer;
+            transform: scale(1.02);
+        }
+        .active-chevrondown
+        {
+            color: $black-icon;
+            font-size: 1rem;
+            cursor: pointer;
+            .custom-chevron{
+                font-size: 0.7rem;
+            }
+        }
+        .job_upload_item-container{
+            width: 100%;
+            border-radius: 10px;
+            transition: all 0.3s ease-in-out;
+            font-family: bitter-text;
+            // border-bottom: 1px solid #afbbbb;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2);
+            .skill-text, .company-loc-text, .email-text {
+                width: 50%;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                color: #999;
+            }
+            .job_upload_item-content{
+                width: 100%;
+            }
+        }
+    }
+      
+    .search_job_upload-form-container {
+        width: 600px;
+        margin: 0 auto;
+    }
+    @media (max-width: 950px) {
+        .search_job_upload-form-container {
+            width: 300px;
+        }
+    }
+    @media (max-width: 700px) {
+        .search_job_upload-form-container {
+            width: 250px;
+        }
+        .skill-text, .company-loc-text, .email-text {
+            width: 20px;
+        }
+    }
+    
+}
+.upload-job-container 
+{
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    height: 70vh;
+
+    h1 {
+        font-size: 1.5 rem;
+        margin-bottom: 40px;
+    }
+
+    .upload-job-form{
+        width: 400px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        padding: 2rem;
+        
+        h1 
+        {
+            color: $dark-blue;
+            font-family: san-fran-form-header;
+        }
+        input 
+        {
+            font-size: 16px;
+            padding: 10px;
+            border-radius: $border-input;
+            border: none;
+            border: 1px solid #ccc;
+            width: 100%;
+            display: inline-block;
+            
+        }
+        label 
+        {
+            display: block;
+            width: 100%;
+            height: 100%;
+            margin-left: 0;
+            text-align: left;
+        }
+        select
+        {
+            display: block;
+            width: 100%;
+            height: 115%;;
+        }
+        button 
+        {
+            background-color: $blue;
+            color: #ffffff;
+            font-size: 1.1rem;
+            padding: 10px 20px;
+            border-radius: 1rem;
+        }
+    }
+}
+

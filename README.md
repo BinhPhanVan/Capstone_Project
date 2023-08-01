@@ -1,1 +1,1 @@
-# Capstone_Project
+# Capstone_Project with DRF and React JS

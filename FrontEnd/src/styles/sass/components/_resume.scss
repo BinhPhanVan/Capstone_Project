@@ -1,0 +1,149 @@
+.resume-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: auto;
+    height: 100%;
+    .resume-form-container{
+      width: 100%;
+      height: 100%;
+    }
+    .react-pdf__Page__textContent {
+        display: none;
+      }
+      
+    .react-pdf__Page__annotations {
+        display: none;
+    }
+    .resume-button-container {
+        display: flex;
+        justify-content: flex-end;
+        width: 100%;
+        margin-top: 20px;
+      }
+      
+    .resume-button {
+        margin-right: 1rem;
+    }
+    .resume-button:hover {
+      color:$dark-blue;
+    }
+
+    .turnoff-button {
+      margin-right: 0;
+      margin-left: 1rem;
+      color: white;
+      background-color: rgb(234, 47, 47);
+    }
+    
+    .upload-button {
+        background-color: #2196f3;
+        color: white;
+    }
+    
+    .submit-button {
+        margin-right: 0;
+        background-color: #4caf50;
+        color: white;
+    }
+    .MuiContainer-root,  .MuiContainer-maxWidthSm
+    {
+        margin: 0;
+        width: 100%;
+    }
+    .custom-file-upload-container {
+        position: relative;
+        width: 100%;
+      }
+      
+    .custom-file-upload-label {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+      
+    .custom-file-upload-frame {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        border: 2px dotted #ccc;
+        border-radius: 0.5rem;
+        width: 100%;
+        min-height: 50vh;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        padding: 1rem;
+    }
+      
+      .custom-file-upload-frame:hover {
+        border-color: $blue;
+      }
+      .custom-file-upload-frame:hover .custom-file-upload-icon{
+        color: $blue;
+      }
+      .custom-file-upload-frame:hover .custom-file-upload-text{
+        color: $blue;
+      }
+      
+      .custom-file-upload-icon {
+        font-size: 48px;
+        color: $brown-icon;
+        margin-bottom: 10px;
+      }
+      
+      .custom-file-upload-text {
+        font-size: 16px;
+        font-weight: 500;
+        color: $brown-icon;
+      }
+      .navigate-button{
+            display: flex;
+            justify-content: space-between;
+            padding-top: 1rem;
+            position: absolute;
+            width: 100%;
+            padding: 3rem;
+        }
+        .navigate-typograpy
+        {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-top: 1rem;
+            width: 100%;
+        }
+      
+      .custom-file-upload-submit-button {
+        position: absolute;
+        bottom: -30px;
+        right: 0;
+      }
+      
+    @media (max-width: 768px) {
+    .custom-file-upload-frame {
+        min-height: 50vh;
+    }
+    
+    .custom-file-upload-icon {
+        font-size: 36px;
+    }
+    
+    .custom-file-upload-text {
+        font-size: 14px;
+    }
+    }
+    
+    @media (min-width: 1000px)
+    {
+        .MuiContainer-maxWidthSm {
+            max-width: 100% !important ;            
+        }
+    }
+    @media (max-width: 800px)
+    {
+      .navigate-button{
+        padding: 0;
+      }
+    }   
+}

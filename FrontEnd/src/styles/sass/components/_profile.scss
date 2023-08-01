@@ -1,0 +1,54 @@
+.profile-page {
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+        align-items: center;
+    .profile-container {
+        width: 100%;
+        max-width: 600px;
+        justify-content: center;
+        align-items: center;
+        .profile-avatar {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            margin-top: 2rem;
+        }
+          
+        .profile-content {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+        .edit-icon {
+            color: $dark-blue-4;
+            cursor: pointer;
+            font-size: 20px;
+        }
+    }
+    .avatar-image {
+        height: 200px;
+        width: 200px;
+        margin-left: 0 !important;
+        box-shadow: 0 6px 20px rgb(0 0 0 / 40%);
+    }
+    @media (max-width: 600px) {
+        .avatar-image {
+            height: 150px;
+            width: 150px;
+        }
+        .edit-icon {
+            font-size: 10px;
+        }
+    }
+}
+.MuiAvatar-circular 
+{
+    background-color: none !important;
+    background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRyGu_ruKgTWdFfgyosD9OiC0RpcZDrpsSF7Q&usqp=CAU');
+    background-size: cover;
+    background-position: center;
+}

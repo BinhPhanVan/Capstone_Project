@@ -1,0 +1,27 @@
+// base scss
+@import "base/_layout";
+@import "base/_variables";
+
+// component scss
+@import "components/_login";
+@import "components/_signup";
+@import "components/_confirmsignup";
+@import "components/_header";
+@import "components/_notfound";
+@import "components/_home";
+@import "components/_spinner";
+@import "components/_resume";
+@import "components/_searchjob";
+@import "components/_modaljob";
+@import "components/_pdfviewer";
+@import "components/_searchcandidate";
+@import "components/_modalcandidate";
+@import "components/_profile";
+@import "components/_uploadjobs";
+@import "components/_menuoption";
+@import "components/_message";
+@import "components/_modallistjob";
+@import "components/_modalcalendar";
+@import "components/_schedulemessage";
+@import "components/_verifyinformation";
+@import "components/_calendar";

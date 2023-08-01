@@ -1,0 +1,99 @@
+.search_candidate-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 3rem !important;
+    margin-bottom: 2rem !important;
+    .MuiPaper-root .MuiMenu-paper .MuiPopover-paper{
+        max-height: 300px !important;
+    }
+    .MuiListItem-secondaryAction 
+    {
+        margin-right: 0 !important;
+    }
+    .MuiList-root{
+        margin-top: 2rem;
+        width: 60vw;
+    }
+    .MuiListItem-secondaryAction 
+    {
+        padding-right: 1rem !important;
+    }
+    .MuiSvgIcon-root
+    {
+        color: $black-icon !important;
+        font-size: 1em !important;
+    }
+    // Candidate Item
+    .btn-container{
+        display: flex;
+        justify-content : flex-end;
+        align-items: center;
+        .btn-apply 
+        {
+            margin-right: 2rem;
+        }
+        .btn-apply:hover, 
+        .btn-message:hover {
+            & ~ .candidate_item-container {
+                background-color: #dee3e3;
+            }
+        }
+
+    }
+    .candidate_item-container:hover {
+        background-color: #dee3e3;
+        cursor: pointer;
+        transform: scale(1.05);
+    }
+    .candidate_item-container{
+        width: 100%;
+        border-radius: 10px;
+        transition: all 0.3s ease-in-out;
+        font-family: bitter-text;
+        // box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
+        .skill-text, .company-loc-text, .email-text{
+            width: 50%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #999;
+        }
+        .candidate_item-content{
+            width: 100%;
+            margin-left: 1rem;
+        }
+        .candidate-avatar{
+            height: 70px;
+            width: 70px;
+            border: 1px solid #999;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+    }
+}
+  
+.search_candidate-form-container {
+    width: 600px;
+    margin: 0 auto;
+}
+@media (max-width: 950px) {
+    .search_candidate-form-container {
+        width: 300px;
+    }
+}
+@media (max-width: 700px) {
+    .search_candidate-form-container {
+        width: 250px;
+    }
+    .skill-text, .company-loc-text, .email-text {
+        width: 20px;
+    }
+}
+@media (max-width: 1100px) {
+    .btn-container {
+        display: none !important;
+    }
+    .skill-text, .company-loc-text, .email-text {
+        width: 80% !important;
+    }
+}

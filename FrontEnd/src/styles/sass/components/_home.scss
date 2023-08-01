@@ -1,0 +1,80 @@
+.home-container
+{
+    padding-top: 2rem;
+    background-color: #f2f2f2;
+    .home-content-1, .home-content-2
+    {
+        font-family: san-fran-form-header;
+        color: $dark-blue;
+        text-align: center;
+    }
+    .row{
+        // margin-top: 2rem;
+    }
+}
+.home-image-container {
+    position: relative;
+    overflow: hidden;
+    .img-fluid {
+        border: 1rem solid #ffffff;
+        background-color: #f2f2f2;
+        border-radius: 20px;
+        height: auto;
+        float: right;
+    }
+    img {
+        height: auto;
+        border-radius: 20px;
+        transition: transform 0.5s ease-out, filter 0.5s ease-out;
+    }
+    img:hover {
+        transform: scale(1.2);
+        filter: blur(1px);
+    }
+      
+    .float-right {
+        float: right;
+    }
+}
+.about-content
+{
+    font-family: san-fran-form-header;
+    color: $dark-blue;
+    text-align: justify;
+    font-size: 1.3rem !important;
+    margin-left: 1rem;
+    padding: 1rem;
+    font-weight: bold;
+    font-style: italic;
+}
+.avatar-about {
+    transform: scale(10);
+}
+.technology-use {
+    margin-top: 3rem;
+    img {
+        max-width: 200px;
+        max-height: 200px;
+    }
+}
+.tech-about{
+    font-family: san-fran-form-header;
+    color: $dark-blue;
+    text-align: center;
+    padding-top: 3rem;
+}
+.about 
+{
+    .MuiGrid-spacing-xs-2 {
+        display: flex;
+        text-align: center;
+        justify-content: center;
+    }
+    .images-about {
+        transition: transform 0.3s
+
+    }
+    .images-about:hover {
+        transform: scale(1.1)
+    }
+}

@@ -1,0 +1,37 @@
+@font-face {
+    src: url(../../fonts/Nunito-Italic-VariableFont_wght.ttf);
+    font-family: san-fran-italic-form-header;
+}
+
+@font-face {
+    src: url(../../fonts/Nunito-Italic-VariableFont_wght.ttf);
+    font-family: san-fran-form-header;
+}
+
+@font-face {
+    src: url(../../fonts/Mulish-VariableFont.ttf);
+    font-family: mulish-text;
+}
+@font-face {
+    src: url(../../fonts/Bitter-ExtraLight.ttf);
+    font-family: bitter-text;
+}
+.hireit-full-height-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+}
+
+.hireit-full-width {
+    width: 100%;
+    background-color: #f2f2f2;
+    flex-grow: 1;
+}
+
+.hireit-main-container {
+    padding: 20px;
+    margin: 0 auto;
+    max-width: 1140px;
+    height: 100%;
+}

@@ -1,0 +1,61 @@
+.message_schedule_container {
+    padding: 1rem;
+      
+    .message_schedule_container button {
+        margin-top: 8px;
+    }
+    .schedule-title{
+        margin-top: 8px !important;
+        line-height: 1rem;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+    .schedule-content{
+        margin-bottom: 1rem;
+    }
+
+    .btn{
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+        padding: 0.5rem 0.8rem !important;
+        border-radius: 4px !important;
+        text-transform: uppercase;
+    }
+    .btn-cancel{
+        color: white;
+        background-color: rgb(185 24 24);
+    }
+    .btn-cancel:hover{
+        color: white;
+        background-color: rgb(185 24 24);
+    }
+    .btn-approve:hover{
+        color: white;
+    }
+    .btn-approval
+    {
+        background-color: #1468a2;
+    }
+    .btn-approval:hover
+    {
+        background-color: #1378bd;
+        color: white;
+        cursor: not-allowed;
+    }
+    .btn-cancelled{
+        color: white;
+        background-color: rgb(149, 19, 19);
+    }
+    .btn-cancelled:hover{
+        color: white;
+        background-color: rgb(164, 19, 19);
+        cursor: not-allowed;
+    }
+}
+.button-information{
+    background-color: #1468a2 !important;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    padding: 0.5rem 0.8rem !important;
+    border-radius: 4px !important;
+}

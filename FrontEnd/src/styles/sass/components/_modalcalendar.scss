@@ -1,0 +1,128 @@
+.modal-calendar-container {
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+
+    .modal-calendar-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+      
+    .modal-calendar-content {
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        width: 50vw;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        background-color: white;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        position: relative;
+    }
+      
+    .modal-btn-calendar {
+        display: flex;
+        position: relative;
+        justify-content: flex-end;
+        border-radius: 4px !important;
+    }
+      
+    .modal-btn-calendar > .MuiButton-root {
+        margin-left: 10px;
+    }
+
+    .time-select-container, .date-input {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .MuiTypography-colorPrimary {
+        font-size: 15px;
+    }
+      
+    .close-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 20px;
+        font-weight: bold;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+    }
+    .schedule-btn{
+        background-color: #0765f1;
+        color: #ffffff;
+        padding: 0.5rem !important;
+        border-radius: 4px !important;
+        text-transform: uppercase;
+    }
+    
+    .schedule-btn:hover{
+        background-color: #0343a3;
+        color: #ffffff;
+    }
+
+    .schedule-btn:disabled {
+        background-color: #e0e0e0;
+        color: #a0a0a0;
+        cursor: not-allowed;
+    }
+
+    .MuiSvgIcon-root {
+        color: $black-icon !important;
+        font-size: 1em !important;
+    }
+      
+    @media (max-width: 1100px) {
+        .modal-calendar-content {
+          width: 70vw;
+        }
+    }
+      
+    @media (max-width: 800px) {
+        .modal-calendar-content {
+          width: 90vw;
+        }
+    }
+}
+.all-interview-container{
+    width: 100%;
+    .event-list-row {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+    }      
+    .event-item{
+        width: 200px;
+        margin: 0.5rem;
+        border-radius: 7px;
+        .MuiPaper-elevation3{
+            margin-bottom: 8px !important;
+            border-radius: 4px !important;
+        }
+    }
+    .event-item-pending {
+        background-color: #eeff03;
+    }
+    .event-item-approval {
+        background-color: #29ff29;
+    }
+    .MuiPaper-rounded{
+        background-color: $blue;
+        color: #ffffff;
+    }
+}
+
+#menu- 
+{
+    .MuiMenu-paper{
+        max-height: 200px !important;
+        width: 50px !important;
+    }
+}
+  
+

@@ -1,0 +1,83 @@
+.modal-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+.modal-list-job {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem;
+    .modal-btn-container {
+        display: flex;
+        position: relative;
+        justify-content: flex-end;
+        margin-top: 3rem !important;
+    }
+    .modal-btn-container > .MuiButton-root {
+        margin-left: 10px;
+    }
+    .MuiTypography-h6
+    {
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+    }
+    .job_upload_item-content {
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        background-color: white;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        position: relative;
+        margin-bottom: 5px;
+    }
+    .job_upload_item_container
+    {
+        width: 30%;
+    }   
+    .job_upload_item-content .company-loc-text {
+        text-overflow: ellipsis;
+        color: #808080;
+        width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+    } 
+    .modal-list-job .MuiTypography-colorPrimary {
+        font-size: 15px;
+    }
+    .close-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 20px;
+        font-weight: bold;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+    }
+      
+    .modal-list-job .MuiSvgIcon-root {
+        color: $black-icon !important;
+        font-size: 1em !important;
+    }
+    .job_upload_item_selected{
+        background-color: $porcelain !important;
+    }
+}
+
+@media (max-width: 1100px) {
+    .job_upload_item_container {
+      width: 50vw;
+    }
+}
+  
+@media (max-width: 800px) {
+    .job_upload_item_container {
+        width: 70vw;
+    }
+}
+  
